@@ -1,5 +1,5 @@
 {
-	"exec": "ts-node --transpile-only src/index.ts",
+	"exec": "ts-node --transpile-only src/app.ts",
 	"ext": "js,ts,json",
 	"ignore": [
 		"src/**/*.spec.ts"
