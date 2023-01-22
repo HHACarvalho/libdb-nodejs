@@ -7,7 +7,7 @@
   - [x] Create
   - [x] Read
   - [x] Update
-  - [x] Delete
+  - [x] Hard Delete
 - [ ] Soft delete
 - [ ] User sign in/login
 - [ ] Use of JWT for requests
