@@ -67,6 +67,24 @@ export default class UserController implements IUserController {
 		}
 	}
 
+	public async toggleUser(req: Request, res: Response, next: NextFunction) {
+		try {
+			const emailParameter = req.query.email as string;
+
+			if (emailParameter == null) {
+				return res.status(404).json('Please specify an ID in the parameters');
+			}
+
+			const objOrError = (await this.serviceInstance.toggleUser(emailParameter)) as Result<IUserDTO>;
+
+			if (!objOrError.isSuccess) return res.status(400).json(objOrError.error);
+
+			return res.status(200).json(objOrError.value);
+		} catch (e) {
+			return next(e);
+		}
+	}
+
 	public async deleteUser(req: Request, res: Response, next: NextFunction) {
 		try {
 			const emailParameter = req.query.email as string;

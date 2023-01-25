@@ -1,5 +1,5 @@
-import config from '../../config';
-import IUserController from '../controllers/IControllers/IUserController';
+import config from '../../../config';
+import IUserController from '../../controllers/IControllers/IUserController';
 
 import { celebrate, Joi } from 'celebrate';
 import { Router } from 'express';
@@ -41,6 +41,8 @@ export default (app: Router) => {
 		}),
 		(req, res, next) => controller.updateUser(req, res, next)
 	);
+
+	userRoute.patch('', (req, res, next) => controller.toggleUser(req, res, next));
 
 	userRoute.delete('', (req, res, next) => controller.deleteUser(req, res, next));
 };

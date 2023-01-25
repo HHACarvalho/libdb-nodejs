@@ -80,6 +80,21 @@ export default class UserService implements IUserService {
 		}
 	}
 
+	public async toggleUser(email: string): Promise<Result<IUserDTO>> {
+		try {
+			const obj = await this.repoInstance.getUser(email);
+
+			if (obj == null) return Result.fail<IUserDTO>('User not found');
+
+			obj.hidden = !obj.hidden;
+
+			const result = await this.repoInstance.save(obj);
+			return Result.ok<IUserDTO>(UserMapper.toDTO(result));
+		} catch (e) {
+			throw e;
+		}
+	}
+
 	public async deleteUser(email: string): Promise<Result<IUserDTO>> {
 		try {
 			const exists = await this.repoInstance.exists(email);

@@ -10,5 +10,7 @@ export default interface IUserService {
 
 	updateUser(dto: IUserDTO): Promise<Result<IUserDTO>>;
 
+	toggleUser(email: string): Promise<Result<IUserDTO>>;
+
 	deleteUser(email: string): Promise<Result<IUserDTO>>;
 }

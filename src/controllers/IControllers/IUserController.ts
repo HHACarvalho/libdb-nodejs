@@ -9,5 +9,7 @@ export default interface IUserController {
 
 	updateUser(req: Request, res: Response, next: NextFunction);
 
+	toggleUser(req: Request, res: Response, next: NextFunction);
+
 	deleteUser(req: Request, res: Response, next: NextFunction);
 }

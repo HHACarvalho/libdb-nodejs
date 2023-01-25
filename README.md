@@ -8,7 +8,7 @@
   - [x] Read
   - [x] Update
   - [x] Hard Delete
-- [ ] Soft delete
+- [x] Soft delete
 - [ ] User sign in/login
 - [ ] Use of JWT for requests
 - [x] Postman tests
