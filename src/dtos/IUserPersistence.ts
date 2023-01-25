@@ -1,8 +1,8 @@
-export default interface IEmployeeDTO {
+export default interface IUserPersistence {
+	domainId: string;
 	email: string;
 	firstName: string;
 	lastName: string;
 	role: string;
-	salary: number;
 	hidden: boolean;
 }

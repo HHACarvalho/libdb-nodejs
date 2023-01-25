@@ -1,11 +1,11 @@
-import employee from './employeeRoute';
+import user from './userRoute';
 
 import { Router } from 'express';
 
 export default () => {
 	const app = Router();
 
-	employee(app);
+	user(app);
 
 	return app;
 };

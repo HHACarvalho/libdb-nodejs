@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
-import IEmployeePersistence from '../dtos/IEmployeePersistence';
+import IUserPersistence from '../dtos/IUserPersistence';
 
-const employeeSchema = new mongoose.Schema(
+const userSchema = new mongoose.Schema(
 	{
 		domainId: {
 			type: String,
@@ -27,11 +27,6 @@ const employeeSchema = new mongoose.Schema(
 			required: [true, 'Role is required'],
 			index: true,
 		},
-		salary: {
-			type: Number,
-			required: [true, 'Salary is required'],
-			index: true,
-		},
 		hidden: {
 			type: Boolean,
 			required: [true, 'Hidden is required'],
@@ -43,4 +38,4 @@ const employeeSchema = new mongoose.Schema(
 	}
 );
 
-export default mongoose.model<IEmployeePersistence & mongoose.Document>('Employee', employeeSchema);
+export default mongoose.model<IUserPersistence & mongoose.Document>('User', userSchema);

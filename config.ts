@@ -21,30 +21,30 @@ export default {
 	port: 3000,
 
 	controllers: {
-		employee: {
-			name: 'employeeController',
-			path: '../../controllers/employeeController',
+		user: {
+			name: 'userController',
+			path: '../../controllers/userController',
 		},
 	},
 
 	services: {
-		employee: {
-			name: 'employeeService',
-			path: '../../services/employeeService',
+		user: {
+			name: 'userService',
+			path: '../../services/userService',
 		},
 	},
 
 	repos: {
-		employee: {
-			name: 'employeeRepo',
-			path: '../../repos/employeeRepo',
+		user: {
+			name: 'userRepo',
+			path: '../../repos/userRepo',
 		},
 	},
 
 	schemas: {
-		employee: {
-			name: 'employeeSchema',
-			path: '../../schemas/employeeSchema',
+		user: {
+			name: 'userSchema',
+			path: '../../schemas/userSchema',
 		},
 	},
 };
