@@ -296,7 +296,7 @@
 			"response": []
 		},
 		{
-			"name": "6. Delete",
+			"name": "6. Toggle",
 			"event": [
 				{
 					"listen": "test",
@@ -312,7 +312,103 @@
 							"    pm.expect(res.firstName).to.eql(\"Jimmy\");\r",
 							"    pm.expect(res.lastName).to.eql(\"McGill\");\r",
 							"    pm.expect(res.role).to.eql(\"admin\");\r",
-							"    pm.expect(res.hidden).to.eql(false);\r",
+							"    pm.expect(res.hidden).to.eql(true);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/user?email=email@email.com",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"user"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "email@email.com"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "7. Find",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"User found\", () => {\r",
+							"    const res = pm.response.json();\r",
+							"    pm.expect(res.email).to.eql(\"email@email.com\");\r",
+							"    pm.expect(res.firstName).to.eql(\"Jimmy\");\r",
+							"    pm.expect(res.lastName).to.eql(\"McGill\");\r",
+							"    pm.expect(res.role).to.eql(\"admin\");\r",
+							"    pm.expect(res.hidden).to.eql(true);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/user?email=email@email.com",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"user"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "email@email.com"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "8. Delete",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"User deleted successfully\", () => {\r",
+							"    const res = pm.response.json();\r",
+							"    pm.expect(res.email).to.eql(\"email@email.com\");\r",
+							"    pm.expect(res.firstName).to.eql(\"Jimmy\");\r",
+							"    pm.expect(res.lastName).to.eql(\"McGill\");\r",
+							"    pm.expect(res.role).to.eql(\"admin\");\r",
+							"    pm.expect(res.hidden).to.eql(true);\r",
 							"});"
 						],
 						"type": "text/javascript"
@@ -344,7 +440,7 @@
 			"response": []
 		},
 		{
-			"name": "7. Find",
+			"name": "9. Find",
 			"event": [
 				{
 					"listen": "test",
