@@ -12,12 +12,16 @@ export class UserRole extends ValueObject<IUserRole> {
 	}
 
 	public static create(role: string): Result<UserRole> {
-		const guardResult = Guard.againstNullOrUndefined(role, 'role');
+		let guardResult;
 
+		guardResult = Guard.againstNullOrUndefined(role, 'role');
 		if (!guardResult.succeeded) {
 			return Result.fail<UserRole>(guardResult.message);
-		} else if (!roles.includes(role)) {
-			return Result.fail<UserRole>('The chosen role does not exist.');
+		}
+
+		guardResult = Guard.isOneOf(role, roles, 'role')
+		if (!guardResult.succeeded) {
+			return Result.fail<UserRole>(guardResult.message);
 		}
 
 		return Result.ok<UserRole>(new UserRole({ value: role }));
