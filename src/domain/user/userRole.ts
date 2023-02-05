@@ -19,7 +19,7 @@ export class UserRole extends ValueObject<IUserRole> {
 			return Result.fail<UserRole>(guardResult.message);
 		}
 
-		guardResult = Guard.isOneOf(role, roles, 'role')
+		guardResult = Guard.isOneOf(role, roles, 'role');
 		if (!guardResult.succeeded) {
 			return Result.fail<UserRole>(guardResult.message);
 		}

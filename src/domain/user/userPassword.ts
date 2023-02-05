@@ -13,7 +13,6 @@ export class UserPassword extends ValueObject<IUserPassword> {
 
 	public static create(password: string): Result<UserPassword> {
 		const guardResult = Guard.againstNullOrUndefined(password, 'password');
-
 		if (!guardResult.succeeded) {
 			return Result.fail<UserPassword>(guardResult.message);
 		}

@@ -11,9 +11,8 @@ export class UserName extends ValueObject<IUserName> {
 		return this.props.value;
 	}
 
-	public static create(name: string): Result<UserName> {
-		const guardResult = Guard.againstNullOrUndefined(name, 'name');
-
+	public static create(name: string, argumentName: string): Result<UserName> {
+		const guardResult = Guard.againstNullOrUndefined(name, argumentName);
 		if (!guardResult.succeeded) {
 			return Result.fail<UserName>(guardResult.message);
 		}
