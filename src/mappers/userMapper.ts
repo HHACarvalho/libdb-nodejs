@@ -8,14 +8,16 @@ import IUserDTO from '../dtos/IUserDTO';
 import IUserPersistence from '../dtos/IUserPersistence';
 
 import { Document, Model } from 'mongoose';
+import { UserPassword } from '../domain/user/userPassword';
 
 export class UserMapper {
 	public static toDomain(schema: any | Model<IUserPersistence & Document>): User {
 		const objOrError = User.create(
 			{
 				email: UserEmail.create(schema.email).value,
-				firstName: UserName.create(schema.firstName).value,
-				lastName: UserName.create(schema.lastName).value,
+				password: UserPassword.create(schema.password).value,
+				firstName: UserName.create(schema.firstName, 'firstName').value,
+				lastName: UserName.create(schema.lastName, 'lastName').value,
 				role: UserRole.create(schema.role).value,
 				hidden: schema.hidden,
 			},
@@ -41,8 +43,9 @@ export class UserMapper {
 
 	public static toPersistence(user: User): IUserPersistence {
 		return {
-			domainId: user.id.toValue(),
+			_id: user.id.toValue(),
 			email: user.email.value,
+			password: user.password.value,
 			firstName: user.firstName.value,
 			lastName: user.lastName.value,
 			role: user.role.value,

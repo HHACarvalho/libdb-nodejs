@@ -26,6 +26,7 @@ export default class UserRepo implements IUserRepo {
 				return UserMapper.toDomain(persisted);
 			} else {
 				document.email = user.email.value;
+				document.password = user.password.value;
 				document.firstName = user.firstName.value;
 				document.lastName = user.lastName.value;
 				document.role = user.role.value;
@@ -41,24 +42,27 @@ export default class UserRepo implements IUserRepo {
 
 	public async getAllUsers(): Promise<User[]> {
 		const documents = await this.schema.find();
-
-		if (documents == null) return null;
+		if (documents == null) {
+			return null;
+		}
 
 		return documents.map((e) => UserMapper.toDomain(e));
 	}
 
 	public async getUser(email: string): Promise<User> {
 		const document = await this.schema.findOne({ email: email });
-
-		if (document == null) return null;
+		if (document == null) {
+			return null;
+		}
 
 		return UserMapper.toDomain(document);
 	}
 
 	public async deleteUser(email: string): Promise<User> {
 		const document = await this.schema.findOne({ email: email });
-
-		if (document == null) return null;
+		if (document == null) {
+			return null;
+		}
 
 		return UserMapper.toDomain(await document.remove());
 	}

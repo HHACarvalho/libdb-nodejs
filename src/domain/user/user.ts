@@ -3,11 +3,13 @@ import { EntityID } from '../../core/domain/EntityID';
 import { Guard } from '../../core/infrastructure/Guard';
 import { Result } from '../../core/infrastructure/Result';
 import { UserEmail } from './userEmail';
+import { UserPassword } from './userPassword';
 import { UserName } from './userName';
 import { UserRole } from './userRole';
 
 interface UserProps {
 	email: UserEmail;
+	password: UserPassword;
 	firstName: UserName;
 	lastName: UserName;
 	role: UserRole;
@@ -17,6 +19,10 @@ interface UserProps {
 export class User extends Entity<UserProps> {
 	get email(): UserEmail {
 		return this._props.email;
+	}
+
+	get password(): UserPassword {
+		return this._props.password;
 	}
 
 	get firstName(): UserName {
@@ -37,6 +43,10 @@ export class User extends Entity<UserProps> {
 
 	set email(value: UserEmail) {
 		this._props.email = value;
+	}
+
+	set password(value: UserPassword) {
+		this._props.password = value;
 	}
 
 	set firstName(value: UserName) {
@@ -62,6 +72,7 @@ export class User extends Entity<UserProps> {
 	public static create(props: UserProps, id?: EntityID): Result<User> {
 		const guardedProps = [
 			{ argument: props.email, argumentName: 'email' },
+			{ argument: props.password, argumentName: 'password' },
 			{ argument: props.firstName, argumentName: 'firstName' },
 			{ argument: props.lastName, argumentName: 'lastName' },
 			{ argument: props.role, argumentName: 'role' },
