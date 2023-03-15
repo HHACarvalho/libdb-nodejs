@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 
-if (!dotenv.config()) {
+if (dotenv.config().error) {
 	throw new Error("Couldn't find .env file.");
 }
 
@@ -25,12 +25,28 @@ export default {
 			name: 'userController',
 			path: '../../controllers/userController',
 		},
+		role: {
+			name: 'roleController',
+			path: '../../controllers/roleController',
+		},
+		movie: {
+			name: 'movieController',
+			path: '../../controllers/movieController',
+		},
 	},
 
 	services: {
 		user: {
 			name: 'userService',
 			path: '../../services/userService',
+		},
+		role: {
+			name: 'roleService',
+			path: '../../services/roleService',
+		},
+		movie: {
+			name: 'movieService',
+			path: '../../services/movieService',
 		},
 	},
 
@@ -39,12 +55,28 @@ export default {
 			name: 'userRepo',
 			path: '../../repos/userRepo',
 		},
+		role: {
+			name: 'roleRepo',
+			path: '../../repos/roleRepo',
+		},
+		movie: {
+			name: 'movieRepo',
+			path: '../../repos/movieRepo',
+		},
 	},
 
 	schemas: {
 		user: {
 			name: 'userSchema',
 			path: '../../schemas/userSchema',
+		},
+		role: {
+			name: 'roleSchema',
+			path: '../../schemas/roleSchema',
+		},
+		movie: {
+			name: 'movieSchema',
+			path: '../../schemas/movieSchema',
 		},
 	},
 };

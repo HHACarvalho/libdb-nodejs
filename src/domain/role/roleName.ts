@@ -11,12 +11,12 @@ export class RoleName extends ValueObject<IRoleName> {
 		return this.props.value;
 	}
 
-	public static create(roleName: string): Result<RoleName> {
-		const guardResult = Guard.againstNullOrUndefined(roleName, 'roleName');
+	public static create(value: string): Result<RoleName> {
+		const guardResult = Guard.againstNullOrUndefined(value, 'roleName');
 		if (!guardResult.succeeded) {
 			return Result.fail<RoleName>(guardResult.message);
 		}
 
-		return Result.ok<RoleName>(new RoleName({ value: roleName }));
+		return Result.ok<RoleName>(new RoleName({ value: value }));
 	}
 }

@@ -3,5 +3,4 @@ export default interface IUserDTO {
 	firstName: string;
 	lastName: string;
 	role: string;
-	hidden: boolean;
 }

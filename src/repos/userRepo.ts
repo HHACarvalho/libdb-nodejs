@@ -16,28 +16,23 @@ export default class UserRepo implements IUserRepo {
 		return !!document === true;
 	}
 
-	public async save(user: User): Promise<User> {
-		const document = await this.schema.findOne({ email: user.email.value });
-
+	public async createUser(user: User): Promise<User> {
 		try {
-			if (document == null) {
-				const persistence = UserMapper.toPersistence(user);
-				const persisted = await this.schema.create(persistence);
-				return UserMapper.toDomain(persisted);
-			} else {
-				document.email = user.email.value;
-				document.password = user.password.value;
-				document.firstName = user.firstName.value;
-				document.lastName = user.lastName.value;
-				document.role = user.role.value;
-				document.hidden = user.hidden;
-
-				const persisted = await document.save();
-				return UserMapper.toDomain(persisted);
-			}
+			const persistence = UserMapper.toPersistence(user);
+			const persisted = await this.schema.create(persistence);
+			return UserMapper.toDomain(persisted);
 		} catch (e) {
 			throw e;
 		}
+	}
+
+	public async getUser(email: string): Promise<User> {
+		const document = await this.schema.findOne({ email: email });
+		if (document == null) {
+			return null;
+		}
+
+		return UserMapper.toDomain(document);
 	}
 
 	public async getAllUsers(): Promise<User[]> {
@@ -49,13 +44,21 @@ export default class UserRepo implements IUserRepo {
 		return documents.map((e) => UserMapper.toDomain(e));
 	}
 
-	public async getUser(email: string): Promise<User> {
-		const document = await this.schema.findOne({ email: email });
-		if (document == null) {
-			return null;
-		}
+	public async updateUser(user: User): Promise<User> {
+		try {
+			const document = await this.schema.findOne({ email: user.email.value });
 
-		return UserMapper.toDomain(document);
+			document.email = user.email.value;
+			document.password = user.password.value;
+			document.firstName = user.firstName.value;
+			document.lastName = user.lastName.value;
+			document.role = user.role.value;
+
+			const persisted = await document.save();
+			return UserMapper.toDomain(persisted);
+		} catch (e) {
+			throw e;
+		}
 	}
 
 	public async deleteUser(email: string): Promise<User> {

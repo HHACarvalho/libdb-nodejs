@@ -5,16 +5,16 @@ import bodyParser from 'body-parser';
 import express from 'express';
 
 export default (expressApp: express.Application) => {
-	// Status check
-	expressApp.get('/status', (req, res, next) => {
-		res.status(200).json('Ok');
-	});
-
-	// Transforms the raw string of req.body into json
+	// Parses req.body into json
 	expressApp.use(bodyParser.json());
 
 	// Load all routes
 	expressApp.use(config.apiPrefix, routes());
+
+	// Status check
+	expressApp.get('/status', (req, res, next) => {
+		res.status(200).json('Ok');
+	});
 
 	// Route not found
 	expressApp.use((req, res, next) => {

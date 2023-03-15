@@ -56,7 +56,7 @@ export class Guard {
 
 	public static isOneOf(value: any, validValues: any[], argumentName: string): IGuardResult {
 		for (let validValue of validValues) {
-			if (value === validValue) {
+			if (validValue === value) {
 				return { succeeded: true };
 			}
 		}
@@ -65,5 +65,16 @@ export class Guard {
 			succeeded: false,
 			message: `Guard: ${argumentName} isn't one of ${JSON.stringify(validValues)}. Got "${value}"`,
 		};
+	}
+
+	public static isInRange(value: number, min: number, max: number, argumentName: string): IGuardResult {
+		if (min > value || value > max) {
+			return {
+				succeeded: false,
+				message: `Guard: ${argumentName} isn't between ${min} and ${max}. Got "${value}"`,
+			};
+		}
+
+		return { succeeded: true };
 	}
 }

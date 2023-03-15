@@ -13,7 +13,6 @@ interface UserProps {
 	firstName: UserName;
 	lastName: UserName;
 	role: UserRole;
-	hidden: boolean;
 }
 
 export class User extends Entity<UserProps> {
@@ -37,10 +36,6 @@ export class User extends Entity<UserProps> {
 		return this._props.role;
 	}
 
-	get hidden(): boolean {
-		return this._props.hidden;
-	}
-
 	set email(value: UserEmail) {
 		this._props.email = value;
 	}
@@ -61,30 +56,24 @@ export class User extends Entity<UserProps> {
 		this._props.role = value;
 	}
 
-	set hidden(value: boolean) {
-		this._props.hidden = value;
-	}
-
 	private constructor(props: UserProps, id?: EntityID) {
 		super(props, id);
 	}
 
 	public static create(props: UserProps, id?: EntityID): Result<User> {
 		const guardedProps = [
-			{ argument: props.email, argumentName: 'email' },
-			{ argument: props.password, argumentName: 'password' },
-			{ argument: props.firstName, argumentName: 'firstName' },
-			{ argument: props.lastName, argumentName: 'lastName' },
-			{ argument: props.role, argumentName: 'role' },
-			{ argument: props.hidden, argumentName: 'hidden' },
+			{ argument: props.email, argumentName: 'userEmail' },
+			{ argument: props.password, argumentName: 'userPassword' },
+			{ argument: props.firstName, argumentName: 'userFirstName' },
+			{ argument: props.lastName, argumentName: 'userLastName' },
+			{ argument: props.role, argumentName: 'userRole' },
 		];
 
 		const guardResult = Guard.againstNullOrUndefinedBulk(guardedProps);
-
 		if (!guardResult.succeeded) {
 			return Result.fail<User>(guardResult.message);
-		} else {
-			return Result.ok<User>(new User({ ...props }, id));
 		}
+
+		return Result.ok<User>(new User({ ...props }, id));
 	}
 }

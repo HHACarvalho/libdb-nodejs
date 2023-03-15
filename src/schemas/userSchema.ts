@@ -1,5 +1,6 @@
-import mongoose from 'mongoose';
 import IUserPersistence from '../dtos/IUserPersistence';
+
+import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema(
 	{
@@ -25,10 +26,6 @@ const userSchema = new mongoose.Schema(
 		role: {
 			type: String,
 			required: [true, 'Role is required'],
-		},
-		hidden: {
-			type: Boolean,
-			required: [true, 'Hidden is required'],
 		},
 	},
 	{

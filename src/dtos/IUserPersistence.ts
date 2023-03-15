@@ -5,5 +5,4 @@ export default interface IUserPersistence {
 	firstName: string;
 	lastName: string;
 	role: string;
-	hidden: boolean;
 }
