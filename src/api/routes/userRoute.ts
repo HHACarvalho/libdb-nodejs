@@ -15,18 +15,23 @@ export default (app: Router) => {
 	const schema = celebrate({
 		[Segments.BODY]: Joi.object().keys({
 			email: Joi.string().email().required(),
-			password: Joi.string().required(),
+			password: Joi.string().min(8).max(32).required(),
 			firstName: Joi.string().alphanum().min(2).max(32).required(),
 			lastName: Joi.string().alphanum().min(2).max(32).required(),
 			role: Joi.string().required(),
 		}),
 	});
 
-	userRoute.post('', schema, (req, res, next) => controller.createUser(req, res, next));
+	const loginSchema = celebrate({
+		[Segments.BODY]: Joi.object().keys({
+			email: Joi.string().email().required(),
+			password: Joi.string().min(8).max(32).required(),
+		}),
+	});
 
-	userRoute.get('', (req, res, next) => controller.getUser(req, res, next));
+	userRoute.post('', schema, (req, res, next) => controller.signUp(req, res, next));
 
-	userRoute.get('/all', (req, res, next) => controller.getAllUsers(req, res, next));
+	userRoute.get('', loginSchema, (req, res, next) => controller.login(req, res, next));
 
 	userRoute.put('', schema, (req, res, next) => controller.updateUser(req, res, next));
 

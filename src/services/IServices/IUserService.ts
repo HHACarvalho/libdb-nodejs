@@ -2,11 +2,9 @@ import { Result } from '../../core/infrastructure/Result';
 import IUserDTO from '../../dtos/IUserDTO';
 
 export default interface IUserService {
-	createUser(dto: any): Promise<Result<IUserDTO>>;
+	signUp(dto: any): Promise<Result<IUserDTO>>;
 
-	getUser(email: string): Promise<Result<IUserDTO>>;
-
-	getAllUsers(): Promise<Result<IUserDTO[]>>;
+	login(dto: any): Promise<Result<IUserDTO>>;
 
 	updateUser(dto: any): Promise<Result<IUserDTO>>;
 
