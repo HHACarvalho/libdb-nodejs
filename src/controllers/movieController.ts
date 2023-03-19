@@ -1,8 +1,8 @@
 import config from '../../config';
+import { Result } from '../core/infrastructure/Result';
 import IMovieController from './IControllers/IMovieController';
 import IMovieDTO from '../dtos/IMovieDTO';
 import IMovieService from '../services/IServices/IMovieService';
-import { Result } from '../core/infrastructure/Result';
 
 import { NextFunction, Request, Response } from 'express';
 import { Inject, Service } from 'typedi';

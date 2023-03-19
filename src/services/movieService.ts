@@ -17,7 +17,7 @@ export default class MovieService implements IMovieService {
 
 	public async createMovie(dto: any): Promise<Result<IMovieDTO>> {
 		try {
-			const objOrError = await Movie.create({
+			const objOrError = Movie.create({
 				title: MovieTitle.create(dto.title).value,
 				director: MovieDirector.create(dto.director).value,
 				releaseYear: MovieReleaseYear.create(dto.releaseYear).value,

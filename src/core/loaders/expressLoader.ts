@@ -12,7 +12,7 @@ export default (expressApp: express.Application) => {
 	expressApp.use(config.apiPrefix, routes());
 
 	// Status check
-	expressApp.get('/status', (req, res, next) => {
+	expressApp.get('/status', (req, res) => {
 		res.status(200).json('Ok');
 	});
 

@@ -21,7 +21,7 @@ export default class RoleService implements IRoleService {
 				return Result.fail<IRoleDTO>('Role with name=' + dto.name + ' already exists');
 			}
 
-			const objOrError = await Role.create({
+			const objOrError = Role.create({
 				name: RoleName.create(dto.name).value,
 				description: RoleDescription.create(dto.description).value,
 			});

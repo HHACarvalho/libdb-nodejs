@@ -12,14 +12,7 @@ export class UserRole extends ValueObject<IUserRole> {
 	}
 
 	public static create(role: string): Result<UserRole> {
-		let guardResult;
-
-		guardResult = Guard.againstNullOrUndefined(role, 'role');
-		if (!guardResult.succeeded) {
-			return Result.fail<UserRole>(guardResult.message);
-		}
-
-		guardResult = Guard.isOneOf(role, roles, 'role');
+		const guardResult = Guard.againstNullOrUndefined(role, 'role');
 		if (!guardResult.succeeded) {
 			return Result.fail<UserRole>(guardResult.message);
 		}
@@ -27,5 +20,3 @@ export class UserRole extends ValueObject<IUserRole> {
 		return Result.ok<UserRole>(new UserRole({ value: role }));
 	}
 }
-
-const roles = ['default', 'moderator', 'admin'];

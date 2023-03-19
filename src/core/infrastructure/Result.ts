@@ -1,22 +1,13 @@
 export class Result<T> {
-	public isSuccess: boolean;
-	private readonly _error: string;
-	private readonly _value: T;
+	public readonly isSuccess: boolean;
+	public readonly error: string;
+	public readonly value: T;
 
 	constructor(isSuccess: boolean, error?: string, value?: T) {
 		this.isSuccess = isSuccess;
-		this._error = error;
-		this._value = value;
-
+		this.error = error;
+		this.value = value;
 		Object.freeze(this);
-	}
-
-	get error(): string {
-		return this._error;
-	}
-
-	get value(): T {
-		return this._value;
 	}
 
 	public static ok<U>(value?: U): Result<U> {

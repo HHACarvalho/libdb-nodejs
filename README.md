@@ -1,15 +1,12 @@
-# bulletproof-express
+# Bulletproof Express API
+This is REST API built with Express and using the onion architecture
 
-### Express REST API
+### Compiles and hot-reloads for development
+```
+npm start
+```
 
-### Todo list
-- [x] Basic CRUD
-  - [x] Create
-  - [x] Read
-  - [x] Update
-  - [x] Hard Delete
-- [x] Soft delete
-- [ ] User sign in/login
-- [ ] Use of JWT for requests
-- [x] Postman tests
-- [ ] Unit tests
+### Compiles for production
+```
+npm build
+```

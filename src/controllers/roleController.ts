@@ -1,8 +1,8 @@
 import config from '../../config';
+import { Result } from '../core/infrastructure/Result';
 import IRoleController from './IControllers/IRoleController';
 import IRoleDTO from '../dtos/IRoleDTO';
 import IRoleService from '../services/IServices/IRoleService';
-import { Result } from '../core/infrastructure/Result';
 
 import { NextFunction, Request, Response } from 'express';
 import { Inject, Service } from 'typedi';
