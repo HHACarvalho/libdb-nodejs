@@ -30,6 +30,7 @@ export class MovieMapper {
 
 	public static toDTO(movie: Movie): IMovieDTO {
 		return {
+			id: movie.id.toValue(),
 			title: movie.title.value,
 			director: movie.director.value,
 			releaseYear: movie.releaseYear.value,
