@@ -24,27 +24,9 @@ export default class RoleController implements IRoleController {
 		}
 	}
 
-	public async getRole(req: Request, res: Response, next: NextFunction) {
+	public async findAllRoles(req: Request, res: Response, next: NextFunction) {
 		try {
-			const nameParameter = req.query.name as string;
-			if (nameParameter == null) {
-				return res.status(404).json('Please specify an ID in the parameters');
-			}
-
-			const objOrError = (await this.serviceInstance.getRole(nameParameter)) as Result<IRoleDTO>;
-			if (!objOrError.isSuccess) {
-				return res.status(404).json(objOrError.error);
-			}
-
-			return res.status(200).json(objOrError.value);
-		} catch (e) {
-			return next(e);
-		}
-	}
-
-	public async getAllRoles(req: Request, res: Response, next: NextFunction) {
-		try {
-			const objOrError = (await this.serviceInstance.getAllRoles()) as Result<IRoleDTO[]>;
+			const objOrError = (await this.serviceInstance.findAllRoles()) as Result<IRoleDTO[]>;
 			if (!objOrError.isSuccess) {
 				return res.status(404).json(objOrError.error);
 			}
@@ -71,9 +53,6 @@ export default class RoleController implements IRoleController {
 	public async deleteRole(req: Request, res: Response, next: NextFunction) {
 		try {
 			const nameParameter = req.query.name as string;
-			if (nameParameter == null) {
-				return res.status(404).json('Please specify an ID in the parameters');
-			}
 
 			const objOrError = (await this.serviceInstance.deleteRole(nameParameter)) as Result<IRoleDTO>;
 			if (!objOrError.isSuccess) {

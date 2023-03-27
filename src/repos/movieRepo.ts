@@ -12,22 +12,22 @@ export default class MovieRepo implements IMovieRepo {
 	constructor(@Inject(config.schemas.movie.name) private schema: Model<IMoviePersistence & Document>) {}
 
 	public async exists(id: string): Promise<boolean> {
-		const document = await this.schema.findOne({ id: id });
+		const document = await this.schema.findOne({ _id: id });
 		return !!document === true;
 	}
 
 	public async createMovie(movie: Movie): Promise<Movie> {
 		try {
 			const persistence = MovieMapper.toPersistence(movie);
-			const persisted = await this.schema.create(persistence);
-			return MovieMapper.toDomain(persisted);
+			const document = await this.schema.create(persistence);
+			return MovieMapper.toDomain(document);
 		} catch (e) {
 			throw e;
 		}
 	}
 
-	public async getMovie(id: string): Promise<Movie> {
-		const document = await this.schema.findOne({ id: id });
+	public async findOneMovie(id: string): Promise<Movie> {
+		const document = await this.schema.findOne({ _id: id });
 		if (document == null) {
 			return null;
 		}
@@ -35,7 +35,18 @@ export default class MovieRepo implements IMovieRepo {
 		return MovieMapper.toDomain(document);
 	}
 
-	public async getAllMovies(): Promise<Movie[]> {
+	public async findMovies(title: string): Promise<Movie[]> {
+		const titleQuery = new RegExp(`${title}`, 'i');
+
+		const documents = await this.schema.find({ title: titleQuery });
+		if (documents == null) {
+			return null;
+		}
+
+		return documents.map((e) => MovieMapper.toDomain(e));
+	}
+
+	public async findAllMovies(): Promise<Movie[]> {
 		const documents = await this.schema.find();
 		if (documents == null) {
 			return null;
@@ -46,22 +57,21 @@ export default class MovieRepo implements IMovieRepo {
 
 	public async updateMovie(movie: Movie): Promise<Movie> {
 		try {
-			const document = await this.schema.findOne({ id: movie.id.toValue() });
+			const document = await this.schema.findOne({ _id: movie.id.toValue() });
 
 			document.title = movie.title.value;
 			document.director = movie.director.value;
 			document.releaseYear = movie.releaseYear.value;
 			document.hidden = movie.hidden;
 
-			const persisted = await document.save();
-			return MovieMapper.toDomain(persisted);
+			return MovieMapper.toDomain(await document.save());
 		} catch (e) {
 			throw e;
 		}
 	}
 
 	public async deleteMovie(id: string): Promise<Movie> {
-		const document = await this.schema.findOne({ id: id });
+		const document = await this.schema.findOne({ _id: id });
 		if (document == null) {
 			return null;
 		}

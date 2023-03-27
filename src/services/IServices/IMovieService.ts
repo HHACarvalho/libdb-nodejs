@@ -4,9 +4,11 @@ import IMovieDTO from '../../dtos/IMovieDTO';
 export default interface IMovieService {
 	createMovie(dto: any): Promise<Result<IMovieDTO>>;
 
-	getMovie(id: string): Promise<Result<IMovieDTO>>;
+	findOneMovie(id: string): Promise<Result<IMovieDTO>>;
 
-	getAllMovies(): Promise<Result<IMovieDTO[]>>;
+	findMovies(title: string): Promise<Result<IMovieDTO[]>>;
+
+	findAllMovies(): Promise<Result<IMovieDTO[]>>;
 
 	updateMovie(dto: any): Promise<Result<IMovieDTO>>;
 

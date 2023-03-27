@@ -19,14 +19,14 @@ export default class RoleRepo implements IRoleRepo {
 	public async createRole(role: Role): Promise<Role> {
 		try {
 			const persistence = RoleMapper.toPersistence(role);
-			const persisted = await this.schema.create(persistence);
-			return RoleMapper.toDomain(persisted);
+			const document = await this.schema.create(persistence);
+			return RoleMapper.toDomain(document);
 		} catch (e) {
 			throw e;
 		}
 	}
 
-	public async getRole(name: string): Promise<Role> {
+	public async findRole(name: string): Promise<Role> {
 		const document = await this.schema.findOne({ name: name });
 		if (document == null) {
 			return null;
@@ -35,7 +35,7 @@ export default class RoleRepo implements IRoleRepo {
 		return RoleMapper.toDomain(document);
 	}
 
-	public async getAllRoles(): Promise<Role[]> {
+	public async findAllRoles(): Promise<Role[]> {
 		const documents = await this.schema.find();
 		if (documents == null) {
 			return null;

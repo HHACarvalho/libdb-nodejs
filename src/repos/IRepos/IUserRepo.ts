@@ -5,9 +5,7 @@ export default interface IUserRepo {
 
 	createUser(user: User): Promise<User>;
 
-	getUser(email: string): Promise<User>;
-
-	getAllUsers(): Promise<User[]>;
+	findUser(email: string): Promise<User>;
 
 	updateUser(user: User): Promise<User>;
 

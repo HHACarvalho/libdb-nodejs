@@ -53,9 +53,6 @@ export default class UserController implements IUserController {
 	public async deleteUser(req: Request, res: Response, next: NextFunction) {
 		try {
 			const emailParameter = req.query.email as string;
-			if (emailParameter == null) {
-				return res.status(404).json('Please specify an ID in the parameters');
-			}
 
 			const objOrError = (await this.serviceInstance.deleteUser(emailParameter)) as Result<IUserDTO>;
 			if (!objOrError.isSuccess) {

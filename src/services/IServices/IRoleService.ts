@@ -4,9 +4,7 @@ import IRoleDTO from '../../dtos/IRoleDTO';
 export default interface IRoleService {
 	createRole(dto: any): Promise<Result<IRoleDTO>>;
 
-	getRole(name: string): Promise<Result<IRoleDTO>>;
-
-	getAllRoles(): Promise<Result<IRoleDTO[]>>;
+	findAllRoles(): Promise<Result<IRoleDTO[]>>;
 
 	updateRole(dto: any): Promise<Result<IRoleDTO>>;
 

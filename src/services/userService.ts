@@ -36,18 +36,18 @@ export default class UserService implements IUserService {
 
 			const hashedPassword = await bcrypt.hash(dto.password, 10);
 
-			const objOrError = User.create({
+			const obj = User.create({
 				email: UserEmail.create(dto.email).value,
 				password: UserPassword.create(hashedPassword).value,
 				firstName: UserName.create(dto.firstName, 'firstName').value,
 				lastName: UserName.create(dto.lastName, 'lastName').value,
 				role: UserRole.create(dto.role).value,
 			});
-			if (!objOrError.isSuccess) {
-				return Result.fail<IUserDTO>(objOrError.error);
+			if (!obj.isSuccess) {
+				return Result.fail<IUserDTO>(obj.error);
 			}
 
-			const result = await this.userRepoInstance.createUser(objOrError.value);
+			const result = await this.userRepoInstance.createUser(obj.value);
 			return Result.ok<IUserDTO>(UserMapper.toDTO(result));
 		} catch (e) {
 			throw e;
@@ -56,7 +56,7 @@ export default class UserService implements IUserService {
 
 	public async login(dto: any): Promise<Result<IUserDTO>> {
 		try {
-			const obj = await this.userRepoInstance.getUser(dto.email);
+			const obj = await this.userRepoInstance.findUser(dto.email);
 			if (obj == null) {
 				return Result.fail<IUserDTO>('No user with email=' + dto.email + ' was found');
 			}
@@ -74,7 +74,7 @@ export default class UserService implements IUserService {
 
 	public async updateUser(dto: any): Promise<Result<IUserDTO>> {
 		try {
-			const obj = await this.userRepoInstance.getUser(dto.email);
+			const obj = await this.userRepoInstance.findUser(dto.email);
 			if (obj == null) {
 				return Result.fail<IUserDTO>('No user with email=' + dto.email + ' was found');
 			}

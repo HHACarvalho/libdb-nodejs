@@ -19,13 +19,17 @@ export default (app: Router) => {
 		}),
 	});
 
+	const schemaNameQuery = celebrate({
+		[Segments.QUERY]: Joi.object().keys({
+			name: Joi.string().min(2).max(32).required(),
+		}),
+	});
+
 	roleRoute.post('', schema, (req, res, next) => controller.createRole(req, res, next));
 
-	roleRoute.get('', (req, res, next) => controller.getRole(req, res, next));
-
-	roleRoute.get('/all', (req, res, next) => controller.getAllRoles(req, res, next));
+	roleRoute.get('/all', (req, res, next) => controller.findAllRoles(req, res, next));
 
 	roleRoute.put('', schema, (req, res, next) => controller.updateRole(req, res, next));
 
-	roleRoute.delete('', (req, res, next) => controller.deleteRole(req, res, next));
+	roleRoute.delete('', schemaNameQuery, (req, res, next) => controller.deleteRole(req, res, next));
 };

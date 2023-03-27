@@ -29,11 +29,17 @@ export default (app: Router) => {
 		}),
 	});
 
+	const schemaEmailQuery = celebrate({
+		[Segments.QUERY]: Joi.object().keys({
+			email: Joi.string().email().required(),
+		}),
+	});
+
 	userRoute.post('', schema, (req, res, next) => controller.signUp(req, res, next));
 
 	userRoute.get('', loginSchema, (req, res, next) => controller.login(req, res, next));
 
 	userRoute.put('', schema, (req, res, next) => controller.updateUser(req, res, next));
 
-	userRoute.delete('', (req, res, next) => controller.deleteUser(req, res, next));
+	userRoute.delete('', schemaEmailQuery, (req, res, next) => controller.deleteUser(req, res, next));
 };

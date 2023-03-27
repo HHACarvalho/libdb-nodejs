@@ -5,9 +5,9 @@ export default interface IRoleRepo {
 
 	createRole(role: Role): Promise<Role>;
 
-	getRole(name: string): Promise<Role>;
+	findRole(name: string): Promise<Role>;
 
-	getAllRoles(): Promise<Role[]>;
+	findAllRoles(): Promise<Role[]>;
 
 	updateRole(role: Role): Promise<Role>;
 

@@ -5,9 +5,11 @@ export default interface IMovieRepo {
 
 	createMovie(movie: Movie): Promise<Movie>;
 
-	getMovie(id: string): Promise<Movie>;
+	findOneMovie(id: string): Promise<Movie>;
 
-	getAllMovies(): Promise<Movie[]>;
+	findMovies(title: string): Promise<Movie[]>;
+
+	findAllMovies(): Promise<Movie[]>;
 
 	updateMovie(movie: Movie): Promise<Movie>;
 

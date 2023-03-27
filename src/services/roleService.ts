@@ -16,43 +16,29 @@ export default class RoleService implements IRoleService {
 
 	public async createRole(dto: any): Promise<Result<IRoleDTO>> {
 		try {
-			const exists = await this.repoInstance.exists(dto.name);
-			if (exists) {
+			const roleExists = await this.repoInstance.exists(dto.name);
+			if (roleExists) {
 				return Result.fail<IRoleDTO>('Role with name=' + dto.name + ' already exists');
 			}
 
-			const objOrError = Role.create({
+			const obj = Role.create({
 				name: RoleName.create(dto.name).value,
 				description: RoleDescription.create(dto.description).value,
 			});
-
-			if (!objOrError.isSuccess) {
-				return Result.fail<IRoleDTO>(objOrError.error);
+			if (!obj.isSuccess) {
+				return Result.fail<IRoleDTO>(obj.error);
 			}
 
-			const result = await this.repoInstance.createRole(objOrError.value);
+			const result = await this.repoInstance.createRole(obj.value);
 			return Result.ok<IRoleDTO>(RoleMapper.toDTO(result));
 		} catch (e) {
 			throw e;
 		}
 	}
 
-	public async getRole(name: string): Promise<Result<IRoleDTO>> {
+	public async findAllRoles(): Promise<Result<IRoleDTO[]>> {
 		try {
-			const obj = await this.repoInstance.getRole(name);
-			if (obj == null) {
-				return Result.fail<IRoleDTO>('No role with name=' + name + ' was found');
-			}
-
-			return Result.ok<IRoleDTO>(RoleMapper.toDTO(obj));
-		} catch (e) {
-			throw e;
-		}
-	}
-
-	public async getAllRoles(): Promise<Result<IRoleDTO[]>> {
-		try {
-			const list = await this.repoInstance.getAllRoles();
+			const list = await this.repoInstance.findAllRoles();
 			if (list == null) {
 				return Result.fail<IRoleDTO[]>('There are no roles');
 			}
@@ -65,7 +51,7 @@ export default class RoleService implements IRoleService {
 
 	public async updateRole(dto: any): Promise<Result<IRoleDTO>> {
 		try {
-			const obj = await this.repoInstance.getRole(dto.name);
+			const obj = await this.repoInstance.findRole(dto.name);
 			if (obj == null) {
 				return Result.fail<IRoleDTO>('No role with name=' + dto.name + ' was found');
 			}
@@ -82,8 +68,8 @@ export default class RoleService implements IRoleService {
 
 	public async deleteRole(name: string): Promise<Result<IRoleDTO>> {
 		try {
-			const exists = await this.repoInstance.exists(name);
-			if (!exists) {
+			const roleExists = await this.repoInstance.exists(name);
+			if (!roleExists) {
 				return Result.fail<IRoleDTO>('No role with name=' + name + ' was found');
 			}
 

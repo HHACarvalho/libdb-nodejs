@@ -19,29 +19,20 @@ export default class UserRepo implements IUserRepo {
 	public async createUser(user: User): Promise<User> {
 		try {
 			const persistence = UserMapper.toPersistence(user);
-			const persisted = await this.schema.create(persistence);
-			return UserMapper.toDomain(persisted);
+			const document = await this.schema.create(persistence);
+			return UserMapper.toDomain(document);
 		} catch (e) {
 			throw e;
 		}
 	}
 
-	public async getUser(email: string): Promise<User> {
+	public async findUser(email: string): Promise<User> {
 		const document = await this.schema.findOne({ email: email });
 		if (document == null) {
 			return null;
 		}
 
 		return UserMapper.toDomain(document);
-	}
-
-	public async getAllUsers(): Promise<User[]> {
-		const documents = await this.schema.find();
-		if (documents == null) {
-			return null;
-		}
-
-		return documents.map((e) => UserMapper.toDomain(e));
 	}
 
 	public async updateUser(user: User): Promise<User> {

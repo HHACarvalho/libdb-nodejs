@@ -24,14 +24,11 @@ export default class MovieController implements IMovieController {
 		}
 	}
 
-	public async getMovie(req: Request, res: Response, next: NextFunction) {
+	public async findOneMovie(req: Request, res: Response, next: NextFunction) {
 		try {
 			const idParameter = req.query.id as string;
-			if (idParameter == null) {
-				return res.status(404).json('Please specify an ID in the parameters');
-			}
 
-			const objOrError = (await this.serviceInstance.getMovie(idParameter)) as Result<IMovieDTO>;
+			const objOrError = (await this.serviceInstance.findOneMovie(idParameter)) as Result<IMovieDTO>;
 			if (!objOrError.isSuccess) {
 				return res.status(404).json(objOrError.error);
 			}
@@ -42,9 +39,24 @@ export default class MovieController implements IMovieController {
 		}
 	}
 
-	public async getAllMovies(req: Request, res: Response, next: NextFunction) {
+	public async findMovies(req: Request, res: Response, next: NextFunction) {
 		try {
-			const objOrError = (await this.serviceInstance.getAllMovies()) as Result<IMovieDTO[]>;
+			const titleParameter = req.query.title as string;
+
+			const objOrError = (await this.serviceInstance.findMovies(titleParameter)) as Result<IMovieDTO[]>;
+			if (!objOrError.isSuccess) {
+				return res.status(404).json(objOrError.error);
+			}
+
+			return res.status(200).json(objOrError.value);
+		} catch (e) {
+			return next(e);
+		}
+	}
+
+	public async findAllMovies(req: Request, res: Response, next: NextFunction) {
+		try {
+			const objOrError = (await this.serviceInstance.findAllMovies()) as Result<IMovieDTO[]>;
 			if (!objOrError.isSuccess) {
 				return res.status(404).json(objOrError.error);
 			}
@@ -68,14 +80,11 @@ export default class MovieController implements IMovieController {
 		}
 	}
 
-	public async toggleMovie(req: Request, res: Response, next: NextFunction) {
+	public async deleteMovie(req: Request, res: Response, next: NextFunction) {
 		try {
 			const idParameter = req.query.id as string;
-			if (idParameter == null) {
-				return res.status(404).json('Please specify an ID in the parameters');
-			}
 
-			const objOrError = (await this.serviceInstance.toggleMovie(idParameter)) as Result<IMovieDTO>;
+			const objOrError = (await this.serviceInstance.deleteMovie(idParameter)) as Result<IMovieDTO>;
 			if (!objOrError.isSuccess) {
 				return res.status(400).json(objOrError.error);
 			}
@@ -86,14 +95,11 @@ export default class MovieController implements IMovieController {
 		}
 	}
 
-	public async deleteMovie(req: Request, res: Response, next: NextFunction) {
+	public async toggleMovie(req: Request, res: Response, next: NextFunction) {
 		try {
 			const idParameter = req.query.id as string;
-			if (idParameter == null) {
-				return res.status(404).json('Please specify an ID in the parameters');
-			}
 
-			const objOrError = (await this.serviceInstance.deleteMovie(idParameter)) as Result<IMovieDTO>;
+			const objOrError = (await this.serviceInstance.toggleMovie(idParameter)) as Result<IMovieDTO>;
 			if (!objOrError.isSuccess) {
 				return res.status(400).json(objOrError.error);
 			}

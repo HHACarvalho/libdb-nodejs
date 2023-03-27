@@ -5,6 +5,7 @@ import { MovieDirector } from '../domain/movie/movieDirector';
 import { MovieReleaseYear } from '../domain/movie/movieReleaseYear';
 import { MovieMapper } from '../mappers/movieMapper';
 import { Result } from '../core/infrastructure/Result';
+import { EntityID } from '../core/domain/EntityID';
 import IMovieDTO from '../dtos/IMovieDTO';
 import IMovieRepo from '../repos/IRepos/IMovieRepo';
 import IMovieService from './IServices/IMovieService';
@@ -17,27 +18,29 @@ export default class MovieService implements IMovieService {
 
 	public async createMovie(dto: any): Promise<Result<IMovieDTO>> {
 		try {
-			const objOrError = Movie.create({
-				title: MovieTitle.create(dto.title).value,
-				director: MovieDirector.create(dto.director).value,
-				releaseYear: MovieReleaseYear.create(dto.releaseYear).value,
-				hidden: false,
-			});
-
-			if (!objOrError.isSuccess) {
-				return Result.fail<IMovieDTO>(objOrError.error);
+			const obj = Movie.create(
+				{
+					title: MovieTitle.create(dto.title).value,
+					director: MovieDirector.create(dto.director).value,
+					releaseYear: MovieReleaseYear.create(dto.releaseYear).value,
+					hidden: false,
+				},
+				new EntityID(dto.id)
+			);
+			if (!obj.isSuccess) {
+				return Result.fail<IMovieDTO>(obj.error);
 			}
 
-			const result = await this.repoInstance.createMovie(objOrError.value);
+			const result = await this.repoInstance.createMovie(obj.value);
 			return Result.ok<IMovieDTO>(MovieMapper.toDTO(result));
 		} catch (e) {
 			throw e;
 		}
 	}
 
-	public async getMovie(id: string): Promise<Result<IMovieDTO>> {
+	public async findOneMovie(id: string): Promise<Result<IMovieDTO>> {
 		try {
-			const obj = await this.repoInstance.getMovie(id);
+			const obj = await this.repoInstance.findOneMovie(id);
 			if (obj == null) {
 				return Result.fail<IMovieDTO>('No movie with id=' + id + ' was found');
 			}
@@ -48,9 +51,22 @@ export default class MovieService implements IMovieService {
 		}
 	}
 
-	public async getAllMovies(): Promise<Result<IMovieDTO[]>> {
+	public async findMovies(title: string): Promise<Result<IMovieDTO[]>> {
 		try {
-			const list = await this.repoInstance.getAllMovies();
+			const list = await this.repoInstance.findMovies(title);
+			if (list == null) {
+				return Result.fail<IMovieDTO[]>('No movies with title=' + title + ' were found');
+			}
+
+			return Result.ok<IMovieDTO[]>(list.map((e) => MovieMapper.toDTO(e)));
+		} catch (e) {
+			throw e;
+		}
+	}
+
+	public async findAllMovies(): Promise<Result<IMovieDTO[]>> {
+		try {
+			const list = await this.repoInstance.findAllMovies();
 			if (list == null) {
 				return Result.fail<IMovieDTO[]>('There are no movies');
 			}
@@ -63,7 +79,7 @@ export default class MovieService implements IMovieService {
 
 	public async updateMovie(dto: any): Promise<Result<IMovieDTO>> {
 		try {
-			const obj = await this.repoInstance.getMovie(dto.id);
+			const obj = await this.repoInstance.findOneMovie(dto.id);
 			if (obj == null) {
 				return Result.fail<IMovieDTO>('No movie with id=' + dto.id + ' was found');
 			}
@@ -79,9 +95,24 @@ export default class MovieService implements IMovieService {
 		}
 	}
 
+	public async deleteMovie(id: string): Promise<Result<IMovieDTO>> {
+		try {
+			const movieExists = await this.repoInstance.exists(id);
+
+			if (!movieExists) {
+				return Result.fail<IMovieDTO>('No movie with id=' + id + ' was found');
+			}
+
+			const result = await this.repoInstance.deleteMovie(id);
+			return Result.ok<IMovieDTO>(MovieMapper.toDTO(result));
+		} catch (e) {
+			throw e;
+		}
+	}
+
 	public async toggleMovie(id: string): Promise<Result<IMovieDTO>> {
 		try {
-			const obj = await this.repoInstance.getMovie(id);
+			const obj = await this.repoInstance.findOneMovie(id);
 			if (obj == null) {
 				return Result.fail<IMovieDTO>('No movie with id=' + id + ' was found');
 			}
@@ -89,20 +120,6 @@ export default class MovieService implements IMovieService {
 			obj.hidden = !obj.hidden;
 
 			const result = await this.repoInstance.updateMovie(obj);
-			return Result.ok<IMovieDTO>(MovieMapper.toDTO(result));
-		} catch (e) {
-			throw e;
-		}
-	}
-
-	public async deleteMovie(id: string): Promise<Result<IMovieDTO>> {
-		try {
-			const obj = await this.repoInstance.getMovie(id);
-			if (obj == null) {
-				return Result.fail<IMovieDTO>('No movie with id=' + id + ' was found');
-			}
-
-			const result = await this.repoInstance.deleteMovie(id);
 			return Result.ok<IMovieDTO>(MovieMapper.toDTO(result));
 		} catch (e) {
 			throw e;
