@@ -6,26 +6,27 @@ const userSchema = new mongoose.Schema(
 	{
 		_id: {
 			type: String,
+			required: true,
 		},
 		email: {
 			type: String,
-			required: [true, 'Email is required'],
+			required: true,
 		},
 		password: {
 			type: String,
-			required: [true, 'Password is required'],
+			required: true,
 		},
 		firstName: {
 			type: String,
-			required: [true, 'First name is required'],
+			required: true,
 		},
 		lastName: {
 			type: String,
-			required: [true, 'Last name is required'],
+			required: true,
 		},
 		role: {
 			type: String,
-			required: [true, 'Role is required'],
+			required: true,
 		},
 	},
 	{

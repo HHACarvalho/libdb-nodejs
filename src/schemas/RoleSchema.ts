@@ -9,11 +9,11 @@ const roleSchema = new mongoose.Schema(
 		},
 		name: {
 			type: String,
-			required: [true, 'Name is required'],
+			required: true,
 		},
 		description: {
 			type: String,
-			required: [true, 'Description is required'],
+			required: true,
 		},
 	},
 	{

@@ -1,11 +1,11 @@
 import config from '../../config';
+import { EntityID } from '../core/domain/EntityID';
 import { Movie } from '../domain/movie/movie';
 import { MovieTitle } from '../domain/movie/movieTitle';
 import { MovieDirector } from '../domain/movie/movieDirector';
 import { MovieReleaseYear } from '../domain/movie/movieReleaseYear';
 import { MovieMapper } from '../mappers/movieMapper';
 import { Result } from '../core/infrastructure/Result';
-import { EntityID } from '../core/domain/EntityID';
 import IMovieDTO from '../dtos/IMovieDTO';
 import IMovieRepo from '../repos/IRepos/IMovieRepo';
 import IMovieService from './IServices/IMovieService';

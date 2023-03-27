@@ -9,19 +9,19 @@ const movieSchema = new mongoose.Schema(
 		},
 		title: {
 			type: String,
-			required: [true, 'Title is required'],
+			required: true,
 		},
 		director: {
 			type: String,
-			required: [true, 'Director is required'],
+			required: true,
 		},
 		releaseYear: {
 			type: Number,
-			required: [true, 'Release Year is required'],
+			required: true,
 		},
 		hidden: {
 			type: Boolean,
-			required: [true, 'Hidden is required'],
+			required: true,
 		},
 	},
 	{
