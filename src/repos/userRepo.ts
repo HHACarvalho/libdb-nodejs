@@ -1,5 +1,5 @@
 import config from '../../config';
-import { User } from '../domain/user/user';
+import { User } from '../domain/user';
 import { UserMapper } from '../mappers/userMapper';
 import IUserPersistence from '../dtos/IUserPersistence';
 import IUserRepo from './IRepos/IUserRepo';

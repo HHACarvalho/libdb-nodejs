@@ -1,6 +1,6 @@
 import config from '../../config';
 import { EntityID } from '../core/domain/EntityID';
-import { Role } from '../domain/role/role';
+import { Role } from '../domain/role';
 import { RoleMapper } from '../mappers/roleMapper';
 import { Result } from '../core/infrastructure/Result';
 import IRoleDTO from '../dtos/IRoleDTO';

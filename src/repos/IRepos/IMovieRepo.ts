@@ -1,4 +1,4 @@
-import { Movie } from '../../domain/movie/movie';
+import { Movie } from '../../domain/movie';
 
 export default interface IMovieRepo {
 	exists(id: string): Promise<boolean>;

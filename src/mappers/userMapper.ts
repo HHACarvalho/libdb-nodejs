@@ -1,4 +1,4 @@
-import { User } from '../domain/user/user';
+import { User } from '../domain/user';
 import { EntityID } from '../core/domain/EntityID';
 import IUserDTO from '../dtos/IUserDTO';
 import IUserPersistence from '../dtos/IUserPersistence';

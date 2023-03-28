@@ -1,6 +1,6 @@
 import config from '../../config';
 import { EntityID } from '../core/domain/EntityID';
-import { User } from '../domain/user/user';
+import { User } from '../domain/user';
 import { UserMapper } from '../mappers/userMapper';
 import { Result } from '../core/infrastructure/Result';
 import IRoleRepo from '../repos/IRepos/IRoleRepo';

@@ -1,5 +1,5 @@
-import { Entity } from '../../core/domain/Entity';
-import { EntityID } from '../../core/domain/EntityID';
+import { Entity } from '../core/domain/Entity';
+import { EntityID } from '../core/domain/EntityID';
 
 interface RoleProps {
 	name: string;

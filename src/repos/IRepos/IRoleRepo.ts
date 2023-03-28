@@ -1,4 +1,4 @@
-import { Role } from '../../domain/role/role';
+import { Role } from '../../domain/role';
 
 export default interface IRoleRepo {
 	exists(name: string): Promise<boolean>;

@@ -1,4 +1,4 @@
-import { Movie } from '../domain/movie/movie';
+import { Movie } from '../domain/movie';
 import { EntityID } from '../core/domain/EntityID';
 import IMovieDTO from '../dtos/IMovieDTO';
 import IMoviePersistence from '../dtos/IMoviePersistence';

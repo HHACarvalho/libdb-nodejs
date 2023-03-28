@@ -1,5 +1,5 @@
 import config from '../../config';
-import { Movie } from '../domain/movie/movie';
+import { Movie } from '../domain/movie';
 import { MovieMapper } from '../mappers/movieMapper';
 import IMoviePersistence from '../dtos/IMoviePersistence';
 import IMovieRepo from './IRepos/IMovieRepo';

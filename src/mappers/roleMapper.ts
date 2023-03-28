@@ -1,4 +1,4 @@
-import { Role } from '../domain/role/role';
+import { Role } from '../domain/role';
 import { EntityID } from '../core/domain/EntityID';
 import IRoleDTO from '../dtos/IRoleDTO';
 import IRolePersistence from '../dtos/IRolePersistence';

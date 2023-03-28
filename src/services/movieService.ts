@@ -1,6 +1,6 @@
 import config from '../../config';
 import { EntityID } from '../core/domain/EntityID';
-import { Movie } from '../domain/movie/movie';
+import { Movie } from '../domain/movie';
 import { MovieMapper } from '../mappers/movieMapper';
 import { Result } from '../core/infrastructure/Result';
 import IMovieDTO from '../dtos/IMovieDTO';

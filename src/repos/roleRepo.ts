@@ -1,5 +1,5 @@
 import config from '../../config';
-import { Role } from '../domain/role/role';
+import { Role } from '../domain/role';
 import { RoleMapper } from '../mappers/roleMapper';
 import IRolePersistence from '../dtos/IRolePersistence';
 import IRoleRepo from './IRepos/IRoleRepo';
