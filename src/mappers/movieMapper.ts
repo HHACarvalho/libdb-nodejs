@@ -1,8 +1,4 @@
-import Logger from '../core/loaders/loggerLoader';
 import { Movie } from '../domain/movie/movie';
-import { MovieTitle } from '../domain/movie/movieTitle';
-import { MovieDirector } from '../domain/movie/movieDirector';
-import { MovieReleaseYear } from '../domain/movie/movieReleaseYear';
 import { EntityID } from '../core/domain/EntityID';
 import IMovieDTO from '../dtos/IMovieDTO';
 import IMoviePersistence from '../dtos/IMoviePersistence';
@@ -11,29 +7,23 @@ import { Document, Model } from 'mongoose';
 
 export class MovieMapper {
 	public static toDomain(schema: any | Model<IMoviePersistence & Document>): Movie {
-		const objOrError = Movie.create(
+		return Movie.create(
 			{
-				title: MovieTitle.create(schema.title).value,
-				director: MovieDirector.create(schema.director).value,
-				releaseYear: MovieReleaseYear.create(schema.releaseYear).value,
+				title: schema.title,
+				director: schema.director,
+				releaseYear: schema.releaseYear,
 				hidden: schema.hidden,
 			},
 			new EntityID(schema.id)
 		);
-
-		if (!objOrError.isSuccess) {
-			Logger.error(objOrError.error);
-		}
-
-		return objOrError.isSuccess ? objOrError.value : null;
 	}
 
 	public static toDTO(movie: Movie): IMovieDTO {
 		return {
 			id: movie.id.toValue(),
-			title: movie.title.value,
-			director: movie.director.value,
-			releaseYear: movie.releaseYear.value,
+			title: movie.title,
+			director: movie.director,
+			releaseYear: movie.releaseYear,
 			hidden: movie.hidden,
 		} as IMovieDTO;
 	}
@@ -41,9 +31,9 @@ export class MovieMapper {
 	public static toPersistence(movie: Movie): IMoviePersistence {
 		return {
 			_id: movie.id.toValue(),
-			title: movie.title.value,
-			director: movie.director.value,
-			releaseYear: movie.releaseYear.value,
+			title: movie.title,
+			director: movie.director,
+			releaseYear: movie.releaseYear,
 			hidden: movie.hidden,
 		} as IMoviePersistence;
 	}

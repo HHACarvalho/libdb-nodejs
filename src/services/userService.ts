@@ -1,9 +1,6 @@
 import config from '../../config';
+import { EntityID } from '../core/domain/EntityID';
 import { User } from '../domain/user/user';
-import { UserEmail } from '../domain/user/userEmail';
-import { UserPassword } from '../domain/user/userPassword';
-import { UserName } from '../domain/user/userName';
-import { UserRole } from '../domain/user/userRole';
 import { UserMapper } from '../mappers/userMapper';
 import { Result } from '../core/infrastructure/Result';
 import IRoleRepo from '../repos/IRepos/IRoleRepo';
@@ -36,18 +33,18 @@ export default class UserService implements IUserService {
 
 			const hashedPassword = await bcrypt.hash(dto.password, 10);
 
-			const obj = User.create({
-				email: UserEmail.create(dto.email).value,
-				password: UserPassword.create(hashedPassword).value,
-				firstName: UserName.create(dto.firstName, 'firstName').value,
-				lastName: UserName.create(dto.lastName, 'lastName').value,
-				role: UserRole.create(dto.role).value,
-			});
-			if (!obj.isSuccess) {
-				return Result.fail<IUserDTO>(obj.error);
-			}
+			const obj = User.create(
+				{
+					email: dto.email,
+					password: hashedPassword,
+					firstName: dto.firstName,
+					lastName: dto.lastName,
+					role: dto.role,
+				},
+				new EntityID(dto.id)
+			);
 
-			const result = await this.userRepoInstance.createUser(obj.value);
+			const result = await this.userRepoInstance.createUser(obj);
 			return Result.ok<IUserDTO>(UserMapper.toDTO(result));
 		} catch (e) {
 			throw e;
@@ -61,7 +58,7 @@ export default class UserService implements IUserService {
 				return Result.fail<IUserDTO>('No user with email=' + dto.email + ' was found');
 			}
 
-			const isMatch = await bcrypt.compare(dto.password, obj.password.value);
+			const isMatch = await bcrypt.compare(dto.password, obj.password);
 			if (!isMatch) {
 				return Result.fail<IUserDTO>('Invalid password');
 			}
@@ -86,11 +83,11 @@ export default class UserService implements IUserService {
 
 			const hashedPassword = await bcrypt.hash(dto.password, 10);
 
-			if (dto.email) obj.email = UserEmail.create(dto.email).value;
-			if (dto.password) obj.password = UserPassword.create(hashedPassword).value;
-			if (dto.firstName) obj.firstName = UserName.create(dto.firstName, 'firstName').value;
-			if (dto.lastName) obj.lastName = UserName.create(dto.lastName, 'lastName').value;
-			if (dto.role) obj.role = UserRole.create(dto.role).value;
+			if (dto.email) obj.email = dto.email;
+			if (dto.password) obj.password = hashedPassword;
+			if (dto.firstName) obj.firstName = dto.firstName;
+			if (dto.lastName) obj.lastName = dto.lastName;
+			if (dto.role) obj.role = dto.role;
 
 			const result = await this.userRepoInstance.updateUser(obj);
 			return Result.ok<IUserDTO>(UserMapper.toDTO(result));

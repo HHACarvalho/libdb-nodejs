@@ -59,9 +59,9 @@ export default class MovieRepo implements IMovieRepo {
 		try {
 			const document = await this.schema.findOne({ _id: movie.id.toValue() });
 
-			document.title = movie.title.value;
-			document.director = movie.director.value;
-			document.releaseYear = movie.releaseYear.value;
+			document.title = movie.title;
+			document.director = movie.director;
+			document.releaseYear = movie.releaseYear;
 			document.hidden = movie.hidden;
 
 			return MovieMapper.toDomain(await document.save());

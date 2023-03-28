@@ -1,79 +1,56 @@
 import { Entity } from '../../core/domain/Entity';
 import { EntityID } from '../../core/domain/EntityID';
-import { Guard } from '../../core/infrastructure/Guard';
-import { Result } from '../../core/infrastructure/Result';
-import { UserEmail } from './userEmail';
-import { UserPassword } from './userPassword';
-import { UserName } from './userName';
-import { UserRole } from './userRole';
 
 interface UserProps {
-	email: UserEmail;
-	password: UserPassword;
-	firstName: UserName;
-	lastName: UserName;
-	role: UserRole;
+	email: string;
+	password: string;
+	firstName: string;
+	lastName: string;
+	role: string;
 }
 
 export class User extends Entity<UserProps> {
-	get email(): UserEmail {
+	get email(): string {
 		return this._props.email;
 	}
 
-	get password(): UserPassword {
+	get password(): string {
 		return this._props.password;
 	}
 
-	get firstName(): UserName {
+	get firstName(): string {
 		return this._props.firstName;
 	}
 
-	get lastName(): UserName {
+	get lastName(): string {
 		return this._props.lastName;
 	}
 
-	get role(): UserRole {
+	get role(): string {
 		return this._props.role;
 	}
 
-	set email(value: UserEmail) {
+	set email(value: string) {
 		this._props.email = value;
 	}
 
-	set password(value: UserPassword) {
+	set password(value: string) {
 		this._props.password = value;
 	}
 
-	set firstName(value: UserName) {
+	set firstName(value: string) {
 		this._props.firstName = value;
 	}
 
-	set lastName(value: UserName) {
+	set lastName(value: string) {
 		this._props.lastName = value;
 	}
 
-	set role(value: UserRole) {
+	set role(value: string) {
 		this._props.role = value;
 	}
 
-	private constructor(props: UserProps, id?: EntityID) {
-		super(props, id);
-	}
-
-	public static create(props: UserProps, id?: EntityID): Result<User> {
-		const guardedProps = [
-			{ argument: props.email, argumentName: 'userEmail' },
-			{ argument: props.password, argumentName: 'userPassword' },
-			{ argument: props.firstName, argumentName: 'userFirstName' },
-			{ argument: props.lastName, argumentName: 'userLastName' },
-			{ argument: props.role, argumentName: 'userRole' },
-		];
-
-		const guardResult = Guard.againstNullOrUndefinedBulk(guardedProps);
-		if (!guardResult.succeeded) {
-			return Result.fail<User>(guardResult.message);
-		}
-
-		return Result.ok<User>(new User({ ...props }, id));
+	public static create(props: UserProps, id?: EntityID): User {
+		return new User({ ...props }, id);
 	}
 }

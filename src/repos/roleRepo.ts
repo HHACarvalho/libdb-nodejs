@@ -46,10 +46,10 @@ export default class RoleRepo implements IRoleRepo {
 
 	public async updateRole(role: Role): Promise<Role> {
 		try {
-			const document = await this.schema.findOne({ name: role.name.value });
+			const document = await this.schema.findOne({ name: role.name });
 
-			document.name = role.name.value;
-			document.description = role.description.value;
+			document.name = role.name;
+			document.description = role.description;
 
 			const persisted = await document.save();
 			return RoleMapper.toDomain(persisted);

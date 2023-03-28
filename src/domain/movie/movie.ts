@@ -1,28 +1,23 @@
 import { Entity } from '../../core/domain/Entity';
 import { EntityID } from '../../core/domain/EntityID';
-import { Guard } from '../../core/infrastructure/Guard';
-import { Result } from '../../core/infrastructure/Result';
-import { MovieTitle } from './movieTitle';
-import { MovieDirector } from './movieDirector';
-import { MovieReleaseYear } from './movieReleaseYear';
 
 interface MovieProps {
-	title: MovieTitle;
-	director: MovieDirector;
-	releaseYear: MovieReleaseYear;
+	title: string;
+	director: string;
+	releaseYear: number;
 	hidden: boolean;
 }
 
 export class Movie extends Entity<MovieProps> {
-	get title(): MovieTitle {
+	get title(): string {
 		return this._props.title;
 	}
 
-	get director(): MovieDirector {
+	get director(): string {
 		return this._props.director;
 	}
 
-	get releaseYear(): MovieReleaseYear {
+	get releaseYear(): number {
 		return this._props.releaseYear;
 	}
 
@@ -30,15 +25,15 @@ export class Movie extends Entity<MovieProps> {
 		return this._props.hidden;
 	}
 
-	set title(value: MovieTitle) {
+	set title(value: string) {
 		this._props.title = value;
 	}
 
-	set director(value: MovieDirector) {
+	set director(value: string) {
 		this._props.director = value;
 	}
 
-	set releaseYear(value: MovieReleaseYear) {
+	set releaseYear(value: number) {
 		this._props.releaseYear = value;
 	}
 
@@ -46,22 +41,7 @@ export class Movie extends Entity<MovieProps> {
 		this._props.hidden = value;
 	}
 
-	private constructor(props: MovieProps, id?: EntityID) {
-		super(props, id);
-	}
-
-	public static create(props: MovieProps, id?: EntityID): Result<Movie> {
-		const guardedProps = [
-			{ argument: props.title, argumentName: 'movieTitle' },
-			{ argument: props.director, argumentName: 'movieDirector' },
-			{ argument: props.releaseYear, argumentName: 'movieReleaseYear' },
-		];
-
-		const guardResult = Guard.againstNullOrUndefinedBulk(guardedProps);
-		if (!guardResult.succeeded) {
-			return Result.fail<Movie>(guardResult.message);
-		}
-
-		return Result.ok<Movie>(new Movie({ ...props }, id));
+	public static create(props: MovieProps, id?: EntityID): Movie {
+		return new Movie({ ...props }, id);
 	}
 }

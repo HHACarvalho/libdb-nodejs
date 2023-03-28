@@ -1,7 +1,6 @@
 import config from '../../config';
+import { EntityID } from '../core/domain/EntityID';
 import { Role } from '../domain/role/role';
-import { RoleName } from '../domain/role/roleName';
-import { RoleDescription } from '../domain/role/roleDescription';
 import { RoleMapper } from '../mappers/roleMapper';
 import { Result } from '../core/infrastructure/Result';
 import IRoleDTO from '../dtos/IRoleDTO';
@@ -21,15 +20,15 @@ export default class RoleService implements IRoleService {
 				return Result.fail<IRoleDTO>('Role with name=' + dto.name + ' already exists');
 			}
 
-			const obj = Role.create({
-				name: RoleName.create(dto.name).value,
-				description: RoleDescription.create(dto.description).value,
-			});
-			if (!obj.isSuccess) {
-				return Result.fail<IRoleDTO>(obj.error);
-			}
+			const obj = Role.create(
+				{
+					name: dto.name,
+					description: dto.description,
+				},
+				new EntityID(dto.id)
+			);
 
-			const result = await this.repoInstance.createRole(obj.value);
+			const result = await this.repoInstance.createRole(obj);
 			return Result.ok<IRoleDTO>(RoleMapper.toDTO(result));
 		} catch (e) {
 			throw e;
@@ -56,8 +55,8 @@ export default class RoleService implements IRoleService {
 				return Result.fail<IRoleDTO>('No role with name=' + dto.name + ' was found');
 			}
 
-			if (dto.name) obj.name = RoleName.create(dto.name).value;
-			if (dto.description) obj.description = RoleDescription.create(dto.description).value;
+			if (dto.name) obj.name = dto.name;
+			if (dto.description) obj.description = dto.description;
 
 			const result = await this.repoInstance.updateRole(obj);
 			return Result.ok<IRoleDTO>(RoleMapper.toDTO(result));

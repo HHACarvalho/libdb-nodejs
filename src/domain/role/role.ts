@@ -1,47 +1,29 @@
 import { Entity } from '../../core/domain/Entity';
 import { EntityID } from '../../core/domain/EntityID';
-import { Guard } from '../../core/infrastructure/Guard';
-import { Result } from '../../core/infrastructure/Result';
-import { RoleName } from './roleName';
-import { RoleDescription } from './roleDescription';
 
 interface RoleProps {
-	name: RoleName;
-	description: RoleDescription;
+	name: string;
+	description: string;
 }
 
 export class Role extends Entity<RoleProps> {
-	get name(): RoleName {
+	get name(): string {
 		return this._props.name;
 	}
 
-	get description(): RoleDescription {
+	get description(): string {
 		return this._props.description;
 	}
 
-	set name(value: RoleName) {
+	set name(value: string) {
 		this._props.name = value;
 	}
 
-	set description(value: RoleDescription) {
+	set description(value: string) {
 		this._props.description = value;
 	}
 
-	private constructor(props: RoleProps, id?: EntityID) {
-		super(props, id);
-	}
-
-	public static create(props: RoleProps, id?: EntityID): Result<Role> {
-		const guardedProps = [
-			{ argument: props.name, argumentName: 'roleName' },
-			{ argument: props.description, argumentName: 'roleDescription' },
-		];
-
-		const guardResult = Guard.againstNullOrUndefinedBulk(guardedProps);
-		if (!guardResult.succeeded) {
-			return Result.fail<Role>(guardResult.message);
-		}
-
-		return Result.ok<Role>(new Role({ ...props }, id));
+	public static create(props: RoleProps, id?: EntityID): Role {
+		return new Role({ ...props }, id);
 	}
 }

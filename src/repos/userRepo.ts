@@ -37,13 +37,13 @@ export default class UserRepo implements IUserRepo {
 
 	public async updateUser(user: User): Promise<User> {
 		try {
-			const document = await this.schema.findOne({ email: user.email.value });
+			const document = await this.schema.findOne({ email: user.email });
 
-			document.email = user.email.value;
-			document.password = user.password.value;
-			document.firstName = user.firstName.value;
-			document.lastName = user.lastName.value;
-			document.role = user.role.value;
+			document.email = user.email;
+			document.password = user.password;
+			document.firstName = user.firstName;
+			document.lastName = user.lastName;
+			document.role = user.role;
 
 			const persisted = await document.save();
 			return UserMapper.toDomain(persisted);

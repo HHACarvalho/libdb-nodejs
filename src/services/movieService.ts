@@ -1,9 +1,6 @@
 import config from '../../config';
 import { EntityID } from '../core/domain/EntityID';
 import { Movie } from '../domain/movie/movie';
-import { MovieTitle } from '../domain/movie/movieTitle';
-import { MovieDirector } from '../domain/movie/movieDirector';
-import { MovieReleaseYear } from '../domain/movie/movieReleaseYear';
 import { MovieMapper } from '../mappers/movieMapper';
 import { Result } from '../core/infrastructure/Result';
 import IMovieDTO from '../dtos/IMovieDTO';
@@ -18,20 +15,24 @@ export default class MovieService implements IMovieService {
 
 	public async createMovie(dto: any): Promise<Result<IMovieDTO>> {
 		try {
+			if (dto.id) {
+				const movieExists = await this.repoInstance.exists(dto.id);
+				if (movieExists) {
+					return Result.fail<IMovieDTO>('Movie with id=' + dto.id + ' already exists');
+				}
+			}
+
 			const obj = Movie.create(
 				{
-					title: MovieTitle.create(dto.title).value,
-					director: MovieDirector.create(dto.director).value,
-					releaseYear: MovieReleaseYear.create(dto.releaseYear).value,
+					title: dto.title,
+					director: dto.director,
+					releaseYear: dto.releaseYear,
 					hidden: false,
 				},
 				new EntityID(dto.id)
 			);
-			if (!obj.isSuccess) {
-				return Result.fail<IMovieDTO>(obj.error);
-			}
 
-			const result = await this.repoInstance.createMovie(obj.value);
+			const result = await this.repoInstance.createMovie(obj);
 			return Result.ok<IMovieDTO>(MovieMapper.toDTO(result));
 		} catch (e) {
 			throw e;
@@ -84,9 +85,9 @@ export default class MovieService implements IMovieService {
 				return Result.fail<IMovieDTO>('No movie with id=' + dto.id + ' was found');
 			}
 
-			if (dto.title) obj.title = MovieTitle.create(dto.title).value;
-			if (dto.director) obj.director = MovieDirector.create(dto.director).value;
-			if (dto.releaseYear) obj.releaseYear = MovieReleaseYear.create(dto.releaseYear).value;
+			if (dto.title) obj.title = dto.title;
+			if (dto.director) obj.director = dto.director;
+			if (dto.releaseYear) obj.releaseYear = dto.releaseYear;
 
 			const result = await this.repoInstance.updateMovie(obj);
 			return Result.ok<IMovieDTO>(MovieMapper.toDTO(result));
