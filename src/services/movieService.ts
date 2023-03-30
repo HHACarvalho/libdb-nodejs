@@ -2,7 +2,7 @@ import config from '../../config';
 import { EntityID } from '../core/domain/EntityID';
 import { Movie } from '../domain/movie';
 import { MovieMapper } from '../mappers/movieMapper';
-import { Result } from '../core/infrastructure/Result';
+import { Result } from '../core/Result';
 import IMovieDTO from '../dtos/IMovieDTO';
 import IMovieRepo from '../repos/IRepos/IMovieRepo';
 import IMovieService from './IServices/IMovieService';

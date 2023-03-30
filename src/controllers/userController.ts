@@ -1,5 +1,5 @@
 import config from '../../config';
-import { Result } from '../core/infrastructure/Result';
+import { Result } from '../core/Result';
 import IUserController from './IControllers/IUserController';
 import IUserDTO from '../dtos/IUserDTO';
 import IUserService from '../services/IServices/IUserService';

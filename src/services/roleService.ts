@@ -2,7 +2,7 @@ import config from '../../config';
 import { EntityID } from '../core/domain/EntityID';
 import { Role } from '../domain/role';
 import { RoleMapper } from '../mappers/roleMapper';
-import { Result } from '../core/infrastructure/Result';
+import { Result } from '../core/Result';
 import IRoleDTO from '../dtos/IRoleDTO';
 import IRoleRepo from '../repos/IRepos/IRoleRepo';
 import IRoleService from './IServices/IRoleService';

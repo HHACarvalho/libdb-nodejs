@@ -1,5 +1,5 @@
 import config from '../../config';
-import { Result } from '../core/infrastructure/Result';
+import { Result } from '../core/Result';
 import IRoleController from './IControllers/IRoleController';
 import IRoleDTO from '../dtos/IRoleDTO';
 import IRoleService from '../services/IServices/IRoleService';

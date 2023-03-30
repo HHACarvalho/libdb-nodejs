@@ -1,4 +1,4 @@
-import { Result } from '../../core/infrastructure/Result';
+import { Result } from '../../core/Result';
 import IUserDTO from '../../dtos/IUserDTO';
 
 export default interface IUserService {

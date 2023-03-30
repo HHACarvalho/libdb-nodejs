@@ -2,7 +2,7 @@ import config from '../../config';
 import { EntityID } from '../core/domain/EntityID';
 import { User } from '../domain/user';
 import { UserMapper } from '../mappers/userMapper';
-import { Result } from '../core/infrastructure/Result';
+import { Result } from '../core/Result';
 import IRoleRepo from '../repos/IRepos/IRoleRepo';
 import IUserDTO from '../dtos/IUserDTO';
 import IUserRepo from '../repos/IRepos/IUserRepo';

@@ -1,5 +1,5 @@
 import config from '../../config';
-import { Result } from '../core/infrastructure/Result';
+import { Result } from '../core/Result';
 import IMovieController from './IControllers/IMovieController';
 import IMovieDTO from '../dtos/IMovieDTO';
 import IMovieService from '../services/IServices/IMovieService';

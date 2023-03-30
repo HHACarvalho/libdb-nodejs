@@ -1,4 +1,4 @@
-import { Result } from '../../core/infrastructure/Result';
+import { Result } from '../../core/Result';
 import IRoleDTO from '../../dtos/IRoleDTO';
 
 export default interface IRoleService {
