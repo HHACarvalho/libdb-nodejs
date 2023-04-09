@@ -9,8 +9,8 @@ import IUserRepo from '../repos/IRepos/IUserRepo';
 import IUserService from './IServices/IUserService';
 
 import { Inject, Service } from 'typedi';
-
-const bcrypt = require('bcrypt');
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 @Service()
 export default class UserService implements IUserService {
@@ -45,7 +45,8 @@ export default class UserService implements IUserService {
 			);
 
 			const result = await this.userRepoInstance.createUser(obj);
-			return Result.ok<IUserDTO>(UserMapper.toDTO(result));
+			const webToken = jwt.sign(UserMapper.toDTO(result), process.env.ACCESS_JWT_SECRET, { expiresIn: '15m' });
+			return Result.ok<IUserDTO>(webToken);
 		} catch (e) {
 			throw e;
 		}
@@ -63,7 +64,8 @@ export default class UserService implements IUserService {
 				return Result.fail<IUserDTO>('Invalid password');
 			}
 
-			return Result.ok<IUserDTO>(UserMapper.toDTO(obj));
+			const webToken = jwt.sign(UserMapper.toDTO(obj), process.env.ACCESS_JWT_SECRET, { expiresIn: '15m' });
+			return Result.ok<IUserDTO>(webToken);
 		} catch (e) {
 			throw e;
 		}

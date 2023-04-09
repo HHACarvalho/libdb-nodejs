@@ -18,6 +18,8 @@ export default class UserController implements IUserController {
 				return res.status(400).json(objOrError.error);
 			}
 
+			res.cookie('token', objOrError.value, { httpOnly: true });
+
 			return res.status(201).json(objOrError.value);
 		} catch (e) {
 			return next(e);
@@ -30,6 +32,8 @@ export default class UserController implements IUserController {
 			if (!objOrError.isSuccess) {
 				return res.status(404).json(objOrError.error);
 			}
+
+			res.cookie('token', objOrError.value, { httpOnly: true });
 
 			return res.status(200).json(objOrError.value);
 		} catch (e) {
