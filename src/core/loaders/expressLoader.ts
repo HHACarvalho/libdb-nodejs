@@ -2,9 +2,13 @@ import config from '../../../config';
 import routes from '../../api';
 
 import bodyParser from 'body-parser';
+import cors from 'cors';
 import express from 'express';
 
 export default (expressApp: express.Application) => {
+	// Enable Cross Origin Resource Sharing to all origins by default
+	expressApp.use(cors());
+
 	// Parses req.body into json
 	expressApp.use(bodyParser.json());
 
