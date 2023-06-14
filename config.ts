@@ -1,82 +1,46 @@
-import dotenv from "dotenv";
+import dotenv from 'dotenv';
 
 if (dotenv.config().error) {
 	throw new Error("Couldn't find .env file");
 }
 
 export default {
-	// The APIs url prefix
+	// Port used by the API
+	apiPort: 3000,
+
+	// URL prefix used to access the API
 	apiPrefix: '/api',
 
-	// Mongo connection string
+	// MongoDB's connection string
 	databaseURL: process.env.DATABASE_URL,
 
-	// Only affects logging procedure
+	// Affects logging procedure
 	environment: 'development',
 
-	// Only log if level is either info, warn or error
+	// Log message if it's type is equal to info, warn or error
 	logLevel: 'info',
 
-	// Port to be used by the API
-	port: 3000,
-
 	controllers: {
-		user: {
-			name: 'userController',
-			path: '../../controllers/userController',
-		},
-		role: {
-			name: 'roleController',
-			path: '../../controllers/roleController',
-		},
-		movie: {
-			name: 'movieController',
-			path: '../../controllers/movieController',
-		},
+		movie: 'movieController',
+		role: 'roleController',
+		user: 'userController',
 	},
 
 	services: {
-		user: {
-			name: 'userService',
-			path: '../../services/userService',
-		},
-		role: {
-			name: 'roleService',
-			path: '../../services/roleService',
-		},
-		movie: {
-			name: 'movieService',
-			path: '../../services/movieService',
-		},
+		movie: 'movieService',
+		role: 'roleService',
+		user: 'userService',
 	},
 
 	repos: {
-		user: {
-			name: 'userRepo',
-			path: '../../repos/userRepo',
-		},
-		role: {
-			name: 'roleRepo',
-			path: '../../repos/roleRepo',
-		},
-		movie: {
-			name: 'movieRepo',
-			path: '../../repos/movieRepo',
-		},
+		movie: 'movieRepo',
+		role: 'roleRepo',
+		user: 'userRepo',
 	},
 
 	schemas: {
-		user: {
-			name: 'userSchema',
-			path: '../../schemas/userSchema',
-		},
-		role: {
-			name: 'roleSchema',
-			path: '../../schemas/roleSchema',
-		},
-		movie: {
-			name: 'movieSchema',
-			path: '../../schemas/movieSchema',
-		},
+		movie: 'movieSchema',
+		role: 'roleSchema',
+		user: 'userSchema',
 	},
 };

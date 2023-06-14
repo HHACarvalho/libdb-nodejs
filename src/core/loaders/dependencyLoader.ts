@@ -1,40 +1,31 @@
+import config from '../../../config';
 import Logger from './loggerLoader';
 
 import { Container } from 'typedi';
 
-export default ({
-	controllers,
-	services,
-	repos,
-	schemas,
-}: {
-	controllers: { name: string; path: string }[];
-	services: { name: string; path: string }[];
-	repos: { name: string; path: string }[];
-	schemas: { name: string; path: string }[];
-}) => {
+export default () => {
 	try {
-		schemas.forEach(e => {
-			const schema = require(e.path).default;
-			Container.set(e.name, schema);
+		Object.values(config.schemas).forEach((e) => {
+			const schema = require('../../schemas/' + e).default;
+			Container.set(e, schema);
 		});
 
-		repos.forEach(e => {
-			const repoClass = require(e.path).default;
+		Object.values(config.repos).forEach((e) => {
+			const repoClass = require('../../repos/' + e).default;
 			const repoInstance = Container.get(repoClass);
-			Container.set(e.name, repoInstance);
+			Container.set(e, repoInstance);
 		});
 
-		services.forEach(e => {
-			const serviceClass = require(e.path).default;
+		Object.values(config.services).forEach((e) => {
+			const serviceClass = require('../../services/' + e).default;
 			const serviceInstance = Container.get(serviceClass);
-			Container.set(e.name, serviceInstance);
+			Container.set(e, serviceInstance);
 		});
 
-		controllers.forEach(e => {
-			const controllerClass = require(e.path).default;
+		Object.values(config.controllers).forEach((e) => {
+			const controllerClass = require('../../controllers/' + e).default;
 			const controllerInstance = Container.get(controllerClass);
-			Container.set(e.name, controllerInstance);
+			Container.set(e, controllerInstance);
 		});
 	} catch (e) {
 		Logger.error('Error on dependency injector loader: ' + e);

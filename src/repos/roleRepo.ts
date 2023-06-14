@@ -9,7 +9,7 @@ import { Inject, Service } from 'typedi';
 
 @Service()
 export default class RoleRepo implements IRoleRepo {
-	constructor(@Inject(config.schemas.role.name) private schema: Model<IRolePersistence & Document>) {}
+	constructor(@Inject(config.schemas.role) private schema: Model<IRolePersistence & Document>) {}
 
 	public async exists(name: string): Promise<boolean> {
 		const document = await this.schema.findOne({ name: name });

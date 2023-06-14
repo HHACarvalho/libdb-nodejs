@@ -10,7 +10,7 @@ const roleRoute = Router();
 export default (app: Router) => {
 	app.use('/role', roleRoute);
 
-	const controller = Container.get(config.controllers.role.name) as IRoleController;
+	const controller = Container.get(config.controllers.role) as IRoleController;
 
 	const schema = celebrate({
 		[Segments.BODY]: Joi.object().keys({

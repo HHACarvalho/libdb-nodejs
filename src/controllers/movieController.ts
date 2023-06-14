@@ -9,7 +9,7 @@ import { Inject, Service } from 'typedi';
 
 @Service()
 export default class MovieController implements IMovieController {
-	constructor(@Inject(config.services.movie.name) private serviceInstance: IMovieService) {}
+	constructor(@Inject(config.services.movie) private serviceInstance: IMovieService) {}
 
 	public async createMovie(req: Request, res: Response, next: NextFunction) {
 		try {

@@ -9,7 +9,7 @@ import { Inject, Service } from 'typedi';
 
 @Service()
 export default class UserRepo implements IUserRepo {
-	constructor(@Inject(config.schemas.user.name) private schema: Model<IUserPersistence & Document>) {}
+	constructor(@Inject(config.schemas.user) private schema: Model<IUserPersistence & Document>) {}
 
 	public async exists(email: string): Promise<boolean> {
 		const document = await this.schema.findOne({ email: email });

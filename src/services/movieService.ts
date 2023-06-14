@@ -11,7 +11,7 @@ import { Inject, Service } from 'typedi';
 
 @Service()
 export default class MovieService implements IMovieService {
-	constructor(@Inject(config.repos.movie.name) private repoInstance: IMovieRepo) {}
+	constructor(@Inject(config.repos.movie) private repoInstance: IMovieRepo) {}
 
 	public async createMovie(dto: any): Promise<Result<IMovieDTO>> {
 		try {

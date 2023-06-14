@@ -15,8 +15,8 @@ import jwt from 'jsonwebtoken';
 @Service()
 export default class UserService implements IUserService {
 	constructor(
-		@Inject(config.repos.user.name) private userRepoInstance: IUserRepo,
-		@Inject(config.repos.role.name) private roleRepoInstance: IRoleRepo
+		@Inject(config.repos.user) private userRepoInstance: IUserRepo,
+		@Inject(config.repos.role) private roleRepoInstance: IRoleRepo
 	) {}
 
 	public async signUp(dto: any): Promise<Result<IUserDTO>> {

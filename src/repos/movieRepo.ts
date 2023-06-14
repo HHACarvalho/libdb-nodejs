@@ -9,7 +9,7 @@ import { Inject, Service } from 'typedi';
 
 @Service()
 export default class MovieRepo implements IMovieRepo {
-	constructor(@Inject(config.schemas.movie.name) private schema: Model<IMoviePersistence & Document>) {}
+	constructor(@Inject(config.schemas.movie) private schema: Model<IMoviePersistence & Document>) {}
 
 	public async exists(id: string): Promise<boolean> {
 		const document = await this.schema.findOne({ _id: id });

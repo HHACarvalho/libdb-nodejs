@@ -11,7 +11,7 @@ import { Inject, Service } from 'typedi';
 
 @Service()
 export default class RoleService implements IRoleService {
-	constructor(@Inject(config.repos.role.name) private repoInstance: IRoleRepo) {}
+	constructor(@Inject(config.repos.role) private repoInstance: IRoleRepo) {}
 
 	public async createRole(dto: any): Promise<Result<IRoleDTO>> {
 		try {

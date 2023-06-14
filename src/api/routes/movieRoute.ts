@@ -10,7 +10,7 @@ const movieRoute = Router();
 export default (app: Router) => {
 	app.use('/movie', movieRoute);
 
-	const controller = Container.get(config.controllers.movie.name) as IMovieController;
+	const controller = Container.get(config.controllers.movie) as IMovieController;
 
 	const schema = celebrate({
 		[Segments.BODY]: Joi.object().keys({

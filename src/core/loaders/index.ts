@@ -1,4 +1,3 @@
-import config from '../../../config';
 import Logger from './loggerLoader';
 import dependencyLoader from './dependencyLoader';
 import expressLoader from './expressLoader';
@@ -10,12 +9,7 @@ export default async (expressApp: express.Application) => {
 	await mongooseLoader();
 	Logger.info('MongoDB connected and loaded!');
 
-	await dependencyLoader({
-		controllers: Object.values(config.controllers),
-		services: Object.values(config.services),
-		repos: Object.values(config.repos),
-		schemas: Object.values(config.schemas),
-	});
+	await dependencyLoader();
 	Logger.info('Controllers, Services, Repos and Schemas loaded!');
 
 	await expressLoader(expressApp);

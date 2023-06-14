@@ -10,7 +10,7 @@ const userRoute = Router();
 export default (app: Router) => {
 	app.use('/user', userRoute);
 
-	const controller = Container.get(config.controllers.user.name) as IUserController;
+	const controller = Container.get(config.controllers.user) as IUserController;
 
 	const schema = celebrate({
 		[Segments.BODY]: Joi.object().keys({
