@@ -14,24 +14,24 @@ export default ({
 	schemas: { name: string; path: string }[];
 }) => {
 	try {
-		schemas.forEach((e) => {
+		schemas.forEach(e => {
 			const schema = require(e.path).default;
 			Container.set(e.name, schema);
 		});
 
-		repos.forEach((e) => {
+		repos.forEach(e => {
 			const repoClass = require(e.path).default;
 			const repoInstance = Container.get(repoClass);
 			Container.set(e.name, repoInstance);
 		});
 
-		services.forEach((e) => {
+		services.forEach(e => {
 			const serviceClass = require(e.path).default;
 			const serviceInstance = Container.get(serviceClass);
 			Container.set(e.name, serviceInstance);
 		});
 
-		controllers.forEach((e) => {
+		controllers.forEach(e => {
 			const controllerClass = require(e.path).default;
 			const controllerInstance = Container.get(controllerClass);
 			Container.set(e.name, controllerInstance);

@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 
 if (dotenv.config().error) {
-	throw new Error("Couldn't find .env file.");
+	throw new Error("Couldn't find .env file");
 }
 
 export default {
@@ -9,7 +9,7 @@ export default {
 	apiPrefix: '/api',
 
 	// Mongo connection string
-	databaseURL: process.env.DATABASE_URL || '',
+	databaseURL: process.env.DATABASE_URL,
 
 	// Only affects logging procedure
 	environment: 'development',

@@ -1,6 +1,7 @@
 import config from '../../../config';
 import routes from '../../api';
 
+import { isCelebrateError } from 'celebrate';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import express from 'express';
@@ -27,6 +28,10 @@ export default (expressApp: express.Application) => {
 
 	// Error handling
 	expressApp.use((err, req, res, next) => {
-		res.status(500).json(err.message);
+		if (isCelebrateError(err)) {
+			res.status(500).json('Validation failed: ' + err.details.get('body').details[0].message);
+		} else {
+			res.status(500).json(err.message);
+		}
 	});
 };
