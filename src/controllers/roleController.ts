@@ -15,10 +15,14 @@ export default class RoleController implements IRoleController {
 		try {
 			const objOrError = (await this.serviceInstance.createRole(req.body)) as Result<IRoleDTO>;
 			if (!objOrError.isSuccess) {
-				return res.status(400).json(objOrError.error);
+				res.status(400);
+				res.json(objOrError.error);
+				return res;
 			}
 
-			return res.status(201).json(objOrError.value);
+			res.status(201);
+			res.json(objOrError.value);
+			return res;
 		} catch (e) {
 			return next(e);
 		}
