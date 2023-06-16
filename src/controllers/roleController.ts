@@ -32,10 +32,14 @@ export default class RoleController implements IRoleController {
 		try {
 			const objOrError = (await this.serviceInstance.findAllRoles()) as Result<IRoleDTO[]>;
 			if (!objOrError.isSuccess) {
-				return res.status(404).json(objOrError.error);
+				res.status(404);
+				res.json(objOrError.error);
+				return res;
 			}
 
-			return res.status(200).json(objOrError.value);
+			res.status(200);
+			res.json(objOrError.value);
+			return res;
 		} catch (e) {
 			return next(e);
 		}
@@ -45,10 +49,14 @@ export default class RoleController implements IRoleController {
 		try {
 			const objOrError = (await this.serviceInstance.updateRole(req.body)) as Result<IRoleDTO>;
 			if (!objOrError.isSuccess) {
-				return res.status(400).json(objOrError.error);
+				res.status(400);
+				res.json(objOrError.error);
+				return res;
 			}
 
-			return res.status(201).json(objOrError.value);
+			res.status(201);
+			res.json(objOrError.value);
+			return res;
 		} catch (e) {
 			return next(e);
 		}
@@ -60,10 +68,14 @@ export default class RoleController implements IRoleController {
 
 			const objOrError = (await this.serviceInstance.deleteRole(nameParameter)) as Result<IRoleDTO>;
 			if (!objOrError.isSuccess) {
-				return res.status(400).json(objOrError.error);
+				res.status(400);
+				res.json(objOrError.error);
+				return res;
 			}
 
-			return res.status(200).json(objOrError.value);
+			res.status(200);
+			res.json(objOrError.value);
+			return res;
 		} catch (e) {
 			return next(e);
 		}
