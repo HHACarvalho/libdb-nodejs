@@ -1,10 +1,10 @@
 import 'reflect-metadata';
 
-import config from '../config';
-import { Result } from '../src/core/Result';
-import IRoleDTO from '../src/dtos/IRoleDTO';
-import IRoleService from '../src/services/IServices/IRoleService';
-import RoleController from '../src/controllers/roleController';
+import config from '../../config';
+import { Result } from '../../src/core/Result';
+import IRoleDTO from '../../src/dtos/IRoleDTO';
+import IRoleService from '../../src/services/IServices/IRoleService';
+import RoleController from '../../src/controllers/roleController';
 
 import { NextFunction, Request, Response } from 'express';
 import { Container } from 'typedi';
@@ -16,14 +16,14 @@ describe('Role Controller', function () {
 	beforeEach(function () {
 		Container.reset();
 
-		let roleSchemaInstance = require('../src/schemas/' + config.schemas.role).default;
+		let roleSchemaInstance = require('../../src/schemas/' + config.schemas.role).default;
 		Container.set(config.schemas.role, roleSchemaInstance);
 
-		let roleRepoClass = require('../src/repos/' + config.repos.role).default;
+		let roleRepoClass = require('../../src/repos/' + config.repos.role).default;
 		let roleRepoInstance = Container.get(roleRepoClass);
 		Container.set(config.repos.role, roleRepoInstance);
 
-		let roleServiceClass = require('../src/services/' + config.services.role).default;
+		let roleServiceClass = require('../../src/services/' + config.services.role).default;
 		let roleServiceInstance = Container.get(roleServiceClass);
 		Container.set(config.services.role, roleServiceInstance);
 	});
