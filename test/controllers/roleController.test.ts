@@ -10,8 +10,17 @@ import { NextFunction, Request, Response } from 'express';
 import { Container } from 'typedi';
 import * as sinon from 'sinon';
 
-describe('Role Controller', function () {
+describe('Role controller', function () {
 	const sandbox = sinon.createSandbox();
+
+	const body = {
+		name: 'Default',
+		description: 'Description of Default',
+	};
+
+	const query = {
+		name: 'Default',
+	};
 
 	beforeEach(function () {
 		Container.reset();
@@ -33,17 +42,11 @@ describe('Role Controller', function () {
 	});
 
 	it('Create role - success', async function () {
-		const body = {
-			name: 'Default',
-			description: 'Description of Default',
-		};
-
 		const req: Partial<Request> = { body: body };
 		const res: Partial<Response> = { status: sinon.spy(), json: sinon.spy() };
 		const next: Partial<NextFunction> = () => {};
 
 		const roleServiceInstance = Container.get(config.services.role);
-
 		sinon.stub(roleServiceInstance, 'createRole').returns(
 			Result.ok<IRoleDTO>({
 				name: req.body.name,
@@ -54,8 +57,7 @@ describe('Role Controller', function () {
 		const controller = new RoleController(roleServiceInstance as IRoleService);
 		await controller.createRole(<Request>req, <Response>res, <NextFunction>next);
 
-		sinon.assert.calledOnce(res.status);
-		sinon.assert.calledOnce(res.json);
+		sinon.assert.calledWith(res.status, sinon.match(201));
 		sinon.assert.calledWith(
 			res.json,
 			sinon.match({
@@ -66,17 +68,11 @@ describe('Role Controller', function () {
 	});
 
 	it('Create role - fail', async function () {
-		const body = {
-			name: 'Default',
-			description: 'Description of Default',
-		};
-
 		const req: Partial<Request> = { body: body };
 		const res: Partial<Response> = { status: sinon.spy(), json: sinon.spy() };
 		const next: Partial<NextFunction> = () => {};
 
 		const roleServiceInstance = Container.get(config.services.role);
-
 		sinon
 			.stub(roleServiceInstance, 'createRole')
 			.returns(Result.fail<IRoleDTO>('Role with name=' + req.body.name + ' already exists'));
@@ -84,8 +80,7 @@ describe('Role Controller', function () {
 		const controller = new RoleController(roleServiceInstance as IRoleService);
 		await controller.createRole(<Request>req, <Response>res, <NextFunction>next);
 
-		sinon.assert.calledOnce(res.status);
-		sinon.assert.calledOnce(res.json);
+		sinon.assert.calledWith(res.status, sinon.match(400));
 		sinon.assert.calledWith(res.json, sinon.match('Role with name=' + req.body.name + ' already exists'));
 	});
 
@@ -95,14 +90,12 @@ describe('Role Controller', function () {
 		const next: Partial<NextFunction> = () => {};
 
 		const roleServiceInstance = Container.get(config.services.role);
-
 		sinon.stub(roleServiceInstance, 'findAllRoles').returns(Result.ok<IRoleDTO[]>([]));
 
 		const controller = new RoleController(roleServiceInstance as IRoleService);
 		await controller.findAllRoles(<Request>req, <Response>res, <NextFunction>next);
 
-		sinon.assert.calledOnce(res.status);
-		sinon.assert.calledOnce(res.json);
+		sinon.assert.calledWith(res.status, sinon.match(200));
 		sinon.assert.calledWith(res.json, sinon.match([]));
 	});
 
@@ -112,29 +105,21 @@ describe('Role Controller', function () {
 		const next: Partial<NextFunction> = () => {};
 
 		const roleServiceInstance = Container.get(config.services.role);
-
 		sinon.stub(roleServiceInstance, 'findAllRoles').returns(Result.fail<IRoleDTO[]>('There are no roles'));
 
 		const controller = new RoleController(roleServiceInstance as IRoleService);
 		await controller.findAllRoles(<Request>req, <Response>res, <NextFunction>next);
 
-		sinon.assert.calledOnce(res.status);
-		sinon.assert.calledOnce(res.json);
+		sinon.assert.calledWith(res.status, sinon.match(404));
 		sinon.assert.calledWith(res.json, sinon.match('There are no roles'));
 	});
 
 	it('Update role - success', async function () {
-		const body = {
-			name: 'Default',
-			description: 'Description of Default',
-		};
-
 		const req: Partial<Request> = { body: body };
 		const res: Partial<Response> = { status: sinon.spy(), json: sinon.spy() };
 		const next: Partial<NextFunction> = () => {};
 
 		const roleServiceInstance = Container.get(config.services.role);
-
 		sinon.stub(roleServiceInstance, 'updateRole').returns(
 			Result.ok<IRoleDTO>({
 				name: req.body.name,
@@ -145,8 +130,7 @@ describe('Role Controller', function () {
 		const controller = new RoleController(roleServiceInstance as IRoleService);
 		await controller.updateRole(<Request>req, <Response>res, <NextFunction>next);
 
-		sinon.assert.calledOnce(res.status);
-		sinon.assert.calledOnce(res.json);
+		sinon.assert.calledWith(res.status, sinon.match(201));
 		sinon.assert.calledWith(
 			res.json,
 			sinon.match({
@@ -157,17 +141,11 @@ describe('Role Controller', function () {
 	});
 
 	it('Update role - fail', async function () {
-		const body = {
-			name: 'Default',
-			description: 'Description of Default',
-		};
-
 		const req: Partial<Request> = { body: body };
 		const res: Partial<Response> = { status: sinon.spy(), json: sinon.spy() };
 		const next: Partial<NextFunction> = () => {};
 
 		const roleServiceInstance = Container.get(config.services.role);
-
 		sinon
 			.stub(roleServiceInstance, 'updateRole')
 			.returns(Result.fail<IRoleDTO>('No role with name=' + req.body.name + ' was found'));
@@ -175,22 +153,16 @@ describe('Role Controller', function () {
 		const controller = new RoleController(roleServiceInstance as IRoleService);
 		await controller.updateRole(<Request>req, <Response>res, <NextFunction>next);
 
-		sinon.assert.calledOnce(res.status);
-		sinon.assert.calledOnce(res.json);
+		sinon.assert.calledWith(res.status, sinon.match(400));
 		sinon.assert.calledWith(res.json, sinon.match('No role with name=' + req.body.name + ' was found'));
 	});
 
 	it('Delete role - success', async function () {
-		const query = {
-			name: 'Default',
-		};
-
 		const req: Partial<Request> = { query: query };
 		const res: Partial<Response> = { status: sinon.spy(), json: sinon.spy() };
 		const next: Partial<NextFunction> = () => {};
 
 		const roleServiceInstance = Container.get(config.services.role);
-
 		sinon.stub(roleServiceInstance, 'deleteRole').returns(
 			Result.ok<IRoleDTO>({
 				name: 'Default',
@@ -201,8 +173,7 @@ describe('Role Controller', function () {
 		const controller = new RoleController(roleServiceInstance as IRoleService);
 		await controller.deleteRole(<Request>req, <Response>res, <NextFunction>next);
 
-		sinon.assert.calledOnce(res.status);
-		sinon.assert.calledOnce(res.json);
+		sinon.assert.calledWith(res.status, sinon.match(200));
 		sinon.assert.calledWith(
 			res.json,
 			sinon.match({
@@ -213,16 +184,11 @@ describe('Role Controller', function () {
 	});
 
 	it('Delete role - fail', async function () {
-		const query = {
-			name: 'Default',
-		};
-
 		const req: Partial<Request> = { query: query };
 		const res: Partial<Response> = { status: sinon.spy(), json: sinon.spy() };
 		const next: Partial<NextFunction> = () => {};
 
 		const roleServiceInstance = Container.get(config.services.role);
-
 		sinon
 			.stub(roleServiceInstance, 'deleteRole')
 			.returns(Result.fail<IRoleDTO>('No role with name=' + req.query.name + ' was found'));
@@ -230,8 +196,7 @@ describe('Role Controller', function () {
 		const controller = new RoleController(roleServiceInstance as IRoleService);
 		await controller.deleteRole(<Request>req, <Response>res, <NextFunction>next);
 
-		sinon.assert.calledOnce(res.status);
-		sinon.assert.calledOnce(res.json);
+		sinon.assert.calledWith(res.status, sinon.match(400));
 		sinon.assert.calledWith(res.json, sinon.match('No role with name=' + req.query.name + ' was found'));
 	});
 });
