@@ -10,6 +10,7 @@
 		"target": "ESNext"
 	},
 	"include": [
-		"src/**/*"
+		"src",
+		"test"
 	]
 }
