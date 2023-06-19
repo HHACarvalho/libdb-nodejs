@@ -20,7 +20,7 @@ export default class UserController implements IUserController {
 				return res;
 			}
 
-			//res.cookie('token', objOrError.value, { httpOnly: true });
+			res.cookie('token', objOrError.value, { httpOnly: true, maxAge: config.jwtDuration * 1000 });
 
 			res.status(201);
 			res.json(objOrError.value);
@@ -39,7 +39,7 @@ export default class UserController implements IUserController {
 				return res;
 			}
 
-			//res.cookie('token', objOrError.value, { httpOnly: true });
+			res.cookie('token', objOrError.value, { httpOnly: true, maxAge: config.jwtDuration * 1000 });
 
 			res.status(200);
 			res.json(objOrError.value);
@@ -79,7 +79,7 @@ export default class UserController implements IUserController {
 
 			res.status(200);
 			res.json(objOrError.value);
-			return res.status(200).json(objOrError.value);
+			return res;
 		} catch (e) {
 			return next(e);
 		}

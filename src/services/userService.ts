@@ -45,7 +45,7 @@ export default class UserService implements IUserService {
 			);
 
 			const result = await this.userRepoInstance.createUser(obj);
-			const webToken = jwt.sign(UserMapper.toDTO(result), process.env.ACCESS_JWT_SECRET, { expiresIn: '15m' });
+			const webToken = jwt.sign(UserMapper.toDTO(result), config.jwtAccessSecret, { expiresIn: config.jwtDuration });
 			return Result.ok<IUserDTO>(webToken);
 		} catch (e) {
 			throw e;
@@ -64,7 +64,7 @@ export default class UserService implements IUserService {
 				return Result.fail<IUserDTO>('Invalid password');
 			}
 
-			const webToken = jwt.sign(UserMapper.toDTO(obj), process.env.ACCESS_JWT_SECRET, { expiresIn: '15m' });
+			const webToken = jwt.sign(UserMapper.toDTO(obj), config.jwtAccessSecret, { expiresIn: config.jwtDuration });
 			return Result.ok<IUserDTO>(webToken);
 		} catch (e) {
 			throw e;

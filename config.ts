@@ -1,8 +1,6 @@
 import dotenv from 'dotenv';
 
-if (dotenv.config().error) {
-	throw new Error("Couldn't find .env file");
-}
+dotenv.config();
 
 export default {
 	// Port used by the API
@@ -13,6 +11,15 @@ export default {
 
 	// MongoDB's connection string
 	databaseURL: process.env.DATABASE_URL,
+
+	// JSON Web Token's expiration time in seconds
+	jwtDuration: 5,
+
+	// JSON Web Token's access secret
+	jwtAccessSecret: process.env.JWT_ACCESS_SECRET,
+
+	// JSON Web Token's refresh secret
+	jwtRefreshSecret: process.env.JWT_REFRESH_SECRET,
 
 	// Affects logging procedure
 	environment: 'development',
