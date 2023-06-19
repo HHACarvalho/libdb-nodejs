@@ -15,10 +15,14 @@ export default class MovieController implements IMovieController {
 		try {
 			const objOrError = (await this.serviceInstance.createMovie(req.body)) as Result<IMovieDTO>;
 			if (!objOrError.isSuccess) {
-				return res.status(400).json(objOrError.error);
+				res.status(400);
+				res.json(objOrError.error);
+				return res;
 			}
 
-			return res.status(201).json(objOrError.value);
+			res.status(201);
+			res.json(objOrError.value);
+			return res;
 		} catch (e) {
 			return next(e);
 		}
@@ -30,10 +34,14 @@ export default class MovieController implements IMovieController {
 
 			const objOrError = (await this.serviceInstance.findOneMovie(idParameter)) as Result<IMovieDTO>;
 			if (!objOrError.isSuccess) {
-				return res.status(404).json(objOrError.error);
+				res.status(404);
+				res.json(objOrError.error);
+				return res;
 			}
 
-			return res.status(200).json(objOrError.value);
+			res.status(200);
+			res.json(objOrError.value);
+			return res;
 		} catch (e) {
 			return next(e);
 		}
@@ -45,10 +53,14 @@ export default class MovieController implements IMovieController {
 
 			const objOrError = (await this.serviceInstance.findMovies(titleParameter)) as Result<IMovieDTO[]>;
 			if (!objOrError.isSuccess) {
-				return res.status(404).json(objOrError.error);
+				res.status(404);
+				res.json(objOrError.error);
+				return res;
 			}
 
-			return res.status(200).json(objOrError.value);
+			res.status(200);
+			res.json(objOrError.value);
+			return res;
 		} catch (e) {
 			return next(e);
 		}
@@ -58,10 +70,14 @@ export default class MovieController implements IMovieController {
 		try {
 			const objOrError = (await this.serviceInstance.findAllMovies()) as Result<IMovieDTO[]>;
 			if (!objOrError.isSuccess) {
-				return res.status(404).json(objOrError.error);
+				res.status(404);
+				res.json(objOrError.error);
+				return res;
 			}
 
-			return res.status(200).json(objOrError.value);
+			res.status(200);
+			res.json(objOrError.value);
+			return res;
 		} catch (e) {
 			return next(e);
 		}
@@ -71,10 +87,14 @@ export default class MovieController implements IMovieController {
 		try {
 			const objOrError = (await this.serviceInstance.updateMovie(req.body)) as Result<IMovieDTO>;
 			if (!objOrError.isSuccess) {
-				return res.status(400).json(objOrError.error);
+				res.status(400);
+				res.json(objOrError.error);
+				return res;
 			}
 
-			return res.status(201).json(objOrError.value);
+			res.status(201);
+			res.json(objOrError.value);
+			return res;
 		} catch (e) {
 			return next(e);
 		}
@@ -86,10 +106,14 @@ export default class MovieController implements IMovieController {
 
 			const objOrError = (await this.serviceInstance.deleteMovie(idParameter)) as Result<IMovieDTO>;
 			if (!objOrError.isSuccess) {
-				return res.status(400).json(objOrError.error);
+				res.status(400);
+				res.json(objOrError.error);
+				return res;
 			}
 
-			return res.status(200).json(objOrError.value);
+			res.status(200);
+			res.json(objOrError.value);
+			return res;
 		} catch (e) {
 			return next(e);
 		}
@@ -101,10 +125,14 @@ export default class MovieController implements IMovieController {
 
 			const objOrError = (await this.serviceInstance.toggleMovie(idParameter)) as Result<IMovieDTO>;
 			if (!objOrError.isSuccess) {
-				return res.status(400).json(objOrError.error);
+				res.status(400);
+				res.json(objOrError.error);
+				return res;
 			}
 
-			return res.status(200).json(objOrError.value);
+			res.status(200);
+			res.json(objOrError.value);
+			return res;
 		} catch (e) {
 			return next(e);
 		}

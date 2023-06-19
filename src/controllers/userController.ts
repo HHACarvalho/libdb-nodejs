@@ -15,12 +15,16 @@ export default class UserController implements IUserController {
 		try {
 			const objOrError = (await this.serviceInstance.signUp(req.body)) as Result<IUserDTO>;
 			if (!objOrError.isSuccess) {
-				return res.status(400).json(objOrError.error);
+				res.status(400);
+				res.json(objOrError.error);
+				return res;
 			}
 
-			res.cookie('token', objOrError.value, { httpOnly: true });
+			//res.cookie('token', objOrError.value, { httpOnly: true });
 
-			return res.status(201).json(objOrError.value);
+			res.status(201);
+			res.json(objOrError.value);
+			return res;
 		} catch (e) {
 			return next(e);
 		}
@@ -30,12 +34,16 @@ export default class UserController implements IUserController {
 		try {
 			const objOrError = (await this.serviceInstance.login(req.body)) as Result<IUserDTO>;
 			if (!objOrError.isSuccess) {
-				return res.status(404).json(objOrError.error);
+				res.status(404);
+				res.json(objOrError.error);
+				return res;
 			}
 
-			res.cookie('token', objOrError.value, { httpOnly: true });
+			//res.cookie('token', objOrError.value, { httpOnly: true });
 
-			return res.status(200).json(objOrError.value);
+			res.status(200);
+			res.json(objOrError.value);
+			return res;
 		} catch (e) {
 			return next(e);
 		}
@@ -45,10 +53,14 @@ export default class UserController implements IUserController {
 		try {
 			const objOrError = (await this.serviceInstance.updateUser(req.body)) as Result<IUserDTO>;
 			if (!objOrError.isSuccess) {
-				return res.status(400).json(objOrError.error);
+				res.status(400);
+				res.json(objOrError.error);
+				return res;
 			}
 
-			return res.status(201).json(objOrError.value);
+			res.status(201);
+			res.json(objOrError.value);
+			return res;
 		} catch (e) {
 			return next(e);
 		}
@@ -60,9 +72,13 @@ export default class UserController implements IUserController {
 
 			const objOrError = (await this.serviceInstance.deleteUser(emailParameter)) as Result<IUserDTO>;
 			if (!objOrError.isSuccess) {
-				return res.status(400).json(objOrError.error);
+				res.status(400);
+				res.json(objOrError.error);
+				return res;
 			}
 
+			res.status(200);
+			res.json(objOrError.value);
 			return res.status(200).json(objOrError.value);
 		} catch (e) {
 			return next(e);
