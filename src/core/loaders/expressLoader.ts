@@ -3,14 +3,18 @@ import routes from '../../api';
 
 import { isCelebrateError } from 'celebrate';
 import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express from 'express';
 
 export default (expressApp: express.Application) => {
-	// Enable Cross Origin Resource Sharing to all origins by default
+	// Middleware to handle cross-origin resource sharing
 	expressApp.use(cors());
 
-	// Parses req.body into json
+	// Middleware for req.cookies
+	expressApp.use(cookieParser());
+
+	// Middleware for req.body
 	expressApp.use(bodyParser.json());
 
 	// Load all routes
