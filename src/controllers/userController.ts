@@ -9,7 +9,10 @@ import { Inject, Service } from 'typedi';
 
 @Service()
 export default class UserController implements IUserController {
-	constructor(@Inject(config.services.user) private serviceInstance: IUserService) {}
+	constructor(
+		@Inject(config.services.user) private serviceInstance: IUserService,
+		@Inject('logger') private logger
+	) {}
 
 	public async signUp(req: Request, res: Response, next: NextFunction) {
 		try {
@@ -17,13 +20,16 @@ export default class UserController implements IUserController {
 			if (!objOrError.isSuccess) {
 				res.status(400);
 				res.json(objOrError.error);
+
+				this.logger.warn('Received signUp() request -> fail');
 				return res;
 			}
 
-			res.cookie('token', objOrError.value, { httpOnly: true, maxAge: config.jwtDuration * 1000 });
-
 			res.status(201);
+			res.cookie('token', objOrError.value, { httpOnly: true, maxAge: config.jwtDuration * 1000 });
 			res.json(objOrError.value);
+
+			this.logger.info('Received signUp() request -> success');
 			return res;
 		} catch (e) {
 			return next(e);
@@ -36,13 +42,16 @@ export default class UserController implements IUserController {
 			if (!objOrError.isSuccess) {
 				res.status(404);
 				res.json(objOrError.error);
+
+				this.logger.warn('Received login() request -> fail');
 				return res;
 			}
 
-			res.cookie('token', objOrError.value, { httpOnly: true, maxAge: config.jwtDuration * 1000 });
-
 			res.status(200);
+			res.cookie('token', objOrError.value, { httpOnly: true, maxAge: config.jwtDuration * 1000 });
 			res.json(objOrError.value);
+
+			this.logger.info('Received login() request -> success');
 			return res;
 		} catch (e) {
 			return next(e);

@@ -5,6 +5,8 @@ import { Container } from 'typedi';
 
 export default () => {
 	try {
+		Container.set('logger', Logger);
+
 		Object.values(config.schemas).forEach((e) => {
 			const schema = require('../../schemas/' + e).default;
 			Container.set(e, schema);

@@ -26,7 +26,7 @@ export default (expressApp: express.Application) => {
 	});
 
 	// Route not found
-	expressApp.use((req, res, next) => {
+	expressApp.use((req, res) => {
 		res.status(404).json('Route not found');
 	});
 

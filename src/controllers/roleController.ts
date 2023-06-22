@@ -9,7 +9,10 @@ import { Inject, Service } from 'typedi';
 
 @Service()
 export default class RoleController implements IRoleController {
-	constructor(@Inject(config.services.role) private serviceInstance: IRoleService) {}
+	constructor(
+		@Inject(config.services.role) private serviceInstance: IRoleService,
+		@Inject('logger') private logger
+	) {}
 
 	public async createRole(req: Request, res: Response, next: NextFunction) {
 		try {
