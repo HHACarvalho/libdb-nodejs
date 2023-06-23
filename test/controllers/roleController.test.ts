@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 
 import config from '../../config';
+import Logger from '../../src/core/loaders/loggerLoader';
 import { Result } from '../../src/core/Result';
 import IRoleDTO from '../../src/dtos/IRoleDTO';
 import IRoleService from '../../src/services/IServices/IRoleService';
@@ -24,6 +25,8 @@ describe('Role controller', function () {
 
 	beforeEach(function () {
 		Container.reset();
+
+		Container.set('logger', Logger);
 
 		let roleSchemaInstance = require('../../src/schemas/' + config.schemas.role).default;
 		Container.set(config.schemas.role, roleSchemaInstance);
@@ -54,7 +57,8 @@ describe('Role controller', function () {
 			})
 		);
 
-		const controller = new RoleController(roleServiceInstance as IRoleService);
+		const logger = Container.get('logger');
+		const controller = new RoleController(roleServiceInstance as IRoleService, logger);
 		await controller.createRole(<Request>req, <Response>res, <NextFunction>next);
 
 		sinon.assert.calledWith(res.status, sinon.match(201));
@@ -77,7 +81,8 @@ describe('Role controller', function () {
 			.stub(roleServiceInstance, 'createRole')
 			.returns(Result.fail<IRoleDTO>('Role with name=' + req.body.name + ' already exists'));
 
-		const controller = new RoleController(roleServiceInstance as IRoleService);
+		const logger = Container.get('logger');
+		const controller = new RoleController(roleServiceInstance as IRoleService, logger);
 		await controller.createRole(<Request>req, <Response>res, <NextFunction>next);
 
 		sinon.assert.calledWith(res.status, sinon.match(400));
@@ -92,7 +97,8 @@ describe('Role controller', function () {
 		const roleServiceInstance = Container.get(config.services.role);
 		sinon.stub(roleServiceInstance, 'findAllRoles').returns(Result.ok<IRoleDTO[]>([]));
 
-		const controller = new RoleController(roleServiceInstance as IRoleService);
+		const logger = Container.get('logger');
+		const controller = new RoleController(roleServiceInstance as IRoleService, logger);
 		await controller.findAllRoles(<Request>req, <Response>res, <NextFunction>next);
 
 		sinon.assert.calledWith(res.status, sinon.match(200));
@@ -107,7 +113,8 @@ describe('Role controller', function () {
 		const roleServiceInstance = Container.get(config.services.role);
 		sinon.stub(roleServiceInstance, 'findAllRoles').returns(Result.fail<IRoleDTO[]>('There are no roles'));
 
-		const controller = new RoleController(roleServiceInstance as IRoleService);
+		const logger = Container.get('logger');
+		const controller = new RoleController(roleServiceInstance as IRoleService, logger);
 		await controller.findAllRoles(<Request>req, <Response>res, <NextFunction>next);
 
 		sinon.assert.calledWith(res.status, sinon.match(404));
@@ -127,10 +134,11 @@ describe('Role controller', function () {
 			})
 		);
 
-		const controller = new RoleController(roleServiceInstance as IRoleService);
+		const logger = Container.get('logger');
+		const controller = new RoleController(roleServiceInstance as IRoleService, logger);
 		await controller.updateRole(<Request>req, <Response>res, <NextFunction>next);
 
-		sinon.assert.calledWith(res.status, sinon.match(201));
+		sinon.assert.calledWith(res.status, sinon.match(200));
 		sinon.assert.calledWith(
 			res.json,
 			sinon.match({
@@ -150,10 +158,11 @@ describe('Role controller', function () {
 			.stub(roleServiceInstance, 'updateRole')
 			.returns(Result.fail<IRoleDTO>('No role with name=' + req.body.name + ' was found'));
 
-		const controller = new RoleController(roleServiceInstance as IRoleService);
+		const logger = Container.get('logger');
+		const controller = new RoleController(roleServiceInstance as IRoleService, logger);
 		await controller.updateRole(<Request>req, <Response>res, <NextFunction>next);
 
-		sinon.assert.calledWith(res.status, sinon.match(400));
+		sinon.assert.calledWith(res.status, sinon.match(404));
 		sinon.assert.calledWith(res.json, sinon.match('No role with name=' + req.body.name + ' was found'));
 	});
 
@@ -170,7 +179,8 @@ describe('Role controller', function () {
 			})
 		);
 
-		const controller = new RoleController(roleServiceInstance as IRoleService);
+		const logger = Container.get('logger');
+		const controller = new RoleController(roleServiceInstance as IRoleService, logger);
 		await controller.deleteRole(<Request>req, <Response>res, <NextFunction>next);
 
 		sinon.assert.calledWith(res.status, sinon.match(200));
@@ -193,10 +203,11 @@ describe('Role controller', function () {
 			.stub(roleServiceInstance, 'deleteRole')
 			.returns(Result.fail<IRoleDTO>('No role with name=' + req.query.name + ' was found'));
 
-		const controller = new RoleController(roleServiceInstance as IRoleService);
+		const logger = Container.get('logger');
+		const controller = new RoleController(roleServiceInstance as IRoleService, logger);
 		await controller.deleteRole(<Request>req, <Response>res, <NextFunction>next);
 
-		sinon.assert.calledWith(res.status, sinon.match(400));
+		sinon.assert.calledWith(res.status, sinon.match(404));
 		sinon.assert.calledWith(res.json, sinon.match('No role with name=' + req.query.name + ' was found'));
 	});
 });
