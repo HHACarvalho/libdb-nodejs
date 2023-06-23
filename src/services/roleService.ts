@@ -1,5 +1,4 @@
 import config from '../../config';
-import { EntityID } from '../core/domain/EntityID';
 import { Role } from '../domain/role';
 import { RoleMapper } from '../mappers/roleMapper';
 import { Result } from '../core/Result';
@@ -20,13 +19,10 @@ export default class RoleService implements IRoleService {
 				return Result.fail<any>('Role with name=' + dto.name + ' already exists');
 			}
 
-			const obj = Role.create(
-				{
-					name: dto.name,
-					description: dto.description,
-				},
-				new EntityID(dto.id)
-			);
+			const obj = Role.create({
+				name: dto.name,
+				description: dto.description,
+			});
 
 			await this.repoInstance.createRole(obj);
 			return Result.ok<any>();

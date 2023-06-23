@@ -1,5 +1,4 @@
 import config from '../../config';
-import { EntityID } from '../core/domain/EntityID';
 import { User } from '../domain/user';
 import { UserMapper } from '../mappers/userMapper';
 import { Result } from '../core/Result';
@@ -32,16 +31,13 @@ export default class UserService implements IUserService {
 
 			const hashedPassword = await bcrypt.hash(dto.password, 10);
 
-			const obj = User.create(
-				{
-					email: dto.email,
-					password: hashedPassword,
-					firstName: dto.firstName,
-					lastName: dto.lastName,
-					role: dto.role,
-				},
-				new EntityID(dto.id)
-			);
+			const obj = User.create({
+				email: dto.email,
+				password: hashedPassword,
+				firstName: dto.firstName,
+				lastName: dto.lastName,
+				role: dto.role,
+			});
 
 			const result = await this.userRepoInstance.createUser(obj);
 
