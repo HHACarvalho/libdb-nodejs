@@ -18,14 +18,14 @@ export default class MovieController implements IMovieController {
 		try {
 			const objOrError = (await this.serviceInstance.createMovie(req.body)) as Result<IMovieDTO>;
 			if (!objOrError.isSuccess) {
-				res.status(400);
 				res.json(objOrError.error);
-				return res;
+
+				this.logger.warn('Received createMovie() request -> fail');
+				return res.status(400);
 			}
 
-			res.status(201);
-			res.json(objOrError.value);
-			return res;
+			this.logger.info('Received createMovie() request -> success');
+			return res.status(201);
 		} catch (e) {
 			return next(e);
 		}
@@ -37,14 +37,16 @@ export default class MovieController implements IMovieController {
 
 			const objOrError = (await this.serviceInstance.findOneMovie(idParameter)) as Result<IMovieDTO>;
 			if (!objOrError.isSuccess) {
-				res.status(404);
 				res.json(objOrError.error);
-				return res;
+
+				this.logger.warn('Received findOneMovie() request -> fail');
+				return res.status(404);
 			}
 
-			res.status(200);
 			res.json(objOrError.value);
-			return res;
+
+			this.logger.info('Received findOneMovie() request -> success');
+			return res.status(200);
 		} catch (e) {
 			return next(e);
 		}
@@ -56,14 +58,16 @@ export default class MovieController implements IMovieController {
 
 			const objOrError = (await this.serviceInstance.findMovies(titleParameter)) as Result<IMovieDTO[]>;
 			if (!objOrError.isSuccess) {
-				res.status(404);
 				res.json(objOrError.error);
-				return res;
+
+				this.logger.warn('Received findMovies() request -> fail');
+				return res.status(404);
 			}
 
-			res.status(200);
 			res.json(objOrError.value);
-			return res;
+
+			this.logger.info('Received findMovies() request -> success');
+			return res.status(200);
 		} catch (e) {
 			return next(e);
 		}
@@ -73,14 +77,16 @@ export default class MovieController implements IMovieController {
 		try {
 			const objOrError = (await this.serviceInstance.findAllMovies()) as Result<IMovieDTO[]>;
 			if (!objOrError.isSuccess) {
-				res.status(404);
 				res.json(objOrError.error);
-				return res;
+
+				this.logger.warn('Received findAllMovies() request -> fail');
+				return res.status(404);
 			}
 
-			res.status(200);
 			res.json(objOrError.value);
-			return res;
+
+			this.logger.info('Received findAllMovies() request -> success');
+			return res.status(200);
 		} catch (e) {
 			return next(e);
 		}
@@ -90,14 +96,14 @@ export default class MovieController implements IMovieController {
 		try {
 			const objOrError = (await this.serviceInstance.updateMovie(req.body)) as Result<IMovieDTO>;
 			if (!objOrError.isSuccess) {
-				res.status(400);
 				res.json(objOrError.error);
-				return res;
+
+				this.logger.warn('Received updateMovie() request -> fail');
+				return res.status(404);
 			}
 
-			res.status(201);
-			res.json(objOrError.value);
-			return res;
+			this.logger.info('Received updateMovie() request -> success');
+			return res.status(200);
 		} catch (e) {
 			return next(e);
 		}
@@ -109,14 +115,14 @@ export default class MovieController implements IMovieController {
 
 			const objOrError = (await this.serviceInstance.deleteMovie(idParameter)) as Result<IMovieDTO>;
 			if (!objOrError.isSuccess) {
-				res.status(400);
 				res.json(objOrError.error);
-				return res;
+
+				this.logger.warn('Received deleteMovie() request -> fail');
+				return res.status(404);
 			}
 
-			res.status(200);
-			res.json(objOrError.value);
-			return res;
+			this.logger.info('Received deleteMovie() request -> success');
+			return res.status(200);
 		} catch (e) {
 			return next(e);
 		}

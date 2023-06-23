@@ -13,11 +13,11 @@ import { Inject, Service } from 'typedi';
 export default class RoleService implements IRoleService {
 	constructor(@Inject(config.repos.role) private repoInstance: IRoleRepo) {}
 
-	public async createRole(dto: any): Promise<Result<IRoleDTO>> {
+	public async createRole(dto: any): Promise<Result<any>> {
 		try {
 			const roleExists = await this.repoInstance.exists(dto.name);
 			if (roleExists) {
-				return Result.fail<IRoleDTO>('Role with name=' + dto.name + ' already exists');
+				return Result.fail<any>('Role with name=' + dto.name + ' already exists');
 			}
 
 			const obj = Role.create(
@@ -28,8 +28,8 @@ export default class RoleService implements IRoleService {
 				new EntityID(dto.id)
 			);
 
-			const result = await this.repoInstance.createRole(obj);
-			return Result.ok<IRoleDTO>(RoleMapper.toDTO(result));
+			await this.repoInstance.createRole(obj);
+			return Result.ok<any>();
 		} catch (e) {
 			throw e;
 		}
@@ -48,32 +48,32 @@ export default class RoleService implements IRoleService {
 		}
 	}
 
-	public async updateRole(dto: any): Promise<Result<IRoleDTO>> {
+	public async updateRole(dto: any): Promise<Result<any>> {
 		try {
 			const obj = await this.repoInstance.findRole(dto.name);
 			if (obj == null) {
-				return Result.fail<IRoleDTO>('No role with name=' + dto.name + ' was found');
+				return Result.fail<any>('No role with name=' + dto.name + ' was found');
 			}
 
 			if (dto.name) obj.name = dto.name;
 			if (dto.description) obj.description = dto.description;
 
-			const result = await this.repoInstance.updateRole(obj);
-			return Result.ok<IRoleDTO>(RoleMapper.toDTO(result));
+			await this.repoInstance.updateRole(obj);
+			return Result.ok<any>();
 		} catch (e) {
 			throw e;
 		}
 	}
 
-	public async deleteRole(name: string): Promise<Result<IRoleDTO>> {
+	public async deleteRole(name: string): Promise<Result<any>> {
 		try {
 			const roleExists = await this.repoInstance.exists(name);
 			if (!roleExists) {
-				return Result.fail<IRoleDTO>('No role with name=' + name + ' was found');
+				return Result.fail<any>('No role with name=' + name + ' was found');
 			}
 
-			const result = await this.repoInstance.deleteRole(name);
-			return Result.ok<IRoleDTO>(RoleMapper.toDTO(result));
+			await this.repoInstance.deleteRole(name);
+			return Result.ok<any>();
 		} catch (e) {
 			throw e;
 		}

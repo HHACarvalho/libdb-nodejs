@@ -4,7 +4,6 @@ import { User } from '../domain/user';
 import { UserMapper } from '../mappers/userMapper';
 import { Result } from '../core/Result';
 import IRoleRepo from '../repos/IRepos/IRoleRepo';
-import IUserDTO from '../dtos/IUserDTO';
 import IUserRepo from '../repos/IRepos/IUserRepo';
 import IUserService from './IServices/IUserService';
 
@@ -19,16 +18,16 @@ export default class UserService implements IUserService {
 		@Inject(config.repos.role) private roleRepoInstance: IRoleRepo
 	) {}
 
-	public async signUp(dto: any): Promise<Result<IUserDTO>> {
+	public async signUp(dto: any): Promise<Result<any>> {
 		try {
 			const userExists = await this.userRepoInstance.exists(dto.email);
 			if (userExists) {
-				return Result.fail<IUserDTO>('User with email=' + dto.email + ' already exists');
+				return Result.fail<any>('User with email=' + dto.email + ' already exists');
 			}
 
 			const roleExists = await this.roleRepoInstance.exists(dto.role);
 			if (!roleExists) {
-				return Result.fail<IUserDTO>('No role with name=' + dto.role + ' was found');
+				return Result.fail<any>('No role with name=' + dto.role + ' was found');
 			}
 
 			const hashedPassword = await bcrypt.hash(dto.password, 10);
@@ -45,42 +44,43 @@ export default class UserService implements IUserService {
 			);
 
 			const result = await this.userRepoInstance.createUser(obj);
-			const webToken = jwt.sign(UserMapper.toDTO(result), config.jwtAccessSecret, { expiresIn: config.jwtDuration });
-			return Result.ok<IUserDTO>(webToken);
+
+			const token = this.signToken(UserMapper.toDTO(result));
+			return Result.ok<any>(token);
 		} catch (e) {
 			throw e;
 		}
 	}
 
-	public async login(dto: any): Promise<Result<IUserDTO>> {
+	public async login(dto: any): Promise<Result<any>> {
 		try {
 			const obj = await this.userRepoInstance.findUser(dto.email);
 			if (obj == null) {
-				return Result.fail<IUserDTO>('No user with email=' + dto.email + ' was found');
+				return Result.fail<any>('No user with email=' + dto.email + ' was found');
 			}
 
 			const isMatch = await bcrypt.compare(dto.password, obj.password);
 			if (!isMatch) {
-				return Result.fail<IUserDTO>('Invalid password');
+				return Result.fail<any>('Invalid password');
 			}
 
-			const webToken = jwt.sign(UserMapper.toDTO(obj), config.jwtAccessSecret, { expiresIn: config.jwtDuration });
-			return Result.ok<IUserDTO>(webToken);
+			const token = this.signToken(UserMapper.toDTO(obj));
+			return Result.ok<any>(token);
 		} catch (e) {
 			throw e;
 		}
 	}
 
-	public async updateUser(dto: any): Promise<Result<IUserDTO>> {
+	public async updateUser(dto: any): Promise<Result<any>> {
 		try {
 			const obj = await this.userRepoInstance.findUser(dto.email);
 			if (obj == null) {
-				return Result.fail<IUserDTO>('No user with email=' + dto.email + ' was found');
+				return Result.fail<any>('No user with email=' + dto.email + ' was found');
 			}
 
 			const roleExists = await this.roleRepoInstance.exists(dto.role);
 			if (!roleExists) {
-				return Result.fail<IUserDTO>('No role with name=' + dto.role + ' was found');
+				return Result.fail<any>('No role with name=' + dto.role + ' was found');
 			}
 
 			const hashedPassword = await bcrypt.hash(dto.password, 10);
@@ -91,24 +91,32 @@ export default class UserService implements IUserService {
 			if (dto.lastName) obj.lastName = dto.lastName;
 			if (dto.role) obj.role = dto.role;
 
-			const result = await this.userRepoInstance.updateUser(obj);
-			return Result.ok<IUserDTO>(UserMapper.toDTO(result));
+			await this.userRepoInstance.updateUser(obj);
+			return Result.ok<any>();
 		} catch (e) {
 			throw e;
 		}
 	}
 
-	public async deleteUser(email: string): Promise<Result<IUserDTO>> {
+	public async deleteUser(email: string): Promise<Result<any>> {
 		try {
 			const userExists = await this.userRepoInstance.exists(email);
 			if (!userExists) {
-				return Result.fail<IUserDTO>('No user with email=' + email + ' was found');
+				return Result.fail<any>('No user with email=' + email + ' was found');
 			}
 
-			const result = await this.userRepoInstance.deleteUser(email);
-			return Result.ok<IUserDTO>(UserMapper.toDTO(result));
+			await this.userRepoInstance.deleteUser(email);
+			return Result.ok<any>();
 		} catch (e) {
 			throw e;
 		}
+	}
+
+	private signToken(dto: any): string {
+		return jwt.sign(dto, config.jwtAccessSecret, { expiresIn: config.jwtDuration });
+	}
+
+	private verifyToken(cookie: string): string {
+		return jwt.verify(cookie, config.jwtAccessSecret);
 	}
 }

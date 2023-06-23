@@ -1,7 +1,6 @@
 import config from '../../config';
 import { Result } from '../core/Result';
 import IUserController from './IControllers/IUserController';
-import IUserDTO from '../dtos/IUserDTO';
 import IUserService from '../services/IServices/IUserService';
 
 import { NextFunction, Request, Response } from 'express';
@@ -16,21 +15,18 @@ export default class UserController implements IUserController {
 
 	public async signUp(req: Request, res: Response, next: NextFunction) {
 		try {
-			const objOrError = (await this.serviceInstance.signUp(req.body)) as Result<IUserDTO>;
-			if (!objOrError.isSuccess) {
-				res.status(400);
-				res.json(objOrError.error);
+			const result = (await this.serviceInstance.signUp(req.body)) as Result<any>;
+			if (!result.isSuccess) {
+				res.json(result.error);
 
 				this.logger.warn('Received signUp() request -> fail');
-				return res;
+				return res.status(400);
 			}
 
-			res.status(201);
-			res.cookie('token', objOrError.value, { httpOnly: true, maxAge: config.jwtDuration * 1000 });
-			res.json(objOrError.value);
+			res.cookie('token', result.value, { httpOnly: true, maxAge: config.jwtDuration * 1000 });
 
 			this.logger.info('Received signUp() request -> success');
-			return res;
+			return res.status(201);
 		} catch (e) {
 			return next(e);
 		}
@@ -38,21 +34,18 @@ export default class UserController implements IUserController {
 
 	public async login(req: Request, res: Response, next: NextFunction) {
 		try {
-			const objOrError = (await this.serviceInstance.login(req.body)) as Result<IUserDTO>;
-			if (!objOrError.isSuccess) {
-				res.status(404);
-				res.json(objOrError.error);
+			const result = (await this.serviceInstance.login(req.body)) as Result<any>;
+			if (!result.isSuccess) {
+				res.json(result.error);
 
 				this.logger.warn('Received login() request -> fail');
-				return res;
+				return res.status(404);
 			}
 
-			res.status(200);
-			res.cookie('token', objOrError.value, { httpOnly: true, maxAge: config.jwtDuration * 1000 });
-			res.json(objOrError.value);
+			res.cookie('token', result.value, { httpOnly: true, maxAge: config.jwtDuration * 1000 });
 
 			this.logger.info('Received login() request -> success');
-			return res;
+			return res.status(200);
 		} catch (e) {
 			return next(e);
 		}
@@ -60,16 +53,16 @@ export default class UserController implements IUserController {
 
 	public async updateUser(req: Request, res: Response, next: NextFunction) {
 		try {
-			const objOrError = (await this.serviceInstance.updateUser(req.body)) as Result<IUserDTO>;
-			if (!objOrError.isSuccess) {
-				res.status(400);
-				res.json(objOrError.error);
-				return res;
+			const result = (await this.serviceInstance.updateUser(req.body)) as Result<any>;
+			if (!result.isSuccess) {
+				res.json(result.error);
+
+				this.logger.warn('Received updateUser() request -> fail');
+				return res.status(404);
 			}
 
-			res.status(201);
-			res.json(objOrError.value);
-			return res;
+			this.logger.info('Received updateUser() request -> success');
+			return res.status(200);
 		} catch (e) {
 			return next(e);
 		}
@@ -79,16 +72,16 @@ export default class UserController implements IUserController {
 		try {
 			const emailParameter = req.query.email as string;
 
-			const objOrError = (await this.serviceInstance.deleteUser(emailParameter)) as Result<IUserDTO>;
-			if (!objOrError.isSuccess) {
-				res.status(400);
-				res.json(objOrError.error);
-				return res;
+			const result = (await this.serviceInstance.deleteUser(emailParameter)) as Result<any>;
+			if (!result.isSuccess) {
+				res.json(result.error);
+
+				this.logger.warn('Received deleteUser() request -> fail');
+				return res.status(404);
 			}
 
-			res.status(200);
-			res.json(objOrError.value);
-			return res;
+			this.logger.info('Received deleteUser() request -> success');
+			return res.status(204);
 		} catch (e) {
 			return next(e);
 		}

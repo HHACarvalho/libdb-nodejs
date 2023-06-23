@@ -183,7 +183,7 @@ describe('Role controller', function () {
 		const controller = new RoleController(roleServiceInstance as IRoleService, logger);
 		await controller.deleteRole(<Request>req, <Response>res, <NextFunction>next);
 
-		sinon.assert.calledWith(res.status, sinon.match(200));
+		sinon.assert.calledWith(res.status, sinon.match(204));
 		sinon.assert.calledWith(
 			res.json,
 			sinon.match({

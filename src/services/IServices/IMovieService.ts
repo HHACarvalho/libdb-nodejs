@@ -2,7 +2,7 @@ import { Result } from '../../core/Result';
 import IMovieDTO from '../../dtos/IMovieDTO';
 
 export default interface IMovieService {
-	createMovie(dto: any): Promise<Result<IMovieDTO>>;
+	createMovie(dto: any): Promise<Result<any>>;
 
 	findOneMovie(id: string): Promise<Result<IMovieDTO>>;
 
@@ -10,9 +10,9 @@ export default interface IMovieService {
 
 	findAllMovies(): Promise<Result<IMovieDTO[]>>;
 
-	updateMovie(dto: any): Promise<Result<IMovieDTO>>;
+	updateMovie(dto: any): Promise<Result<any>>;
 
-	deleteMovie(id: string): Promise<Result<IMovieDTO>>;
+	deleteMovie(id: string): Promise<Result<any>>;
 
 	toggleMovie(id: string): Promise<Result<IMovieDTO>>;
 }

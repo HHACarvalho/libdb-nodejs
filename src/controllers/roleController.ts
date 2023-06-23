@@ -18,14 +18,14 @@ export default class RoleController implements IRoleController {
 		try {
 			const objOrError = (await this.serviceInstance.createRole(req.body)) as Result<IRoleDTO>;
 			if (!objOrError.isSuccess) {
-				res.status(400);
 				res.json(objOrError.error);
-				return res;
+
+				this.logger.warn('Received createRole() request -> fail');
+				return res.status(400);
 			}
 
-			res.status(201);
-			res.json(objOrError.value);
-			return res;
+			this.logger.info('Received createRole() request -> success');
+			return res.status(201);
 		} catch (e) {
 			return next(e);
 		}
@@ -35,14 +35,16 @@ export default class RoleController implements IRoleController {
 		try {
 			const objOrError = (await this.serviceInstance.findAllRoles()) as Result<IRoleDTO[]>;
 			if (!objOrError.isSuccess) {
-				res.status(404);
 				res.json(objOrError.error);
-				return res;
+
+				this.logger.warn('Received findAllRoles() request -> fail');
+				return res.status(404);
 			}
 
-			res.status(200);
 			res.json(objOrError.value);
-			return res;
+
+			this.logger.info('Received findAllRoles() request -> success');
+			return res.status(200);
 		} catch (e) {
 			return next(e);
 		}
@@ -52,14 +54,14 @@ export default class RoleController implements IRoleController {
 		try {
 			const objOrError = (await this.serviceInstance.updateRole(req.body)) as Result<IRoleDTO>;
 			if (!objOrError.isSuccess) {
-				res.status(400);
 				res.json(objOrError.error);
-				return res;
+
+				this.logger.warn('Received updateRole() request -> fail');
+				return res.status(404);
 			}
 
-			res.status(201);
-			res.json(objOrError.value);
-			return res;
+			this.logger.info('Received updateRole() request -> success');
+			return res.status(200);
 		} catch (e) {
 			return next(e);
 		}
@@ -71,14 +73,14 @@ export default class RoleController implements IRoleController {
 
 			const objOrError = (await this.serviceInstance.deleteRole(nameParameter)) as Result<IRoleDTO>;
 			if (!objOrError.isSuccess) {
-				res.status(400);
 				res.json(objOrError.error);
-				return res;
+
+				this.logger.warn('Received deleteRole() request -> fail');
+				return res.status(404);
 			}
 
-			res.status(200);
-			res.json(objOrError.value);
-			return res;
+			this.logger.info('Received deleteRole() request -> success');
+			return res.status(204);
 		} catch (e) {
 			return next(e);
 		}
