@@ -14,13 +14,6 @@ export default class MovieService implements IMovieService {
 
 	public async createMovie(dto: any): Promise<Result<any>> {
 		try {
-			if (dto.id) {
-				const movieExists = await this.repoInstance.exists(dto.id);
-				if (movieExists) {
-					return Result.fail<any>('Movie with id=' + dto.id + ' already exists');
-				}
-			}
-
 			const obj = Movie.create({
 				title: dto.title,
 				director: dto.director,

@@ -14,7 +14,6 @@ export default (app: Router) => {
 
 	const schema = celebrate({
 		[Segments.BODY]: Joi.object().keys({
-			id: Joi.string().min(2).max(36),
 			title: Joi.string().min(2).max(96).required(),
 			director: Joi.string().min(2).max(32).required(),
 			releaseYear: Joi.number().integer().min(1888).required(),
