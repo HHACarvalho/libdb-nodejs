@@ -44,6 +44,4 @@ export default (app: Router) => {
 	movieRoute.put('', schema, (req, res, next) => controller.updateMovie(req, res, next));
 
 	movieRoute.delete('', schemaIdQuery, (req, res, next) => controller.deleteMovie(req, res, next));
-
-	movieRoute.patch('', schemaIdQuery, (req, res, next) => controller.toggleMovie(req, res, next));
 };

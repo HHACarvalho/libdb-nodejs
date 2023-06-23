@@ -127,23 +127,4 @@ export default class MovieController implements IMovieController {
 			return next(e);
 		}
 	}
-
-	public async toggleMovie(req: Request, res: Response, next: NextFunction) {
-		try {
-			const idParameter = req.query.id as string;
-
-			const objOrError = (await this.serviceInstance.toggleMovie(idParameter)) as Result<IMovieDTO>;
-			if (!objOrError.isSuccess) {
-				res.status(400);
-				res.json(objOrError.error);
-				return res;
-			}
-
-			res.status(200);
-			res.json(objOrError.value);
-			return res;
-		} catch (e) {
-			return next(e);
-		}
-	}
 }

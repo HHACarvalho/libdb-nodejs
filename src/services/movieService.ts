@@ -1,5 +1,4 @@
 import config from '../../config';
-import { EntityID } from '../core/domain/EntityID';
 import { Movie } from '../domain/movie';
 import { MovieMapper } from '../mappers/movieMapper';
 import { Result } from '../core/Result';
@@ -22,15 +21,12 @@ export default class MovieService implements IMovieService {
 				}
 			}
 
-			const obj = Movie.create(
-				{
-					title: dto.title,
-					director: dto.director,
-					releaseYear: dto.releaseYear,
-					hidden: false,
-				},
-				new EntityID(dto.id)
-			);
+			const obj = Movie.create({
+				title: dto.title,
+				director: dto.director,
+				releaseYear: dto.releaseYear,
+				hidden: false,
+			});
 
 			await this.repoInstance.createMovie(obj);
 			return Result.ok<any>();
@@ -99,29 +95,12 @@ export default class MovieService implements IMovieService {
 	public async deleteMovie(id: string): Promise<Result<any>> {
 		try {
 			const movieExists = await this.repoInstance.exists(id);
-
 			if (!movieExists) {
 				return Result.fail<any>('No movie with id=' + id + ' was found');
 			}
 
 			await this.repoInstance.deleteMovie(id);
 			return Result.ok<any>();
-		} catch (e) {
-			throw e;
-		}
-	}
-
-	public async toggleMovie(id: string): Promise<Result<IMovieDTO>> {
-		try {
-			const obj = await this.repoInstance.findOneMovie(id);
-			if (obj == null) {
-				return Result.fail<IMovieDTO>('No movie with id=' + id + ' was found');
-			}
-
-			obj.hidden = !obj.hidden;
-
-			const result = await this.repoInstance.updateMovie(obj);
-			return Result.ok<IMovieDTO>(MovieMapper.toDTO(result));
 		} catch (e) {
 			throw e;
 		}

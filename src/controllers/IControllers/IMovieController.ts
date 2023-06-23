@@ -12,6 +12,4 @@ export default interface IMovieController {
 	updateMovie(req: Request, res: Response, next: NextFunction);
 
 	deleteMovie(req: Request, res: Response, next: NextFunction);
-
-	toggleMovie(req: Request, res: Response, next: NextFunction);
 }

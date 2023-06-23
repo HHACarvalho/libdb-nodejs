@@ -13,6 +13,4 @@ export default interface IMovieService {
 	updateMovie(dto: any): Promise<Result<any>>;
 
 	deleteMovie(id: string): Promise<Result<any>>;
-
-	toggleMovie(id: string): Promise<Result<IMovieDTO>>;
 }
