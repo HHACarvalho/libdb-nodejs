@@ -23,10 +23,11 @@ export default class UserController implements IUserController {
 				return res.status(400);
 			}
 
+			res.status(201);
 			res.cookie('token', result.value, { httpOnly: true, maxAge: config.jwtDuration * 1000 });
 
 			this.logger.info('Received signUp() request -> success');
-			return res.status(201);
+			return res.send();
 		} catch (e) {
 			return next(e);
 		}
@@ -42,10 +43,11 @@ export default class UserController implements IUserController {
 				return res.status(404);
 			}
 
+			res.status(200)
 			res.cookie('token', result.value, { httpOnly: true, maxAge: config.jwtDuration * 1000 });
 
 			this.logger.info('Received login() request -> success');
-			return res.status(200);
+			return res.send();
 		} catch (e) {
 			return next(e);
 		}
@@ -61,8 +63,10 @@ export default class UserController implements IUserController {
 				return res.status(404);
 			}
 
+			res.status(200);
+
 			this.logger.info('Received updateUser() request -> success');
-			return res.status(200);
+			return res.send();
 		} catch (e) {
 			return next(e);
 		}
@@ -80,8 +84,10 @@ export default class UserController implements IUserController {
 				return res.status(404);
 			}
 
+			res.status(204);
+
 			this.logger.info('Received deleteUser() request -> success');
-			return res.status(204);
+			return res.send();
 		} catch (e) {
 			return next(e);
 		}

@@ -16,16 +16,18 @@ export default class RoleController implements IRoleController {
 
 	public async createRole(req: Request, res: Response, next: NextFunction) {
 		try {
-			const objOrError = (await this.serviceInstance.createRole(req.body)) as Result<IRoleDTO>;
-			if (!objOrError.isSuccess) {
-				res.json(objOrError.error);
+			const result = (await this.serviceInstance.createRole(req.body)) as Result<any>;
+			if (!result.isSuccess) {
+				res.json(result.error);
 
 				this.logger.warn('Received createRole() request -> fail');
 				return res.status(400);
 			}
 
+			res.status(201);
+
 			this.logger.info('Received createRole() request -> success');
-			return res.status(201);
+			return res.send();
 		} catch (e) {
 			return next(e);
 		}
@@ -33,15 +35,15 @@ export default class RoleController implements IRoleController {
 
 	public async findAllRoles(req: Request, res: Response, next: NextFunction) {
 		try {
-			const objOrError = (await this.serviceInstance.findAllRoles()) as Result<IRoleDTO[]>;
-			if (!objOrError.isSuccess) {
-				res.json(objOrError.error);
+			const result = (await this.serviceInstance.findAllRoles()) as Result<IRoleDTO[]>;
+			if (!result.isSuccess) {
+				res.json(result.error);
 
 				this.logger.warn('Received findAllRoles() request -> fail');
 				return res.status(404);
 			}
 
-			res.json(objOrError.value);
+			res.json(result.value);
 
 			this.logger.info('Received findAllRoles() request -> success');
 			return res.status(200);
@@ -52,16 +54,18 @@ export default class RoleController implements IRoleController {
 
 	public async updateRole(req: Request, res: Response, next: NextFunction) {
 		try {
-			const objOrError = (await this.serviceInstance.updateRole(req.body)) as Result<IRoleDTO>;
-			if (!objOrError.isSuccess) {
-				res.json(objOrError.error);
+			const result = (await this.serviceInstance.updateRole(req.body)) as Result<any>;
+			if (!result.isSuccess) {
+				res.json(result.error);
 
 				this.logger.warn('Received updateRole() request -> fail');
 				return res.status(404);
 			}
 
+			res.status(200);
+
 			this.logger.info('Received updateRole() request -> success');
-			return res.status(200);
+			return res.send();
 		} catch (e) {
 			return next(e);
 		}
@@ -71,16 +75,18 @@ export default class RoleController implements IRoleController {
 		try {
 			const nameParameter = req.query.name as string;
 
-			const objOrError = (await this.serviceInstance.deleteRole(nameParameter)) as Result<IRoleDTO>;
-			if (!objOrError.isSuccess) {
-				res.json(objOrError.error);
+			const result = (await this.serviceInstance.deleteRole(nameParameter)) as Result<any>;
+			if (!result.isSuccess) {
+				res.json(result.error);
 
 				this.logger.warn('Received deleteRole() request -> fail');
 				return res.status(404);
 			}
 
+			res.status(204);
+
 			this.logger.info('Received deleteRole() request -> success');
-			return res.status(204);
+			return res.send();
 		} catch (e) {
 			return next(e);
 		}
