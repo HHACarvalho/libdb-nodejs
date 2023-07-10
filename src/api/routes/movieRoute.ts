@@ -12,7 +12,7 @@ export default (app: Router) => {
 
 	const controller = Container.get(config.controllers.movie) as IMovieController;
 
-	const schema = celebrate({
+	const fullBodySchema = celebrate({
 		[Segments.BODY]: Joi.object().keys({
 			title: Joi.string().min(2).max(96).required(),
 			director: Joi.string().min(2).max(32).required(),
@@ -20,27 +20,15 @@ export default (app: Router) => {
 		}),
 	});
 
-	const schemaIdQuery = celebrate({
-		[Segments.QUERY]: Joi.object().keys({
-			id: Joi.string().min(2).max(36).required(),
-		}),
-	});
+	movieRoute.post('', fullBodySchema, (req, res, next) => controller.createMovie(req, res, next));
 
-	const schemaTitleQuery = celebrate({
-		[Segments.QUERY]: Joi.object().keys({
-			title: Joi.string().min(2).max(96).required(),
-		}),
-	});
+	movieRoute.get('', (req, res, next) => controller.findOneMovie(req, res, next));
 
-	movieRoute.post('', schema, (req, res, next) => controller.createMovie(req, res, next));
-
-	movieRoute.get('', schemaIdQuery, (req, res, next) => controller.findOneMovie(req, res, next));
-
-	movieRoute.get('/search', schemaTitleQuery, (req, res, next) => controller.findMovies(req, res, next));
+	movieRoute.get('/search', (req, res, next) => controller.findMovies(req, res, next));
 
 	movieRoute.get('/all', (req, res, next) => controller.findAllMovies(req, res, next));
 
-	movieRoute.put('', schema, (req, res, next) => controller.updateMovie(req, res, next));
+	movieRoute.put('', fullBodySchema, (req, res, next) => controller.updateMovie(req, res, next));
 
-	movieRoute.delete('', schemaIdQuery, (req, res, next) => controller.deleteMovie(req, res, next));
+	movieRoute.delete('', (req, res, next) => controller.deleteMovie(req, res, next));
 };

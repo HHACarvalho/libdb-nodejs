@@ -12,13 +12,12 @@ export default (app: Router) => {
 
 	const controller = Container.get(config.controllers.user) as IUserController;
 
-	const schema = celebrate({
+	const fullBodySchema = celebrate({
 		[Segments.BODY]: Joi.object().keys({
 			email: Joi.string().email().required(),
 			password: Joi.string().min(8).max(32).required(),
 			firstName: Joi.string().alphanum().min(2).max(32).required(),
 			lastName: Joi.string().alphanum().min(2).max(32).required(),
-			role: Joi.string().required(),
 		}),
 	});
 
@@ -29,17 +28,11 @@ export default (app: Router) => {
 		}),
 	});
 
-	const schemaEmailQuery = celebrate({
-		[Segments.QUERY]: Joi.object().keys({
-			email: Joi.string().email().required(),
-		}),
-	});
-
-	userRoute.post('', schema, (req, res, next) => controller.signUp(req, res, next));
+	userRoute.post('', fullBodySchema, (req, res, next) => controller.signUp(req, res, next));
 
 	userRoute.get('', loginSchema, (req, res, next) => controller.login(req, res, next));
 
-	userRoute.put('', schema, (req, res, next) => controller.updateUser(req, res, next));
+	userRoute.put('', fullBodySchema, (req, res, next) => controller.updateUser(req, res, next));
 
-	userRoute.delete('', schemaEmailQuery, (req, res, next) => controller.deleteUser(req, res, next));
+	userRoute.delete('', (req, res, next) => controller.deleteUser(req, res, next));
 };

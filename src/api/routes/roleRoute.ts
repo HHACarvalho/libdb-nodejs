@@ -12,24 +12,18 @@ export default (app: Router) => {
 
 	const controller = Container.get(config.controllers.role) as IRoleController;
 
-	const schema = celebrate({
+	const fullBodySchema = celebrate({
 		[Segments.BODY]: Joi.object().keys({
 			name: Joi.string().min(2).max(32).required(),
 			description: Joi.string().min(2).max(96).required(),
 		}),
 	});
 
-	const schemaNameQuery = celebrate({
-		[Segments.QUERY]: Joi.object().keys({
-			name: Joi.string().min(2).max(32).required(),
-		}),
-	});
-
-	roleRoute.post('', schema, (req, res, next) => controller.createRole(req, res, next));
+	roleRoute.post('', fullBodySchema, (req, res, next) => controller.createRole(req, res, next));
 
 	roleRoute.get('/all', (req, res, next) => controller.findAllRoles(req, res, next));
 
-	roleRoute.put('', schema, (req, res, next) => controller.updateRole(req, res, next));
+	roleRoute.put('', fullBodySchema, (req, res, next) => controller.updateRole(req, res, next));
 
-	roleRoute.delete('', schemaNameQuery, (req, res, next) => controller.deleteRole(req, res, next));
+	roleRoute.delete('', (req, res, next) => controller.deleteRole(req, res, next));
 };
