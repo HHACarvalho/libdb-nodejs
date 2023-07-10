@@ -24,11 +24,6 @@ export default class UserService implements IUserService {
 				return Result.fail<any>('User with email=' + dto.email + ' already exists');
 			}
 
-			const roleExists = await this.roleRepoInstance.exists(dto.role);
-			if (!roleExists) {
-				return Result.fail<any>('No role with name=' + dto.role + ' was found');
-			}
-
 			const hashedPassword = await bcrypt.hash(dto.password, 10);
 
 			const obj = User.create({
@@ -36,7 +31,7 @@ export default class UserService implements IUserService {
 				password: hashedPassword,
 				firstName: dto.firstName,
 				lastName: dto.lastName,
-				role: dto.role,
+				role: "Default",
 			});
 
 			const result = await this.userRepoInstance.createUser(obj);
@@ -81,11 +76,11 @@ export default class UserService implements IUserService {
 
 			const hashedPassword = await bcrypt.hash(dto.password, 10);
 
-			if (dto.email) obj.email = dto.email;
-			if (dto.password) obj.password = hashedPassword;
-			if (dto.firstName) obj.firstName = dto.firstName;
-			if (dto.lastName) obj.lastName = dto.lastName;
-			if (dto.role) obj.role = dto.role;
+			obj.email = dto.email;
+			obj.password = hashedPassword;
+			obj.firstName = dto.firstName;
+			obj.lastName = dto.lastName;
+			obj.role = dto.role;
 
 			await this.userRepoInstance.updateUser(obj);
 			return Result.ok<any>();
