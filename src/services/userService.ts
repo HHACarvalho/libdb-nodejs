@@ -2,20 +2,16 @@ import config from '../../config';
 import { User } from '../domain/user';
 import { UserMapper } from '../mappers/userMapper';
 import { Result } from '../core/Result';
-import IRoleRepo from '../repos/IRepos/IRoleRepo';
 import IUserRepo from '../repos/IRepos/IUserRepo';
 import IUserService from './IServices/IUserService';
 
+import { compare, hash } from 'bcrypt';
+import { sign } from 'jsonwebtoken';
 import { Inject, Service } from 'typedi';
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
 
 @Service()
 export default class UserService implements IUserService {
-	constructor(
-		@Inject(config.repos.user) private userRepoInstance: IUserRepo,
-		@Inject(config.repos.role) private roleRepoInstance: IRoleRepo
-	) {}
+	constructor(@Inject(config.repos.user) private userRepoInstance: IUserRepo) {}
 
 	public async signUp(dto: any): Promise<Result<any>> {
 		try {
@@ -24,14 +20,14 @@ export default class UserService implements IUserService {
 				return Result.fail<any>('User with email=' + dto.email + ' already exists');
 			}
 
-			const hashedPassword = await bcrypt.hash(dto.password, 10);
+			const hashedPassword = await hash(dto.password, 10);
 
 			const obj = User.create({
 				email: dto.email,
 				password: hashedPassword,
 				firstName: dto.firstName,
 				lastName: dto.lastName,
-				role: "Default",
+				role: 'Default',
 			});
 
 			const result = await this.userRepoInstance.createUser(obj);
@@ -50,7 +46,7 @@ export default class UserService implements IUserService {
 				return Result.fail<any>('No user with email=' + dto.email + ' was found');
 			}
 
-			const isMatch = await bcrypt.compare(dto.password, obj.password);
+			const isMatch = await compare(dto.password, obj.password);
 			if (!isMatch) {
 				return Result.fail<any>('Invalid password');
 			}
@@ -69,21 +65,17 @@ export default class UserService implements IUserService {
 				return Result.fail<any>('No user with email=' + dto.email + ' was found');
 			}
 
-			const roleExists = await this.roleRepoInstance.exists(dto.role);
-			if (!roleExists) {
-				return Result.fail<any>('No role with name=' + dto.role + ' was found');
-			}
+			const hashedPassword = await hash(dto.password, 10);
 
-			const hashedPassword = await bcrypt.hash(dto.password, 10);
+			if (dto.email) obj.email = dto.email;
+			if (dto.password) obj.password = hashedPassword;
+			if (dto.firstName) obj.firstName = dto.firstName;
+			if (dto.lastName) obj.lastName = dto.lastName;
 
-			obj.email = dto.email;
-			obj.password = hashedPassword;
-			obj.firstName = dto.firstName;
-			obj.lastName = dto.lastName;
-			obj.role = dto.role;
+			const result = await this.userRepoInstance.updateUser(obj);
 
-			await this.userRepoInstance.updateUser(obj);
-			return Result.ok<any>();
+			const token = this.signToken(UserMapper.toDTO(result));
+			return Result.ok<any>(token);
 		} catch (e) {
 			throw e;
 		}
@@ -104,10 +96,6 @@ export default class UserService implements IUserService {
 	}
 
 	private signToken(dto: any): string {
-		return jwt.sign(dto, config.jwtAccessSecret, { expiresIn: config.jwtDuration });
-	}
-
-	private verifyToken(cookie: string): string {
-		return jwt.verify(cookie, config.jwtAccessSecret);
+		return sign(dto, config.jwtAccessSecret, { expiresIn: config.jwtDuration });
 	}
 }
