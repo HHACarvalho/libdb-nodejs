@@ -1,4 +1,5 @@
 import config from '../../../config';
+import { validateJwt, validatePermissions } from '../authMiddleware';
 import IUserController from '../../controllers/IControllers/IUserController';
 
 import { celebrate, Joi, Segments } from 'celebrate';
@@ -12,7 +13,7 @@ export default (app: Router) => {
 
 	const controller = Container.get(config.controllers.user) as IUserController;
 
-	const fullBodySchema = celebrate({
+	const signUpSchema = celebrate({
 		[Segments.BODY]: Joi.object().keys({
 			email: Joi.string().email().required(),
 			password: Joi.string().min(8).max(32).required(),
@@ -28,11 +29,24 @@ export default (app: Router) => {
 		}),
 	});
 
-	userRoute.post('', fullBodySchema, (req, res, next) => controller.signUp(req, res, next));
+	const updateUserSchema = celebrate({
+		[Segments.BODY]: Joi.object().keys({
+			email: Joi.string().email().allow('', null),
+			password: Joi.string().min(8).max(32).allow('', null),
+			firstName: Joi.string().alphanum().min(2).max(32).allow('', null),
+			lastName: Joi.string().alphanum().min(2).max(32).allow('', null),
+		}),
+	});
+
+	userRoute.post('', signUpSchema, (req, res, next) => controller.signUp(req, res, next));
 
 	userRoute.get('', loginSchema, (req, res, next) => controller.login(req, res, next));
 
-	userRoute.put('', fullBodySchema, (req, res, next) => controller.updateUser(req, res, next));
+	userRoute.put('', updateUserSchema, validateJwt, validatePermissions(['Default']), (req, res, next) =>
+		controller.updateUser(req, res, next)
+	);
 
-	userRoute.delete('', (req, res, next) => controller.deleteUser(req, res, next));
+	userRoute.delete('', validateJwt, validatePermissions(['Default']), (req, res, next) =>
+		controller.deleteUser(req, res, next)
+	);
 };

@@ -1,7 +1,8 @@
 import config from '../../../config';
 import routes from '../../api';
 
-import { isCelebrateError } from 'celebrate';
+import { CelebrateError } from 'celebrate';
+import { JsonWebTokenError } from 'jsonwebtoken';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
@@ -32,15 +33,15 @@ export default (expressApp: express.Application) => {
 
 	// Error handling
 	expressApp.use((err, req, res, next) => {
-		if (isCelebrateError(err)) {
+		if (err instanceof CelebrateError) {
 			res.status(400);
-			if (err.details.get('cookies')) {
-				res.json('Validation failed: ' + err.details.get('cookies').details[0].message);
-			} else if (err.details.get('body')) {
-				res.json('Validation failed: ' + err.details.get('body').details[0].message);
-			}
+			res.json('Celebrate: ' + err.details.get('body').details[0].message);
+		} else if (err instanceof JsonWebTokenError) {
+			res.json('JWT: ' + err.message);
 		} else {
-			res.status(500).json(err.message);
+			res.status(500);
+			res.json(err.message);
 		}
+		next();
 	});
 };
