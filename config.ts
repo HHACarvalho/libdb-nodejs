@@ -1,6 +1,6 @@
-import dotenv from 'dotenv';
+import { config } from 'dotenv';
 
-dotenv.config();
+config();
 
 export default {
 	// Port used by the API
@@ -13,7 +13,7 @@ export default {
 	databaseURL: process.env.DATABASE_URL,
 
 	// JSON Web Token's expiration time in seconds
-	jwtDuration: 15,
+	jwtDuration: process.env.JWT_DURATION,
 
 	// JSON Web Token's access secret
 	jwtAccessSecret: process.env.JWT_ACCESS_SECRET,
