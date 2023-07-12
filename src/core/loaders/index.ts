@@ -3,9 +3,7 @@ import dependencyLoader from './dependencyLoader';
 import expressLoader from './expressLoader';
 import mongooseLoader from './mongooseLoader';
 
-import express from 'express';
-
-export default async (expressApp: express.Application) => {
+export default async (expressApp) => {
 	await mongooseLoader();
 	Logger.info('MongoDB connected and loaded!');
 

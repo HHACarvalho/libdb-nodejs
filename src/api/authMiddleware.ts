@@ -1,11 +1,11 @@
 import config from '../../config';
 
 import { NextFunction, Request, Response } from 'express';
-import jwt from 'jsonwebtoken';
+import { JsonWebTokenError, verify } from 'jsonwebtoken';
 
 export const validateJwt = (req: Request, res: Response, next: NextFunction) => {
 	try {
-		req['token'] = jwt.verify(req.cookies.token, config.jwtAccessSecret);
+		req['token'] = verify(req.cookies.token, config.jwtAccessSecret);
 		next();
 	} catch (e) {
 		res.status(401);
@@ -27,6 +27,6 @@ export const validatePermissions = (roles: string[]) => {
 
 function checkUserRole(roles: string[], userRole: string) {
 	if (!roles.includes(userRole)) {
-		throw new jwt.JsonWebTokenError('insufficient permissions');
+		throw new JsonWebTokenError('insufficient permissions');
 	}
 }
