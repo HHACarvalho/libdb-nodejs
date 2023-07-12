@@ -1,24 +1,16 @@
 import IRolePersistence from '../dtos/IRolePersistence';
 
-import mongoose from 'mongoose';
+import { Document, model, Schema } from 'mongoose';
 
-const roleSchema = new mongoose.Schema(
+const schema = new Schema(
 	{
-		_id: {
-			type: String,
-		},
-		name: {
-			type: String,
-			required: true,
-		},
-		description: {
-			type: String,
-			required: true,
-		},
+		_id: String,
+		name: String,
+		description: String,
 	},
 	{
 		versionKey: '_version',
 	}
 );
 
-export default mongoose.model<IRolePersistence & mongoose.Document>('Role', roleSchema);
+export default model<IRolePersistence & Document>('Role', schema);

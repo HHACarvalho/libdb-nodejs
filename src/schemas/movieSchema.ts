@@ -1,32 +1,18 @@
 import IMoviePersistence from '../dtos/IMoviePersistence';
 
-import mongoose from 'mongoose';
+import { Document, model, Schema } from 'mongoose';
 
-const movieSchema = new mongoose.Schema(
+const schema = new Schema(
 	{
-		_id: {
-			type: String,
-		},
-		title: {
-			type: String,
-			required: true,
-		},
-		director: {
-			type: String,
-			required: true,
-		},
-		releaseYear: {
-			type: Number,
-			required: true,
-		},
-		hidden: {
-			type: Boolean,
-			required: true,
-		},
+		_id: String,
+		title: String,
+		director: String,
+		releaseYear: Number,
+		hidden: Boolean,
 	},
 	{
 		versionKey: '_version',
 	}
 );
 
-export default mongoose.model<IMoviePersistence & mongoose.Document>('Movie', movieSchema);
+export default model<IMoviePersistence & Document>('Movie', schema);
