@@ -13,7 +13,7 @@ export default {
 	databaseURL: process.env.DATABASE_URL,
 
 	// JSON Web Token's expiration time in seconds
-	jwtDuration: process.env.JWT_DURATION,
+	jwtDuration: 15,
 
 	// JSON Web Token's access secret
 	jwtAccessSecret: process.env.JWT_ACCESS_SECRET,
@@ -29,21 +29,25 @@ export default {
 
 	controllers: {
 		movie: 'movieController',
+		role: 'roleController',
 		user: 'userController',
 	},
 
 	services: {
 		movie: 'movieService',
+		role: 'roleService',
 		user: 'userService',
 	},
 
 	repos: {
 		movie: 'movieRepo',
+		role: 'roleRepo',
 		user: 'userRepo',
 	},
 
 	schemas: {
 		movie: 'movieSchema',
+		role: 'roleSchema',
 		user: 'userSchema',
 	},
 };
