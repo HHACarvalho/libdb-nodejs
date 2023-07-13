@@ -27,7 +27,7 @@ export default class RoleController implements IRoleController {
 			res.status(201);
 
 			this.logger.info('Received createRole() request -> success');
-			return res.send();
+			return res.send('Successfully created role');
 		} catch (e) {
 			return next(e);
 		}
@@ -67,7 +67,7 @@ export default class RoleController implements IRoleController {
 			res.status(200);
 
 			this.logger.info('Received updateRole() request -> success');
-			return res.send();
+			return res.send('Successfully updated role');
 		} catch (e) {
 			return next(e);
 		}
@@ -88,7 +88,7 @@ export default class RoleController implements IRoleController {
 			res.status(204);
 
 			this.logger.info('Received deleteRole() request -> success');
-			return res.send();
+			return res.send('Successfully deleted role');
 		} catch (e) {
 			return next(e);
 		}

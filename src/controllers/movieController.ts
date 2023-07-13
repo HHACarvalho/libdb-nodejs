@@ -27,7 +27,7 @@ export default class MovieController implements IMovieController {
 			res.status(201);
 
 			this.logger.info('Received createMovie() request -> success');
-			return res.send();
+			return res.send('Successfully created movie');
 		} catch (e) {
 			return next(e);
 		}
@@ -109,7 +109,7 @@ export default class MovieController implements IMovieController {
 			res.status(200);
 
 			this.logger.info('Received updateMovie() request -> success');
-			return res.send();
+			return res.send('Successfully updated movie');
 		} catch (e) {
 			return next(e);
 		}
@@ -130,7 +130,7 @@ export default class MovieController implements IMovieController {
 			res.status(204);
 
 			this.logger.info('Received deleteMovie() request -> success');
-			return res.send();
+			return res.send('Successfully deleted movie');
 		} catch (e) {
 			return next(e);
 		}

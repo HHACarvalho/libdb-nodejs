@@ -67,7 +67,7 @@ export default class UserController implements IUserController {
 			res.cookie('token', result.value, { httpOnly: true, maxAge: config.jwtDuration * 1000 });
 
 			this.logger.info('Received updateProfile() request -> success');
-			return res.send('Successfully updated profile');
+			return res.send('Successfully updated user profile');
 		} catch (e) {
 			return next(e);
 		}
