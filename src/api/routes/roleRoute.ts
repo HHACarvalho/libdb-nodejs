@@ -13,9 +13,13 @@ export default (app: Router) => {
 	const controller = Container.get(config.controllers.role) as IRoleController;
 
 	const fullBodySchema = celebrate({
-		[Segments.BODY]: Joi.object().keys({
+		[Segments.BODY]: Joi.object({
 			name: Joi.string().min(2).max(32).required(),
-			description: Joi.string().min(2).max(96).required(),
+			permissions: Joi.object({
+				manageMovies: Joi.boolean().required(),
+				manageRoles: Joi.boolean().required(),
+				manageUsers: Joi.boolean().required(),
+			}).required(),
 		}),
 	});
 
