@@ -14,14 +14,14 @@ export default class MovieService implements IMovieService {
 
 	public async createMovie(reqBody: any): Promise<Result<any>> {
 		try {
-			const obj = Movie.create({
+			const movie = Movie.create({
 				title: reqBody.title,
 				director: reqBody.director,
 				releaseYear: reqBody.releaseYear,
 				hidden: false,
 			});
 
-			await this.repoInstance.createMovie(obj);
+			await this.repoInstance.createMovie(movie);
 			return Result.ok<any>();
 		} catch (e) {
 			throw e;
@@ -30,12 +30,12 @@ export default class MovieService implements IMovieService {
 
 	public async findOneMovie(id: string): Promise<Result<IMovieDTO>> {
 		try {
-			const obj = await this.repoInstance.findOneMovie(id);
-			if (obj == null) {
-				return Result.fail<IMovieDTO>('No movie with id=' + id + ' was found');
+			const movie = await this.repoInstance.findOneMovie(id);
+			if (movie == null) {
+				return Result.fail<IMovieDTO>('No movie with the id "' + id + '" was found');
 			}
 
-			return Result.ok<IMovieDTO>(MovieMapper.toDTO(obj));
+			return Result.ok<IMovieDTO>(MovieMapper.toDTO(movie));
 		} catch (e) {
 			throw e;
 		}
@@ -43,12 +43,12 @@ export default class MovieService implements IMovieService {
 
 	public async findMovies(title: string): Promise<Result<IMovieDTO[]>> {
 		try {
-			const list = await this.repoInstance.findMovies(title);
-			if (list == null) {
-				return Result.fail<IMovieDTO[]>('No movies with title=' + title + ' were found');
+			const movieList = await this.repoInstance.findMovies(title);
+			if (movieList == null) {
+				return Result.fail<IMovieDTO[]>('No movies with "' + title + '" in the title were found');
 			}
 
-			return Result.ok<IMovieDTO[]>(list.map((e) => MovieMapper.toDTO(e)));
+			return Result.ok<IMovieDTO[]>(movieList.map((e) => MovieMapper.toDTO(e)));
 		} catch (e) {
 			throw e;
 		}
@@ -56,29 +56,29 @@ export default class MovieService implements IMovieService {
 
 	public async findAllMovies(): Promise<Result<IMovieDTO[]>> {
 		try {
-			const list = await this.repoInstance.findAllMovies();
-			if (list == null) {
+			const movieList = await this.repoInstance.findAllMovies();
+			if (movieList == null) {
 				return Result.fail<IMovieDTO[]>('There are no movies');
 			}
 
-			return Result.ok<IMovieDTO[]>(list.map((e) => MovieMapper.toDTO(e)));
+			return Result.ok<IMovieDTO[]>(movieList.map((e) => MovieMapper.toDTO(e)));
 		} catch (e) {
 			throw e;
 		}
 	}
 
-	public async updateMovie(reqBody: any): Promise<Result<any>> {
+	public async updateMovie(id: string, reqBody: any): Promise<Result<any>> {
 		try {
-			const obj = await this.repoInstance.findOneMovie(reqBody.id);
-			if (obj == null) {
-				return Result.fail<any>('No movie with id=' + reqBody.id + ' was found');
+			const movie = await this.repoInstance.findOneMovie(id);
+			if (movie == null) {
+				return Result.fail<any>('No movie with the id "' + id + '" was found');
 			}
 
-			obj.title = reqBody.title;
-			obj.director = reqBody.director;
-			obj.releaseYear = reqBody.releaseYear;
+			movie.title = reqBody.title;
+			movie.director = reqBody.director;
+			movie.releaseYear = reqBody.releaseYear;
 
-			await this.repoInstance.updateMovie(obj);
+			await this.repoInstance.updateMovie(movie);
 			return Result.ok<any>();
 		} catch (e) {
 			throw e;
@@ -89,7 +89,7 @@ export default class MovieService implements IMovieService {
 		try {
 			const movieExists = await this.repoInstance.exists(id);
 			if (!movieExists) {
-				return Result.fail<any>('No movie with id=' + id + ' was found');
+				return Result.fail<any>('No movie with the id "' + id + '" was found');
 			}
 
 			await this.repoInstance.deleteMovie(id);

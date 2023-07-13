@@ -6,7 +6,7 @@ export default interface IRoleService {
 
 	findAllRoles(): Promise<Result<IRoleDTO[]>>;
 
-	updateRole(reqBody: any): Promise<Result<any>>;
+	updateRole(name: string, reqBody: any): Promise<Result<any>>;
 
 	deleteRole(name: string): Promise<Result<any>>;
 }

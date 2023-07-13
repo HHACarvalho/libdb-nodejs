@@ -10,7 +10,7 @@ export default interface IMovieService {
 
 	findAllMovies(): Promise<Result<IMovieDTO[]>>;
 
-	updateMovie(reqBody: any): Promise<Result<any>>;
+	updateMovie(id: string, reqBody: any): Promise<Result<any>>;
 
 	deleteMovie(id: string): Promise<Result<any>>;
 }

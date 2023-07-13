@@ -21,7 +21,7 @@ export default class UserService implements IUserService {
 		try {
 			const userExists = await this.userRepoInstance.exists(reqBody.email);
 			if (userExists) {
-				return Result.fail<any>('User with email=' + reqBody.email + ' already exists');
+				return Result.fail<any>('User with the email "' + reqBody.email + '" already exists');
 			}
 
 			const hashedPassword = await hash(reqBody.password, 10);
@@ -45,17 +45,17 @@ export default class UserService implements IUserService {
 
 	public async login(reqBody: any): Promise<Result<any>> {
 		try {
-			const obj = await this.userRepoInstance.findUser(reqBody.email);
-			if (obj == null) {
-				return Result.fail<any>('No user with email=' + reqBody.email + ' was found');
+			const user = await this.userRepoInstance.findUser(reqBody.email);
+			if (user == null) {
+				return Result.fail<any>('No user with the email "' + reqBody.email + '" was found');
 			}
 
-			const isMatch = await compare(reqBody.password, obj.password);
+			const isMatch = await compare(reqBody.password, user.password);
 			if (!isMatch) {
 				return Result.fail<any>('Incorrect password');
 			}
 
-			const token = this.signToken(UserMapper.toDTO(obj));
+			const token = this.signToken(UserMapper.toDTO(user));
 			return Result.ok<any>(token);
 		} catch (e) {
 			throw e;
@@ -66,13 +66,13 @@ export default class UserService implements IUserService {
 		try {
 			const user = await this.userRepoInstance.findUser(email);
 			if (user == null) {
-				return Result.fail<any>('No user with email=' + reqBody.email + ' was found');
+				return Result.fail<any>('No user with the email "' + reqBody.email + '" was found');
 			}
 
 			if (user.email != reqBody.email) {
-				const userExists = await this.userRepoInstance.exists(email);
-				if (!userExists) {
-					return Result.fail<any>('No user with email=' + email + ' was found');
+				const userExists = await this.userRepoInstance.exists(reqBody.email);
+				if (userExists) {
+					return Result.fail<any>('User with the email "' + reqBody.email + '" already exists');
 				}
 			}
 
@@ -96,12 +96,12 @@ export default class UserService implements IUserService {
 		try {
 			const user = await this.userRepoInstance.findUser(email);
 			if (user == null) {
-				return Result.fail<any>('No user with email=' + email + ' was found');
+				return Result.fail<any>('No user with the email "' + email + '" was found');
 			}
 
 			const roleExists = await this.roleRepoInstance.exists(role);
 			if (!roleExists) {
-				return Result.fail<any>('No role with name=' + role + ' was found');
+				return Result.fail<any>('No role with the name "' + role + '" was found');
 			}
 
 			user.role = role;
@@ -119,7 +119,7 @@ export default class UserService implements IUserService {
 		try {
 			const userExists = await this.userRepoInstance.exists(email);
 			if (!userExists) {
-				return Result.fail<any>('No user with email=' + email + ' was found');
+				return Result.fail<any>('No user with the email "' + email + '" was found');
 			}
 
 			await this.userRepoInstance.deleteUser(email);

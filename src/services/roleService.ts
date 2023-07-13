@@ -16,7 +16,7 @@ export default class RoleService implements IRoleService {
 		try {
 			const roleExists = await this.repoInstance.exists(reqBody.name);
 			if (roleExists) {
-				return Result.fail<any>('Role with name=' + reqBody.name + ' already exists');
+				return Result.fail<any>('Role with the name "' + reqBody.name + '" already exists');
 			}
 
 			const obj = Role.create({
@@ -33,28 +33,28 @@ export default class RoleService implements IRoleService {
 
 	public async findAllRoles(): Promise<Result<IRoleDTO[]>> {
 		try {
-			const list = await this.repoInstance.findAllRoles();
-			if (list == null) {
+			const roleList = await this.repoInstance.findAllRoles();
+			if (roleList == null) {
 				return Result.fail<IRoleDTO[]>('There are no roles');
 			}
 
-			return Result.ok<IRoleDTO[]>(list.map((e) => RoleMapper.toDTO(e)));
+			return Result.ok<IRoleDTO[]>(roleList.map((e) => RoleMapper.toDTO(e)));
 		} catch (e) {
 			throw e;
 		}
 	}
 
-	public async updateRole(reqBody: any): Promise<Result<any>> {
+	public async updateRole(name: string, reqBody: any): Promise<Result<any>> {
 		try {
-			const obj = await this.repoInstance.findRole(reqBody.name);
-			if (obj == null) {
-				return Result.fail<any>('No role with name=' + reqBody.name + ' was found');
+			const role = await this.repoInstance.findRole(name);
+			if (role == null) {
+				return Result.fail<any>('No role with the name "' + name + '" was found');
 			}
 
-			obj.name = reqBody.name;
-			obj.permissions = reqBody.permissions;
+			role.name = reqBody.name;
+			role.permissions = reqBody.permissions;
 
-			await this.repoInstance.updateRole(obj);
+			await this.repoInstance.updateRole(role);
 			return Result.ok<any>();
 		} catch (e) {
 			throw e;
@@ -65,7 +65,7 @@ export default class RoleService implements IRoleService {
 		try {
 			const roleExists = await this.repoInstance.exists(name);
 			if (!roleExists) {
-				return Result.fail<any>('No role with name=' + name + ' was found');
+				return Result.fail<any>('No role with the name "' + name + '" was found');
 			}
 
 			await this.repoInstance.deleteRole(name);
