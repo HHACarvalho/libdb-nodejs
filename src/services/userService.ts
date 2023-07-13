@@ -2,6 +2,7 @@ import config from '../../config';
 import { User } from '../domain/user';
 import { UserMapper } from '../mappers/userMapper';
 import { Result } from '../core/Result';
+import IRoleRepo from '../repos/IRepos/IRoleRepo';
 import IUserRepo from '../repos/IRepos/IUserRepo';
 import IUserService from './IServices/IUserService';
 
@@ -11,22 +12,25 @@ import { Inject, Service } from 'typedi';
 
 @Service()
 export default class UserService implements IUserService {
-	constructor(@Inject(config.repos.user) private userRepoInstance: IUserRepo) {}
+	constructor(
+		@Inject(config.repos.user) private userRepoInstance: IUserRepo,
+		@Inject(config.repos.role) private roleRepoInstance: IRoleRepo
+	) {}
 
-	public async signUp(dto: any): Promise<Result<any>> {
+	public async signUp(reqBody: any): Promise<Result<any>> {
 		try {
-			const userExists = await this.userRepoInstance.exists(dto.email);
+			const userExists = await this.userRepoInstance.exists(reqBody.email);
 			if (userExists) {
-				return Result.fail<any>('User with email=' + dto.email + ' already exists');
+				return Result.fail<any>('User with email=' + reqBody.email + ' already exists');
 			}
 
-			const hashedPassword = await hash(dto.password, 10);
+			const hashedPassword = await hash(reqBody.password, 10);
 
 			const obj = User.create({
-				email: dto.email,
+				email: reqBody.email,
 				password: hashedPassword,
-				firstName: dto.firstName,
-				lastName: dto.lastName,
+				firstName: reqBody.firstName,
+				lastName: reqBody.lastName,
 				role: 'User',
 			});
 
@@ -39,16 +43,16 @@ export default class UserService implements IUserService {
 		}
 	}
 
-	public async login(dto: any): Promise<Result<any>> {
+	public async login(reqBody: any): Promise<Result<any>> {
 		try {
-			const obj = await this.userRepoInstance.findUser(dto.email);
+			const obj = await this.userRepoInstance.findUser(reqBody.email);
 			if (obj == null) {
-				return Result.fail<any>('No user with email=' + dto.email + ' was found');
+				return Result.fail<any>('No user with email=' + reqBody.email + ' was found');
 			}
 
-			const isMatch = await compare(dto.password, obj.password);
+			const isMatch = await compare(reqBody.password, obj.password);
 			if (!isMatch) {
-				return Result.fail<any>('Invalid password');
+				return Result.fail<any>('Incorrect password');
 			}
 
 			const token = this.signToken(UserMapper.toDTO(obj));

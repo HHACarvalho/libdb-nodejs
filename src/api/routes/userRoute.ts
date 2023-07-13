@@ -1,5 +1,6 @@
 import config from '../../../config';
 import { userValidation } from '../authMiddleware';
+import { Permissions } from '../../domain/role';
 import IUserController from '../../controllers/IControllers/IUserController';
 
 import { celebrate, Joi, Segments } from 'celebrate';
@@ -38,10 +39,14 @@ export default (app: Router) => {
 	});
 
 	userRoute.put('', bodySchema, userValidation, (req, res, next) => {
-		controller.updateUser(req, res, next);
+		controller.updateProfile(req, res, next);
+	});
+
+	userRoute.patch('', userValidation([Permissions.manageUsers]), (req, res, next) => {
+		controller.updateUserRole(req, res, next);
 	});
 
 	userRoute.delete('', userValidation, (req, res, next) => {
-		controller.deleteUser(req, res, next);
+		controller.deleteAccount(req, res, next);
 	});
 };

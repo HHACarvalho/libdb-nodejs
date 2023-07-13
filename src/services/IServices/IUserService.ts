@@ -1,11 +1,13 @@
 import { Result } from '../../core/Result';
 
 export default interface IUserService {
-	signUp(dto: any): Promise<Result<any>>;
+	signUp(reqBody: any): Promise<Result<any>>;
 
-	login(dto: any): Promise<Result<any>>;
+	login(reqBody: any): Promise<Result<any>>;
 
-	updateUser(dto: any): Promise<Result<any>>;
+	updateProfile(email: string, reqBody: any): Promise<Result<any>>;
+
+	updateUserRole(email: string, role: string): Promise<Result<any>>;
 
 	deleteUser(email: string): Promise<Result<any>>;
 }

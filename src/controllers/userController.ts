@@ -53,27 +53,50 @@ export default class UserController implements IUserController {
 		}
 	}
 
-	public async updateUser(req: Request, res: Response, next: NextFunction) {
+	public async updateProfile(req: Request, res: Response, next: NextFunction) {
 		try {
-			const result = (await this.serviceInstance.updateUser(req.body)) as Result<any>;
+			const result = (await this.serviceInstance.updateProfile(req['token'].email, req.body)) as Result<any>;
 			if (!result.isSuccess) {
 				res.json(result.error);
 
-				this.logger.warn('Received updateUser() request -> fail');
+				this.logger.warn('Received updateProfile() request -> fail');
 				return res.status(404);
 			}
 
 			res.status(200);
 			res.cookie('token', result.value, { httpOnly: true, maxAge: config.jwtDuration * 1000 });
 
-			this.logger.info('Received updateUser() request -> success');
-			return res.send('Successfully updated user');
+			this.logger.info('Received updateProfile() request -> success');
+			return res.send('Successfully updated profile');
 		} catch (e) {
 			return next(e);
 		}
 	}
 
-	public async deleteUser(req: Request, res: Response, next: NextFunction) {
+	public async updateUserRole(req: Request, res: Response, next: NextFunction) {
+		try {
+			const emailParameter = req.query.email as string;
+			const roleParameter = req.query.role as string;
+
+			const result = (await this.serviceInstance.updateUserRole(emailParameter, roleParameter)) as Result<any>;
+			if (!result.isSuccess) {
+				res.json(result.error);
+
+				this.logger.warn('Received updateUserRole() request -> fail');
+				return res.status(404);
+			}
+
+			res.status(200);
+			res.cookie('token', result.value, { httpOnly: true, maxAge: config.jwtDuration * 1000 });
+
+			this.logger.info('Received updateUserRole() request -> success');
+			return res.send('Successfully updated user role');
+		} catch (e) {
+			return next(e);
+		}
+	}
+
+	public async deleteAccount(req: Request, res: Response, next: NextFunction) {
 		try {
 			const emailParameter = req.query.email as string;
 
@@ -81,14 +104,14 @@ export default class UserController implements IUserController {
 			if (!result.isSuccess) {
 				res.json(result.error);
 
-				this.logger.warn('Received deleteUser() request -> fail');
+				this.logger.warn('Received deleteAccount() request -> fail');
 				return res.status(404);
 			}
 
 			res.status(204);
 
-			this.logger.info('Received deleteUser() request -> success');
-			return res.send('Successfully deleted user');
+			this.logger.info('Received deleteAccount() request -> success');
+			return res.send('Successfully deleted account');
 		} catch (e) {
 			return next(e);
 		}
