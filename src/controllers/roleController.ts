@@ -54,7 +54,9 @@ export default class RoleController implements IRoleController {
 
 	public async updateRole(req: Request, res: Response, next: NextFunction) {
 		try {
-			const result = (await this.serviceInstance.updateRole(req.body)) as Result<any>;
+			const nameParameter = req.query.name as string;
+
+			const result = (await this.serviceInstance.updateRole(nameParameter, req.body)) as Result<any>;
 			if (!result.isSuccess) {
 				res.json(result.error);
 

@@ -96,7 +96,9 @@ export default class MovieController implements IMovieController {
 
 	public async updateMovie(req: Request, res: Response, next: NextFunction) {
 		try {
-			const result = (await this.serviceInstance.updateMovie(req.body)) as Result<any>;
+			const idParameter = req.query.id as string;
+
+			const result = (await this.serviceInstance.updateMovie(idParameter, req.body)) as Result<any>;
 			if (!result.isSuccess) {
 				res.json(result.error);
 
