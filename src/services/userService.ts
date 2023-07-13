@@ -27,7 +27,7 @@ export default class UserService implements IUserService {
 				password: hashedPassword,
 				firstName: dto.firstName,
 				lastName: dto.lastName,
-				role: 'Default',
+				role: 'User',
 			});
 
 			const result = await this.userRepoInstance.createUser(obj);
