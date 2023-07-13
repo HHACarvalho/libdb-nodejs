@@ -10,7 +10,7 @@ export class RoleMapper {
 		return Role.create(
 			{
 				name: schema.name,
-				description: schema.description,
+				permissions: schema.permissions,
 			},
 			new EntityID(schema.id)
 		);
@@ -19,7 +19,7 @@ export class RoleMapper {
 	public static toDTO(role: Role): IRoleDTO {
 		return {
 			name: role.name,
-			description: role.description,
+			permissions: role.permissions,
 		} as IRoleDTO;
 	}
 
@@ -27,7 +27,7 @@ export class RoleMapper {
 		return {
 			_id: role.id.toValue(),
 			name: role.name,
-			description: role.description,
+			permissions: role.permissions,
 		} as IRolePersistence;
 	}
 }

@@ -21,7 +21,7 @@ export default class RoleService implements IRoleService {
 
 			const obj = Role.create({
 				name: dto.name,
-				description: dto.description,
+				permissions: dto.permissions,
 			});
 
 			await this.repoInstance.createRole(obj);
@@ -51,8 +51,8 @@ export default class RoleService implements IRoleService {
 				return Result.fail<any>('No role with name=' + dto.name + ' was found');
 			}
 
-			if (dto.name) obj.name = dto.name;
-			if (dto.description) obj.description = dto.description;
+			obj.name = dto.name;
+			obj.permissions = dto.permissions;
 
 			await this.repoInstance.updateRole(obj);
 			return Result.ok<any>();

@@ -1,9 +1,19 @@
 import { Entity } from '../core/domain/Entity';
 import { EntityID } from '../core/domain/EntityID';
 
+export enum Permissions {
+	manageMovies,
+	manageRoles,
+	manageUsers,
+}
+
 interface RoleProps {
 	name: string;
-	description: string;
+	permissions: {
+		manageMovies: boolean;
+		manageRoles: boolean;
+		manageUsers: boolean;
+	};
 }
 
 export class Role extends Entity<RoleProps> {
@@ -11,16 +21,16 @@ export class Role extends Entity<RoleProps> {
 		return this._props.name;
 	}
 
-	get description(): string {
-		return this._props.description;
+	get permissions(): any {
+		return this._props.permissions;
 	}
 
 	set name(value: string) {
 		this._props.name = value;
 	}
 
-	set description(value: string) {
-		this._props.description = value;
+	set permissions(value: any) {
+		this._props.permissions = value;
 	}
 
 	public static create(props: RoleProps, id?: EntityID): Role {
