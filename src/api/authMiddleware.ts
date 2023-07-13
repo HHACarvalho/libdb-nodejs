@@ -1,32 +1,58 @@
 import config from '../../config';
+import { Permissions } from '../domain/role';
+import IRoleRepo from '../repos/IRepos/IRoleRepo';
 
 import { NextFunction, Request, Response } from 'express';
 import { JsonWebTokenError, verify } from 'jsonwebtoken';
+import { Container } from 'typedi';
 
-export const validateJwt = (req: Request, res: Response, next: NextFunction) => {
-	try {
-		req['token'] = verify(req.cookies.token, config.jwtAccessSecret);
-		next();
-	} catch (e) {
-		res.status(401);
-		next(e);
-	}
-};
-
-export const validatePermissions = (roles: string[]) => {
-	return (req: Request, res: Response, next: NextFunction) => {
+export const userValidation = (permissions?: number[]) => {
+	return async (req: Request, res: Response, next: NextFunction) => {
 		try {
-			checkUserRole(roles, req['token'].role);
+			await validateJWT(req, res, next);
+
+			if (permissions) {
+				await validatePermissions(req, res, next, permissions);
+			}
+
 			next();
-		} catch (e) {
-			res.status(403);
-			next(e);
+		} catch (e: JsonWebTokenError) {
+			return next(e);
 		}
 	};
 };
 
-function checkUserRole(roles: string[], userRole: string) {
-	if (!roles.includes(userRole)) {
-		throw new JsonWebTokenError('insufficient permissions');
+async function validateJWT(req: Request, res: Response, next: NextFunction) {
+	try {
+		req['token'] = await verify(req.cookies.token, config.jwtAccessSecret);
+	} catch (e: JsonWebTokenError) {
+		res.status(401);
+		throw e;
 	}
+}
+
+async function validatePermissions(req: Request, res: Response, next: NextFunction, permissions: number[]) {
+	try {
+		await checkPermissions(permissions, req['token'].role);
+	} catch (e: JsonWebTokenError) {
+		res.status(403);
+		throw e;
+	}
+}
+
+async function checkPermissions(requiredPermissions: number[], userRole: string) {
+	const roleRepo = Container.get(config.repos.role) as IRoleRepo;
+
+	const role = await roleRepo.findRole(userRole);
+	if (role == null) {
+		throw new JsonWebTokenError('invalid role');
+	}
+
+	console.log(role);
+
+	requiredPermissions.forEach((e) => {
+		if (role.permissions[Object.values(Permissions)[e]] === false) {
+			throw new JsonWebTokenError('insufficient permissions');
+		}
+	});
 }

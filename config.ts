@@ -13,7 +13,7 @@ export default {
 	databaseURL: process.env.DATABASE_URL,
 
 	// JSON Web Token's expiration time in seconds
-	jwtDuration: process.env.JWT_DURATION,
+	jwtDuration: parseInt(process.env.JWT_DURATION),
 
 	// JSON Web Token's access secret
 	jwtAccessSecret: process.env.JWT_ACCESS_SECRET,
