@@ -1,4 +1,6 @@
 import config from '../../../config';
+import { userValidation } from '../authMiddleware';
+import { Permissions } from '../../domain/role';
 import IRoleController from '../../controllers/IControllers/IRoleController';
 
 import { celebrate, Joi, Segments } from 'celebrate';
@@ -23,11 +25,19 @@ export default (app: Router) => {
 		}),
 	});
 
-	roleRoute.post('', fullBodySchema, (req, res, next) => controller.createRole(req, res, next));
+	roleRoute.post('', fullBodySchema, userValidation([Permissions.manageRoles]), (req, res, next) => {
+		controller.createRole(req, res, next);
+	});
 
-	roleRoute.get('/all', (req, res, next) => controller.findAllRoles(req, res, next));
+	roleRoute.get('/all', (req, res, next) => {
+		controller.findAllRoles(req, res, next);
+	});
 
-	roleRoute.put('', fullBodySchema, (req, res, next) => controller.updateRole(req, res, next));
+	roleRoute.put('', fullBodySchema, userValidation([Permissions.manageRoles]), (req, res, next) => {
+		controller.updateRole(req, res, next);
+	});
 
-	roleRoute.delete('', (req, res, next) => controller.deleteRole(req, res, next));
+	roleRoute.delete('', userValidation([Permissions.manageRoles]), (req, res, next) => {
+		controller.deleteRole(req, res, next);
+	});
 };

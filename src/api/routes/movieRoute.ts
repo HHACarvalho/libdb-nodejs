@@ -1,4 +1,6 @@
 import config from '../../../config';
+import { userValidation } from '../authMiddleware';
+import { Permissions } from '../../domain/role';
 import IMovieController from '../../controllers/IControllers/IMovieController';
 
 import { celebrate, Joi, Segments } from 'celebrate';
@@ -20,15 +22,27 @@ export default (app: Router) => {
 		}),
 	});
 
-	movieRoute.post('', fullBodySchema, (req, res, next) => controller.createMovie(req, res, next));
+	movieRoute.post('', fullBodySchema, userValidation([Permissions.manageMovies]), (req, res, next) => {
+		controller.createMovie(req, res, next);
+	});
 
-	movieRoute.get('', (req, res, next) => controller.findOneMovie(req, res, next));
+	movieRoute.get('', (req, res, next) => {
+		controller.findOneMovie(req, res, next);
+	});
 
-	movieRoute.get('/search', (req, res, next) => controller.findMovies(req, res, next));
+	movieRoute.get('/search', (req, res, next) => {
+		controller.findMovies(req, res, next);
+	});
 
-	movieRoute.get('/all', (req, res, next) => controller.findAllMovies(req, res, next));
+	movieRoute.get('/all', (req, res, next) => {
+		controller.findAllMovies(req, res, next);
+	});
 
-	movieRoute.put('', fullBodySchema, (req, res, next) => controller.updateMovie(req, res, next));
+	movieRoute.put('', fullBodySchema, userValidation([Permissions.manageMovies]), (req, res, next) => {
+		controller.updateMovie(req, res, next);
+	});
 
-	movieRoute.delete('', (req, res, next) => controller.deleteMovie(req, res, next));
+	movieRoute.delete('', userValidation([Permissions.manageMovies]), (req, res, next) => {
+		controller.deleteMovie(req, res, next);
+	});
 };

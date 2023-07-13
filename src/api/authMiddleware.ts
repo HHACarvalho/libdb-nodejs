@@ -9,10 +9,10 @@ import { Container } from 'typedi';
 export const userValidation = (permissions?: number[]) => {
 	return async (req: Request, res: Response, next: NextFunction) => {
 		try {
-			await validateJWT(req, res, next);
+			await validateJWT(req, res);
 
 			if (permissions) {
-				await validatePermissions(req, res, next, permissions);
+				await validatePermissions(req, res, permissions);
 			}
 
 			next();
@@ -22,7 +22,7 @@ export const userValidation = (permissions?: number[]) => {
 	};
 };
 
-async function validateJWT(req: Request, res: Response, next: NextFunction) {
+async function validateJWT(req: Request, res: Response) {
 	try {
 		req['token'] = await verify(req.cookies.token, config.jwtAccessSecret);
 	} catch (e: JsonWebTokenError) {
@@ -31,7 +31,7 @@ async function validateJWT(req: Request, res: Response, next: NextFunction) {
 	}
 }
 
-async function validatePermissions(req: Request, res: Response, next: NextFunction, permissions: number[]) {
+async function validatePermissions(req: Request, res: Response, permissions: number[]) {
 	try {
 		await checkPermissions(permissions, req['token'].role);
 	} catch (e: JsonWebTokenError) {
