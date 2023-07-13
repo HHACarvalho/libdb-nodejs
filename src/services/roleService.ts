@@ -12,16 +12,16 @@ import { Inject, Service } from 'typedi';
 export default class RoleService implements IRoleService {
 	constructor(@Inject(config.repos.role) private repoInstance: IRoleRepo) {}
 
-	public async createRole(dto: any): Promise<Result<any>> {
+	public async createRole(reqBody: any): Promise<Result<any>> {
 		try {
-			const roleExists = await this.repoInstance.exists(dto.name);
+			const roleExists = await this.repoInstance.exists(reqBody.name);
 			if (roleExists) {
-				return Result.fail<any>('Role with name=' + dto.name + ' already exists');
+				return Result.fail<any>('Role with name=' + reqBody.name + ' already exists');
 			}
 
 			const obj = Role.create({
-				name: dto.name,
-				permissions: dto.permissions,
+				name: reqBody.name,
+				permissions: reqBody.permissions,
 			});
 
 			await this.repoInstance.createRole(obj);
@@ -44,15 +44,15 @@ export default class RoleService implements IRoleService {
 		}
 	}
 
-	public async updateRole(dto: any): Promise<Result<any>> {
+	public async updateRole(reqBody: any): Promise<Result<any>> {
 		try {
-			const obj = await this.repoInstance.findRole(dto.name);
+			const obj = await this.repoInstance.findRole(reqBody.name);
 			if (obj == null) {
-				return Result.fail<any>('No role with name=' + dto.name + ' was found');
+				return Result.fail<any>('No role with name=' + reqBody.name + ' was found');
 			}
 
-			obj.name = dto.name;
-			obj.permissions = dto.permissions;
+			obj.name = reqBody.name;
+			obj.permissions = reqBody.permissions;
 
 			await this.repoInstance.updateRole(obj);
 			return Result.ok<any>();

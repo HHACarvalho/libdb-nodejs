@@ -12,12 +12,12 @@ import { Inject, Service } from 'typedi';
 export default class MovieService implements IMovieService {
 	constructor(@Inject(config.repos.movie) private repoInstance: IMovieRepo) {}
 
-	public async createMovie(dto: any): Promise<Result<any>> {
+	public async createMovie(reqBody: any): Promise<Result<any>> {
 		try {
 			const obj = Movie.create({
-				title: dto.title,
-				director: dto.director,
-				releaseYear: dto.releaseYear,
+				title: reqBody.title,
+				director: reqBody.director,
+				releaseYear: reqBody.releaseYear,
 				hidden: false,
 			});
 
@@ -67,16 +67,16 @@ export default class MovieService implements IMovieService {
 		}
 	}
 
-	public async updateMovie(dto: any): Promise<Result<any>> {
+	public async updateMovie(reqBody: any): Promise<Result<any>> {
 		try {
-			const obj = await this.repoInstance.findOneMovie(dto.id);
+			const obj = await this.repoInstance.findOneMovie(reqBody.id);
 			if (obj == null) {
-				return Result.fail<any>('No movie with id=' + dto.id + ' was found');
+				return Result.fail<any>('No movie with id=' + reqBody.id + ' was found');
 			}
 
-			obj.title = dto.title;
-			obj.director = dto.director;
-			obj.releaseYear = dto.releaseYear;
+			obj.title = reqBody.title;
+			obj.director = reqBody.director;
+			obj.releaseYear = reqBody.releaseYear;
 
 			await this.repoInstance.updateMovie(obj);
 			return Result.ok<any>();
