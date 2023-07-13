@@ -58,21 +58,51 @@ export default class UserService implements IUserService {
 		}
 	}
 
-	public async updateUser(dto: any): Promise<Result<any>> {
+	public async updateProfile(email: string, reqBody: any): Promise<Result<any>> {
 		try {
-			const obj = await this.userRepoInstance.findUser(dto.email);
-			if (obj == null) {
-				return Result.fail<any>('No user with email=' + dto.email + ' was found');
+			const user = await this.userRepoInstance.findUser(email);
+			if (user == null) {
+				return Result.fail<any>('No user with email=' + reqBody.email + ' was found');
 			}
 
-			const hashedPassword = await hash(dto.password, 10);
+			if (user.email != reqBody.email) {
+				const userExists = await this.userRepoInstance.exists(email);
+				if (!userExists) {
+					return Result.fail<any>('No user with email=' + email + ' was found');
+				}
+			}
 
-			obj.email = dto.email;
-			obj.password = hashedPassword;
-			obj.firstName = dto.firstName;
-			obj.lastName = dto.lastName;
+			const hashedPassword = await hash(reqBody.password, 10);
 
-			const result = await this.userRepoInstance.updateUser(obj);
+			user.email = reqBody.email;
+			user.password = hashedPassword;
+			user.firstName = reqBody.firstName;
+			user.lastName = reqBody.lastName;
+
+			const result = await this.userRepoInstance.updateUser(user);
+
+			const token = this.signToken(UserMapper.toDTO(result));
+			return Result.ok<any>(token);
+		} catch (e) {
+			throw e;
+		}
+	}
+
+	public async updateUserRole(email: string, role: string): Promise<Result<any>> {
+		try {
+			const user = await this.userRepoInstance.findUser(email);
+			if (user == null) {
+				return Result.fail<any>('No user with email=' + email + ' was found');
+			}
+
+			const roleExists = await this.roleRepoInstance.exists(role);
+			if (!roleExists) {
+				return Result.fail<any>('No role with name=' + role + ' was found');
+			}
+
+			user.role = role;
+
+			const result = await this.userRepoInstance.updateUser(user);
 
 			const token = this.signToken(UserMapper.toDTO(result));
 			return Result.ok<any>(token);
