@@ -67,10 +67,10 @@ export default class UserService implements IUserService {
 
 			const hashedPassword = await hash(dto.password, 10);
 
-			if (dto.email) obj.email = dto.email;
-			if (dto.password) obj.password = hashedPassword;
-			if (dto.firstName) obj.firstName = dto.firstName;
-			if (dto.lastName) obj.lastName = dto.lastName;
+			obj.email = dto.email;
+			obj.password = hashedPassword;
+			obj.firstName = dto.firstName;
+			obj.lastName = dto.lastName;
 
 			const result = await this.userRepoInstance.updateUser(obj);
 

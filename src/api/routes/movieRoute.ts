@@ -13,7 +13,7 @@ export default (app: Router) => {
 	const controller = Container.get(config.controllers.movie) as IMovieController;
 
 	const fullBodySchema = celebrate({
-		[Segments.BODY]: Joi.object().keys({
+		[Segments.BODY]: Joi.object({
 			title: Joi.string().min(2).max(96).required(),
 			director: Joi.string().min(2).max(32).required(),
 			releaseYear: Joi.number().integer().min(1888).required(),

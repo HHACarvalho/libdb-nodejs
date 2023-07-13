@@ -74,9 +74,9 @@ export default class MovieService implements IMovieService {
 				return Result.fail<any>('No movie with id=' + dto.id + ' was found');
 			}
 
-			if (dto.title) obj.title = dto.title;
-			if (dto.director) obj.director = dto.director;
-			if (dto.releaseYear) obj.releaseYear = dto.releaseYear;
+			obj.title = dto.title;
+			obj.director = dto.director;
+			obj.releaseYear = dto.releaseYear;
 
 			await this.repoInstance.updateMovie(obj);
 			return Result.ok<any>();
