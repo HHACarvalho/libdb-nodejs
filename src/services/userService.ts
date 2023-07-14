@@ -26,7 +26,7 @@ export default class UserService implements IUserService {
 
 			const hashedPassword = await hash(reqBody.password, 10);
 
-			const obj = User.create({
+			const user = User.create({
 				email: reqBody.email,
 				password: hashedPassword,
 				firstName: reqBody.firstName,
@@ -34,7 +34,7 @@ export default class UserService implements IUserService {
 				role: 'User',
 			});
 
-			const result = await this.userRepoInstance.createUser(obj);
+			const result = await this.userRepoInstance.createUser(user);
 
 			const token = this.signToken(UserMapper.toDTO(result));
 			return Result.ok<any>(token);
@@ -50,8 +50,8 @@ export default class UserService implements IUserService {
 				return Result.fail<any>('No user with the email "' + reqBody.email + '" was found');
 			}
 
-			const isMatch = await compare(reqBody.password, user.password);
-			if (!isMatch) {
+			const passwordIsMatch = await compare(reqBody.password, user.password);
+			if (!passwordIsMatch) {
 				return Result.fail<any>('Incorrect password');
 			}
 
@@ -69,7 +69,7 @@ export default class UserService implements IUserService {
 				return Result.fail<any>('No user with the email "' + reqBody.email + '" was found');
 			}
 
-			if (user.email != reqBody.email) {
+			if (email != reqBody.email) {
 				const userExists = await this.userRepoInstance.exists(reqBody.email);
 				if (userExists) {
 					return Result.fail<any>('User with the email "' + reqBody.email + '" already exists');
@@ -106,10 +106,8 @@ export default class UserService implements IUserService {
 
 			user.role = role;
 
-			const result = await this.userRepoInstance.updateUser(user);
-
-			const token = this.signToken(UserMapper.toDTO(result));
-			return Result.ok<any>(token);
+			await this.userRepoInstance.updateUser(user);
+			return Result.ok<any>();
 		} catch (e) {
 			throw e;
 		}
@@ -129,7 +127,7 @@ export default class UserService implements IUserService {
 		}
 	}
 
-	private signToken(dto: any): string {
-		return sign(dto, config.jwtAccessSecret, { expiresIn: config.jwtDuration });
+	private signToken(data: any): string {
+		return sign(data, config.jwtAccessSecret, { expiresIn: config.jwtDuration });
 	}
 }

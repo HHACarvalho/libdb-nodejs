@@ -19,12 +19,12 @@ export default class RoleService implements IRoleService {
 				return Result.fail<any>('Role with the name "' + reqBody.name + '" already exists');
 			}
 
-			const obj = Role.create({
+			const role = Role.create({
 				name: reqBody.name,
 				permissions: reqBody.permissions,
 			});
 
-			await this.repoInstance.createRole(obj);
+			await this.repoInstance.createRole(role);
 			return Result.ok<any>();
 		} catch (e) {
 			throw e;

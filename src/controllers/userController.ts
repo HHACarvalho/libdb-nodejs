@@ -88,7 +88,6 @@ export default class UserController implements IUserController {
 			}
 
 			res.status(200);
-			res.cookie('token', result.value, { httpOnly: true, maxAge: config.jwtDuration * 1000 });
 
 			this.logger.info(Utils.logMessage(true, this.updateUserRole.name));
 			return res.send('Successfully updated user role');
@@ -99,9 +98,7 @@ export default class UserController implements IUserController {
 
 	public async deleteAccount(req: Request, res: Response, next: NextFunction) {
 		try {
-			const emailParameter = req.query.email as string;
-
-			const result = (await this.serviceInstance.deleteUser(emailParameter)) as Result<any>;
+			const result = (await this.serviceInstance.deleteUser(req['token'].email)) as Result<any>;
 			if (!result.isSuccess) {
 				res.json(result.error);
 
