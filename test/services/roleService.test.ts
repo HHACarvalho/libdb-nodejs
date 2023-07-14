@@ -7,18 +7,23 @@ import RoleService from '../../src/services/roleService';
 
 import { Container } from 'typedi';
 import * as sinon from 'sinon';
+import {Result} from "../../src/core/result";
 
 describe('Role service', function () {
 	const sandbox = sinon.createSandbox();
 
 	const body = {
 		name: 'Default',
-		description: 'Description of Default',
+		permissions: {
+			manageMovies: false,
+			manageRoles: false,
+			manageUsers: false,
+		},
 	};
 
 	const obj = Role.create({
 		name: body.name,
-		description: body.description,
+		permissions: body.permissions,
 	});
 
 	beforeEach(function () {
@@ -44,8 +49,7 @@ describe('Role service', function () {
 		const service = new RoleService(roleRepoInstance as IRoleRepo);
 		const returnValue = await service.createRole(body);
 
-		sinon.assert.match(returnValue.value.name, body.name);
-		sinon.assert.match(returnValue.value.description, body.description);
+		sinon.assert.match(returnValue, Result.ok<any>())
 	});
 
 	it('Create role - fail', async function () {
@@ -55,6 +59,6 @@ describe('Role service', function () {
 		const service = new RoleService(roleRepoInstance as IRoleRepo);
 		const returnValue = await service.createRole(body);
 
-		sinon.assert.match(returnValue.error, 'Role with name=' + body.name + ' already exists');
+		sinon.assert.match(returnValue.error, 'Role with the name "' + body.name + '" already exists');
 	});
 });
