@@ -18,16 +18,16 @@ export default class UserController implements IUserController {
 		try {
 			const result = (await this.serviceInstance.signUp(req.body)) as Result<any>;
 			if (!result.isSuccess) {
-				res.json(result.error);
-
 				this.logger.warn(Utils.logMessage(false, this.signUp.name));
-				return res.status(400);
+
+				res.status(400);
+				return res.send(result.error);
 			}
+
+			this.logger.info(Utils.logMessage(true, this.signUp.name));
 
 			res.status(201);
 			res.cookie('token', result.value, { httpOnly: true, maxAge: config.jwtDuration * 1000 });
-
-			this.logger.info(Utils.logMessage(true, this.signUp.name));
 			return res.send('Successful signup');
 		} catch (e) {
 			return next(e);
@@ -38,16 +38,16 @@ export default class UserController implements IUserController {
 		try {
 			const result = (await this.serviceInstance.login(req.body)) as Result<any>;
 			if (!result.isSuccess) {
-				res.json(result.error);
-
 				this.logger.warn(Utils.logMessage(false, this.login.name));
-				return res.status(404);
+
+				res.status(404);
+				return res.send(result.error);
 			}
+
+			this.logger.info(Utils.logMessage(true, this.login.name));
 
 			res.status(200);
 			res.cookie('token', result.value, { httpOnly: true, maxAge: config.jwtDuration * 1000 });
-
-			this.logger.info(Utils.logMessage(true, this.login.name));
 			return res.send('Successful login');
 		} catch (e) {
 			return next(e);
@@ -58,16 +58,16 @@ export default class UserController implements IUserController {
 		try {
 			const result = (await this.serviceInstance.updateProfile(req['token'].email, req.body)) as Result<any>;
 			if (!result.isSuccess) {
-				res.json(result.error);
-
 				this.logger.warn(Utils.logMessage(false, this.updateProfile.name));
-				return res.status(404);
+
+				res.status(404);
+				return res.send(result.error);
 			}
+
+			this.logger.info(Utils.logMessage(true, this.updateProfile.name));
 
 			res.status(200);
 			res.cookie('token', result.value, { httpOnly: true, maxAge: config.jwtDuration * 1000 });
-
-			this.logger.info(Utils.logMessage(true, this.updateProfile.name));
 			return res.send('Successfully updated user profile');
 		} catch (e) {
 			return next(e);
@@ -81,15 +81,15 @@ export default class UserController implements IUserController {
 
 			const result = (await this.serviceInstance.updateUserRole(emailParameter, roleParameter)) as Result<any>;
 			if (!result.isSuccess) {
-				res.json(result.error);
-
 				this.logger.warn(Utils.logMessage(false, this.updateUserRole.name));
-				return res.status(404);
+
+				res.status(404);
+				return res.send(result.error);
 			}
 
-			res.status(200);
-
 			this.logger.info(Utils.logMessage(true, this.updateUserRole.name));
+
+			res.status(200);
 			return res.send('Successfully updated user role');
 		} catch (e) {
 			return next(e);
@@ -100,15 +100,15 @@ export default class UserController implements IUserController {
 		try {
 			const result = (await this.serviceInstance.deleteUser(req['token'].email)) as Result<any>;
 			if (!result.isSuccess) {
-				res.json(result.error);
-
 				this.logger.warn(Utils.logMessage(false, this.deleteAccount.name));
-				return res.status(404);
+
+				res.status(404);
+				return res.send(result.error);
 			}
 
-			res.status(200);
-
 			this.logger.info(Utils.logMessage(true, this.deleteAccount.name));
+
+			res.status(200);
 			return res.send('Successfully deleted account');
 		} catch (e) {
 			return next(e);

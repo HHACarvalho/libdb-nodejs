@@ -44,7 +44,7 @@ export default class MovieService implements IMovieService {
 	public async findMovies(title: string): Promise<Result<IMovieDTO[]>> {
 		try {
 			const movieList = await this.repoInstance.findMovies(title);
-			if (movieList == null) {
+			if (movieList.length === 0) {
 				return Result.fail<IMovieDTO[]>('No movies with "' + title + '" in the title were found');
 			}
 
@@ -57,7 +57,7 @@ export default class MovieService implements IMovieService {
 	public async findAllMovies(): Promise<Result<IMovieDTO[]>> {
 		try {
 			const movieList = await this.repoInstance.findAllMovies();
-			if (movieList == null) {
+			if (movieList.length === 0) {
 				return Result.fail<IMovieDTO[]>('There are no movies');
 			}
 

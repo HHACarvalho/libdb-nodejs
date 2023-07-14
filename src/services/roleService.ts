@@ -34,7 +34,7 @@ export default class RoleService implements IRoleService {
 	public async findAllRoles(): Promise<Result<IRoleDTO[]>> {
 		try {
 			const roleList = await this.repoInstance.findAllRoles();
-			if (roleList == null) {
+			if (roleList.length === 0) {
 				return Result.fail<IRoleDTO[]>('There are no roles');
 			}
 

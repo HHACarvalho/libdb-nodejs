@@ -19,15 +19,15 @@ export default class MovieController implements IMovieController {
 		try {
 			const result = (await this.serviceInstance.createMovie(req.body)) as Result<any>;
 			if (!result.isSuccess) {
-				res.json(result.error);
-
 				this.logger.warn(Utils.logMessage(false, this.createMovie.name));
-				return res.status(400);
+
+				res.status(400);
+				return res.send(result.error);
 			}
 
-			res.status(201);
-
 			this.logger.info(Utils.logMessage(true, this.createMovie.name));
+
+			res.status(201);
 			return res.send('Successfully created movie');
 		} catch (e) {
 			return next(e);
@@ -40,16 +40,16 @@ export default class MovieController implements IMovieController {
 
 			const result = (await this.serviceInstance.findOneMovie(idParameter)) as Result<IMovieDTO>;
 			if (!result.isSuccess) {
-				res.json(result.error);
-
 				this.logger.warn(Utils.logMessage(false, this.findOneMovie.name));
-				return res.status(404);
+
+				res.status(404);
+				return res.send(result.error);
 			}
 
-			res.json(result.value);
-
 			this.logger.info(Utils.logMessage(true, this.findOneMovie.name));
-			return res.status(200);
+
+			res.status(200);
+			return res.json(result.value);
 		} catch (e) {
 			return next(e);
 		}
@@ -61,16 +61,16 @@ export default class MovieController implements IMovieController {
 
 			const result = (await this.serviceInstance.findMovies(titleParameter)) as Result<IMovieDTO[]>;
 			if (!result.isSuccess) {
-				res.json(result.error);
-
 				this.logger.warn(Utils.logMessage(false, this.findMovies.name));
-				return res.status(404);
+
+				res.status(404);
+				return res.send(result.error);
 			}
 
-			res.json(result.value);
-
 			this.logger.info(Utils.logMessage(true, this.findMovies.name));
-			return res.status(200);
+
+			res.status(200);
+			return res.json(result.value);
 		} catch (e) {
 			return next(e);
 		}
@@ -80,16 +80,16 @@ export default class MovieController implements IMovieController {
 		try {
 			const result = (await this.serviceInstance.findAllMovies()) as Result<IMovieDTO[]>;
 			if (!result.isSuccess) {
-				res.json(result.error);
-
 				this.logger.warn(Utils.logMessage(false, this.findAllMovies.name));
-				return res.status(404);
+
+				res.status(404);
+				return res.send(result.error);
 			}
 
-			res.json(result.value);
-
 			this.logger.info(Utils.logMessage(true, this.findAllMovies.name));
-			return res.status(200);
+
+			res.status(200);
+			return res.json(result.value);
 		} catch (e) {
 			return next(e);
 		}
@@ -101,15 +101,15 @@ export default class MovieController implements IMovieController {
 
 			const result = (await this.serviceInstance.updateMovie(idParameter, req.body)) as Result<any>;
 			if (!result.isSuccess) {
-				res.json(result.error);
-
 				this.logger.warn(Utils.logMessage(false, this.updateMovie.name));
-				return res.status(404);
+
+				res.status(404);
+				return res.send(result.error);
 			}
 
-			res.status(200);
-
 			this.logger.info(Utils.logMessage(true, this.updateMovie.name));
+
+			res.status(200);
 			return res.send('Successfully updated movie');
 		} catch (e) {
 			return next(e);
@@ -122,15 +122,15 @@ export default class MovieController implements IMovieController {
 
 			const result = (await this.serviceInstance.deleteMovie(idParameter)) as Result<any>;
 			if (!result.isSuccess) {
-				res.json(result.error);
-
 				this.logger.warn(Utils.logMessage(false, this.deleteMovie.name));
-				return res.status(404);
+
+				res.status(404);
+				return res.send(result.error);
 			}
 
-			res.status(200);
-
 			this.logger.info(Utils.logMessage(true, this.deleteMovie.name));
+
+			res.status(200);
 			return res.send('Successfully deleted movie');
 		} catch (e) {
 			return next(e);

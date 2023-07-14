@@ -19,15 +19,15 @@ export default class RoleController implements IRoleController {
 		try {
 			const result = (await this.serviceInstance.createRole(req.body)) as Result<any>;
 			if (!result.isSuccess) {
-				res.json(result.error);
-
 				this.logger.warn(Utils.logMessage(false, this.createRole.name));
-				return res.status(400);
+
+				res.status(400);
+				return res.send(result.error);
 			}
 
-			res.status(201);
-
 			this.logger.info(Utils.logMessage(true, this.createRole.name));
+
+			res.status(201);
 			return res.send('Successfully created role');
 		} catch (e) {
 			return next(e);
@@ -38,16 +38,16 @@ export default class RoleController implements IRoleController {
 		try {
 			const result = (await this.serviceInstance.findAllRoles()) as Result<IRoleDTO[]>;
 			if (!result.isSuccess) {
-				res.json(result.error);
-
 				this.logger.warn(Utils.logMessage(false, this.findAllRoles.name));
-				return res.status(404);
+
+				res.status(404);
+				return res.send(result.error);
 			}
 
-			res.json(result.value);
-
 			this.logger.info(Utils.logMessage(true, this.findAllRoles.name));
-			return res.status(200);
+
+			res.status(200);
+			return res.json(result.value);
 		} catch (e) {
 			return next(e);
 		}
@@ -59,15 +59,15 @@ export default class RoleController implements IRoleController {
 
 			const result = (await this.serviceInstance.updateRole(nameParameter, req.body)) as Result<any>;
 			if (!result.isSuccess) {
-				res.json(result.error);
-
 				this.logger.warn(Utils.logMessage(false, this.updateRole.name));
-				return res.status(404);
+
+				res.status(404);
+				return res.send(result.error);
 			}
 
-			res.status(200);
-
 			this.logger.info(Utils.logMessage(true, this.updateRole.name));
+
+			res.status(200);
 			return res.send('Successfully updated role');
 		} catch (e) {
 			return next(e);
@@ -80,15 +80,15 @@ export default class RoleController implements IRoleController {
 
 			const result = (await this.serviceInstance.deleteRole(nameParameter)) as Result<any>;
 			if (!result.isSuccess) {
-				res.json(result.error);
-
 				this.logger.warn(Utils.logMessage(false, this.deleteRole.name));
-				return res.status(404);
+
+				res.status(404);
+				return res.send(result.error);
 			}
 
-			res.status(200);
-
 			this.logger.info(Utils.logMessage(true, this.deleteRole.name));
+
+			res.status(200);
 			return res.send('Successfully deleted role');
 		} catch (e) {
 			return next(e);
