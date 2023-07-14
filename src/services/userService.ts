@@ -1,7 +1,7 @@
 import config from '../../config';
 import { User } from '../domain/user';
 import { UserMapper } from '../mappers/userMapper';
-import { Result } from '../core/Result';
+import { Result } from '../core/result';
 import IRoleRepo from '../repos/IRepos/IRoleRepo';
 import IUserRepo from '../repos/IRepos/IUserRepo';
 import IUserService from './IServices/IUserService';

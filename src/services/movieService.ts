@@ -1,7 +1,7 @@
 import config from '../../config';
 import { Movie } from '../domain/movie';
 import { MovieMapper } from '../mappers/movieMapper';
-import { Result } from '../core/Result';
+import { Result } from '../core/result';
 import IMovieDTO from '../dtos/IMovieDTO';
 import IMovieRepo from '../repos/IRepos/IMovieRepo';
 import IMovieService from './IServices/IMovieService';

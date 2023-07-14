@@ -1,4 +1,4 @@
-import { Identifier } from './Identifier';
+import { Identifier } from './identifier';
 
 import { v4 as uuid } from 'uuid';
 

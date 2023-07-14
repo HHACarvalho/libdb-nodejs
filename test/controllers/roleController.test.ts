@@ -2,7 +2,7 @@ import 'reflect-metadata';
 
 import config from '../../config';
 import Logger from '../../src/core/loaders/loggerLoader';
-import { Result } from '../../src/core/Result';
+import { Result } from '../../src/core/result';
 import IRoleDTO from '../../src/dtos/IRoleDTO';
 import IRoleService from '../../src/services/IServices/IRoleService';
 import RoleController from '../../src/controllers/roleController';

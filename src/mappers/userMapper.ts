@@ -1,5 +1,5 @@
 import { User } from '../domain/user';
-import { EntityID } from '../core/domain/EntityID';
+import { EntityID } from '../core/domain/entityID';
 import IUserDTO from '../dtos/IUserDTO';
 import IUserPersistence from '../dtos/IUserPersistence';
 

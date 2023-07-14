@@ -1,5 +1,5 @@
 import { Movie } from '../domain/movie';
-import { EntityID } from '../core/domain/EntityID';
+import { EntityID } from '../core/domain/entityID';
 import IMovieDTO from '../dtos/IMovieDTO';
 import IMoviePersistence from '../dtos/IMoviePersistence';
 

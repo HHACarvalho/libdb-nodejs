@@ -1,4 +1,4 @@
-import { Result } from '../../core/Result';
+import { Result } from '../../core/result';
 import IMovieDTO from '../../dtos/IMovieDTO';
 
 export default interface IMovieService {

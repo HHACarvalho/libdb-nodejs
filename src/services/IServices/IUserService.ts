@@ -1,4 +1,4 @@
-import { Result } from '../../core/Result';
+import { Result } from '../../core/result';
 
 export default interface IUserService {
 	signUp(reqBody: any): Promise<Result<any>>;
