@@ -7,17 +7,17 @@ export class Utils {
 			' | ' +
 			method +
 			'() request received -> ' +
-			currentDate.getDate() +
+			String(currentDate.getDate()).padStart(2, '0') +
 			'/' +
-			(currentDate.getMonth() + 1) +
+			String(currentDate.getMonth() + 1).padStart(2, '0') +
 			'/' +
 			currentDate.getFullYear() +
 			' T ' +
-			currentDate.getHours() +
+			String(currentDate.getHours()).padStart(2, '0') +
 			':' +
-			currentDate.getMinutes() +
+			String(currentDate.getMinutes()).padStart(2, '0') +
 			':' +
-			currentDate.getSeconds()
+			String(currentDate.getSeconds()).padStart(2, '0')
 		);
 	}
 }
