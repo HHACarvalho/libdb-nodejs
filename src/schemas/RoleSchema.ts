@@ -14,6 +14,7 @@ const schema = new Schema(
 	},
 	{
 		versionKey: '_version',
+		collection: 'roles_table'
 	}
 );
 
