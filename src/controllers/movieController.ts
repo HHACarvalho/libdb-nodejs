@@ -1,5 +1,6 @@
 import config from '../../config';
-import { Result } from '../core/Result';
+import { Result } from '../core/result';
+import { Utils } from '../core/utils';
 import IMovieController from './IControllers/IMovieController';
 import IMovieDTO from '../dtos/IMovieDTO';
 import IMovieService from '../services/IServices/IMovieService';
@@ -20,13 +21,13 @@ export default class MovieController implements IMovieController {
 			if (!result.isSuccess) {
 				res.json(result.error);
 
-				this.logger.warn('Received createMovie() request -> fail');
+				this.logger.warn(Utils.logMessage(false, this.createMovie.name));
 				return res.status(400);
 			}
 
 			res.status(201);
 
-			this.logger.info('Received createMovie() request -> success');
+			this.logger.info(Utils.logMessage(true, this.createMovie.name));
 			return res.send('Successfully created movie');
 		} catch (e) {
 			return next(e);
@@ -41,13 +42,13 @@ export default class MovieController implements IMovieController {
 			if (!result.isSuccess) {
 				res.json(result.error);
 
-				this.logger.warn('Received findOneMovie() request -> fail');
+				this.logger.warn(Utils.logMessage(false, this.findOneMovie.name));
 				return res.status(404);
 			}
 
 			res.json(result.value);
 
-			this.logger.info('Received findOneMovie() request -> success');
+			this.logger.info(Utils.logMessage(true, this.findOneMovie.name));
 			return res.status(200);
 		} catch (e) {
 			return next(e);
@@ -62,13 +63,13 @@ export default class MovieController implements IMovieController {
 			if (!result.isSuccess) {
 				res.json(result.error);
 
-				this.logger.warn('Received findMovies() request -> fail');
+				this.logger.warn(Utils.logMessage(false, this.findMovies.name));
 				return res.status(404);
 			}
 
 			res.json(result.value);
 
-			this.logger.info('Received findMovies() request -> success');
+			this.logger.info(Utils.logMessage(true, this.findMovies.name));
 			return res.status(200);
 		} catch (e) {
 			return next(e);
@@ -81,13 +82,13 @@ export default class MovieController implements IMovieController {
 			if (!result.isSuccess) {
 				res.json(result.error);
 
-				this.logger.warn('Received findAllMovies() request -> fail');
+				this.logger.warn(Utils.logMessage(false, this.findAllMovies.name));
 				return res.status(404);
 			}
 
 			res.json(result.value);
 
-			this.logger.info('Received findAllMovies() request -> success');
+			this.logger.info(Utils.logMessage(true, this.findAllMovies.name));
 			return res.status(200);
 		} catch (e) {
 			return next(e);
@@ -102,13 +103,13 @@ export default class MovieController implements IMovieController {
 			if (!result.isSuccess) {
 				res.json(result.error);
 
-				this.logger.warn('Received updateMovie() request -> fail');
+				this.logger.warn(Utils.logMessage(false, this.updateMovie.name));
 				return res.status(404);
 			}
 
 			res.status(200);
 
-			this.logger.info('Received updateMovie() request -> success');
+			this.logger.info(Utils.logMessage(true, this.updateMovie.name));
 			return res.send('Successfully updated movie');
 		} catch (e) {
 			return next(e);
@@ -123,13 +124,13 @@ export default class MovieController implements IMovieController {
 			if (!result.isSuccess) {
 				res.json(result.error);
 
-				this.logger.warn('Received deleteMovie() request -> fail');
+				this.logger.warn(Utils.logMessage(false, this.deleteMovie.name));
 				return res.status(404);
 			}
 
 			res.status(204);
 
-			this.logger.info('Received deleteMovie() request -> success');
+			this.logger.info(Utils.logMessage(true, this.deleteMovie.name));
 			return res.send('Successfully deleted movie');
 		} catch (e) {
 			return next(e);
