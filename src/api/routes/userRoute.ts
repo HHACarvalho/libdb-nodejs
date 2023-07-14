@@ -38,7 +38,7 @@ export default (app: Router) => {
 		controller.login(req, res, next);
 	});
 
-	userRoute.put('', bodySchema, userValidation, (req, res, next) => {
+	userRoute.put('', bodySchema, userValidation(), (req, res, next) => {
 		controller.updateProfile(req, res, next);
 	});
 
@@ -46,7 +46,7 @@ export default (app: Router) => {
 		controller.updateUserRole(req, res, next);
 	});
 
-	userRoute.delete('', userValidation, (req, res, next) => {
+	userRoute.delete('', userValidation(), (req, res, next) => {
 		controller.deleteAccount(req, res, next);
 	});
 };

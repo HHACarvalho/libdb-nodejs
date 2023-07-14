@@ -109,7 +109,7 @@ export default class UserController implements IUserController {
 				return res.status(404);
 			}
 
-			res.status(204);
+			res.status(200);
 
 			this.logger.info(Utils.logMessage(true, this.deleteAccount.name));
 			return res.send('Successfully deleted account');

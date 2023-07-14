@@ -128,7 +128,7 @@ export default class MovieController implements IMovieController {
 				return res.status(404);
 			}
 
-			res.status(204);
+			res.status(200);
 
 			this.logger.info(Utils.logMessage(true, this.deleteMovie.name));
 			return res.send('Successfully deleted movie');

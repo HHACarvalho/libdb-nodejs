@@ -86,7 +86,7 @@ export default class RoleController implements IRoleController {
 				return res.status(404);
 			}
 
-			res.status(204);
+			res.status(200);
 
 			this.logger.info(Utils.logMessage(true, this.deleteRole.name));
 			return res.send('Successfully deleted role');
