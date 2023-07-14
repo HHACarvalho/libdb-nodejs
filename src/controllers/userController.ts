@@ -109,6 +109,7 @@ export default class UserController implements IUserController {
 			this.logger.info(Utils.logMessage(true, this.deleteAccount.name));
 
 			res.status(200);
+			res.clearCookie('token');
 			return res.send('Successfully deleted account');
 		} catch (e) {
 			return next(e);
