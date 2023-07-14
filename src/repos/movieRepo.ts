@@ -48,10 +48,6 @@ export default class MovieRepo implements IMovieRepo {
 
 	public async findAllMovies(): Promise<Movie[]> {
 		const documents = await this.schema.find();
-		if (documents == null) {
-			return null;
-		}
-
 		return documents.map((e) => MovieMapper.toDomain(e));
 	}
 

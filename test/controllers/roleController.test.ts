@@ -69,7 +69,7 @@ describe('Role controller', function () {
 		sinon.assert.calledWith(res.send, sinon.match('Successfully created role'));
 	});
 
-	it('Create role - fail', async function () {
+	it('Create role - failure', async function () {
 		const req: Partial<Request> = { body: body };
 		const res: Partial<Response> = { status: sinon.spy(), json: sinon.spy() };
 		const next: Partial<NextFunction> = () => {};
@@ -77,14 +77,14 @@ describe('Role controller', function () {
 		const roleServiceInstance = Container.get(config.services.role);
 		sinon
 			.stub(roleServiceInstance, 'createRole')
-			.returns(Result.fail<IRoleDTO>('Role with the name "' + req.body.name + '" already exists'));
+			.returns(Result.fail<IRoleDTO>('Role with the name "' + body.name + '" already exists'));
 
 		const logger = Container.get('logger');
 		const controller = new RoleController(roleServiceInstance as IRoleService, logger);
 		await controller.createRole(<Request>req, <Response>res, <NextFunction>next);
 
 		sinon.assert.calledWith(res.status, sinon.match(400));
-		sinon.assert.calledWith(res.json, sinon.match('Role with the name "' + req.body.name + '" already exists'));
+		sinon.assert.calledWith(res.json, sinon.match('Role with the name "' + body.name + '" already exists'));
 	});
 
 	it('Find all roles - success', async function () {
@@ -103,7 +103,7 @@ describe('Role controller', function () {
 		sinon.assert.calledWith(res.json, sinon.match([]));
 	});
 
-	it('Find all roles - fail', async function () {
+	it('Find all roles - failure', async function () {
 		const req: Partial<Request> = {};
 		const res: Partial<Response> = { status: sinon.spy(), json: sinon.spy() };
 		const next: Partial<NextFunction> = () => {};
@@ -140,7 +140,7 @@ describe('Role controller', function () {
 		sinon.assert.calledWith(res.send, sinon.match('Successfully updated role'));
 	});
 
-	it('Update role - fail', async function () {
+	it('Update role - failure', async function () {
 		const req: Partial<Request> = { query: query, body: body };
 		const res: Partial<Response> = { status: sinon.spy(), json: sinon.spy() };
 		const next: Partial<NextFunction> = () => {};
@@ -174,7 +174,7 @@ describe('Role controller', function () {
 		sinon.assert.calledWith(res.send, sinon.match('Successfully deleted role'));
 	});
 
-	it('Delete role - fail', async function () {
+	it('Delete role - failure', async function () {
 		const req: Partial<Request> = { query: query };
 		const res: Partial<Response> = { status: sinon.spy(), json: sinon.spy() };
 		const next: Partial<NextFunction> = () => {};
