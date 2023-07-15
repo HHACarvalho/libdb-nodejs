@@ -4,10 +4,7 @@ config();
 
 export default {
 	// Port used by the API
-	apiPort: 3000,
-
-	// URL prefix used to access the API
-	apiPrefix: '/api',
+	apiPort: parseInt(process.env.API_PORT),
 
 	// MongoDB's connection string
 	databaseURL: process.env.DATABASE_URL,
@@ -23,9 +20,6 @@ export default {
 
 	// Affects logging procedure
 	environment: 'development',
-
-	// Log message if it's type is equal to info, warn or error
-	logLevel: 'info',
 
 	controllers: {
 		movie: 'movieController',

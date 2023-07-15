@@ -13,7 +13,7 @@ const schema = new Schema(
 	},
 	{
 		versionKey: '_version',
-		collection: 'users_table'
+		collection: 'users_table',
 	}
 );
 

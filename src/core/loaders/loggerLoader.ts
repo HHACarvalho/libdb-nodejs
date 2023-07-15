@@ -19,7 +19,7 @@ if (config.environment === 'production') {
 }
 
 const LoggerInstance = winston.createLogger({
-	level: config.logLevel,
+	level: 'info',
 	levels: winston.config.npm.levels,
 	transports,
 });

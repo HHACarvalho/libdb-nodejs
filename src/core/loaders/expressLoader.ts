@@ -1,4 +1,3 @@
-import config from '../../../config';
 import routes from '../../api';
 
 import { CelebrateError } from 'celebrate';
@@ -19,13 +18,19 @@ export default (expressApp: Application) => {
 	expressApp.use(cors());
 
 	// Load all routes
-	expressApp.use(config.apiPrefix, routes());
+	expressApp.use(routes());
 
 	// Status check
-	expressApp.get('/status', (req, res) => res.status(200).json('Ok'));
+	expressApp.get('/status', (req, res) => {
+		res.status(200);
+		res.send('Ok');
+	});
 
-	// Route not found
-	expressApp.use((req, res) => res.status(404).json('Route not found'));
+	// Unknown route
+	expressApp.use((req, res) => {
+		res.status(404);
+		res.send('Route not found');
+	});
 
 	// Error handling
 	expressApp.use((err, req, res, next) => {
