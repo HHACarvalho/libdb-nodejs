@@ -8,7 +8,6 @@ const schema = new Schema(
 		title: String,
 		director: String,
 		releaseYear: Number,
-		hidden: Boolean,
 	},
 	{
 		versionKey: '_version',

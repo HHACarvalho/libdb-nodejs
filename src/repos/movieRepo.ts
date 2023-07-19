@@ -58,7 +58,6 @@ export default class MovieRepo implements IMovieRepo {
 			document.title = movie.title;
 			document.director = movie.director;
 			document.releaseYear = movie.releaseYear;
-			document.hidden = movie.hidden;
 
 			return MovieMapper.toDomain(await document.save());
 		} catch (e) {

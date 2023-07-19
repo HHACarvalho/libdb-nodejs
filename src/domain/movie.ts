@@ -5,7 +5,6 @@ interface MovieProps {
 	title: string;
 	director: string;
 	releaseYear: number;
-	hidden: boolean;
 }
 
 export class Movie extends Entity<MovieProps> {
@@ -21,10 +20,6 @@ export class Movie extends Entity<MovieProps> {
 		return this._props.releaseYear;
 	}
 
-	get hidden(): boolean {
-		return this._props.hidden;
-	}
-
 	set title(value: string) {
 		this._props.title = value;
 	}
@@ -35,10 +30,6 @@ export class Movie extends Entity<MovieProps> {
 
 	set releaseYear(value: number) {
 		this._props.releaseYear = value;
-	}
-
-	set hidden(value: boolean) {
-		this._props.hidden = value;
 	}
 
 	public static create(props: MovieProps, id?: EntityID): Movie {

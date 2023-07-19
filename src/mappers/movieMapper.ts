@@ -12,7 +12,6 @@ export class MovieMapper {
 				title: schema.title,
 				director: schema.director,
 				releaseYear: schema.releaseYear,
-				hidden: schema.hidden,
 			},
 			new EntityID(schema.id)
 		);
@@ -24,7 +23,6 @@ export class MovieMapper {
 			title: movie.title,
 			director: movie.director,
 			releaseYear: movie.releaseYear,
-			hidden: movie.hidden,
 		} as IMovieDTO;
 	}
 
@@ -34,7 +32,6 @@ export class MovieMapper {
 			title: movie.title,
 			director: movie.director,
 			releaseYear: movie.releaseYear,
-			hidden: movie.hidden,
 		} as IMoviePersistence;
 	}
 }

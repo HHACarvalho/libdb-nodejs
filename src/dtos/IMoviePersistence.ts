@@ -3,5 +3,4 @@ export default interface IMoviePersistence {
 	title: string;
 	director: string;
 	releaseYear: number;
-	hidden: boolean;
 }

@@ -18,7 +18,6 @@ export default class MovieService implements IMovieService {
 				title: reqBody.title,
 				director: reqBody.director,
 				releaseYear: reqBody.releaseYear,
-				hidden: false,
 			});
 
 			await this.repoInstance.createMovie(movie);
