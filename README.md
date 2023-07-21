@@ -1,5 +1,5 @@
-# MovieDB Express API
-REST API built with Express
+# MovieDB NodeJS API
+REST API built with NodeJS and Express
 
 ### Compiles and hot-reloads for development
 ```
