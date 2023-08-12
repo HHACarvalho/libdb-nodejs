@@ -11,19 +11,10 @@ import { Inject, Service } from 'typedi';
 export default class RoleRepo implements IRoleRepo {
 	constructor(@Inject(config.schemas.role) private schema: Model<IRolePersistence & Document>) {}
 
-	public async exists(name: string): Promise<boolean> {
-		const document = await this.schema.findOne({ name: name });
-		return !!document === true;
-	}
-
 	public async createRole(role: Role): Promise<Role> {
-		try {
-			const persistence = RoleMapper.toPersistence(role);
-			const document = await this.schema.create(persistence);
-			return RoleMapper.toDomain(document);
-		} catch (e) {
-			throw e;
-		}
+		const persistence = RoleMapper.toPersistence(role);
+		const document = await this.schema.create(persistence);
+		return RoleMapper.toDomain(document);
 	}
 
 	public async findRole(name: string): Promise<Role> {
@@ -41,17 +32,12 @@ export default class RoleRepo implements IRoleRepo {
 	}
 
 	public async updateRole(role: Role): Promise<Role> {
-		try {
-			const document = await this.schema.findOne({ name: role.name });
+		const document = await this.schema.findOne({ name: role.name });
 
-			document.name = role.name;
-			document.permissions = role.permissions;
+		document.name = role.name;
+		document.permissions = role.permissions;
 
-			const persisted = await document.save();
-			return RoleMapper.toDomain(persisted);
-		} catch (e) {
-			throw e;
-		}
+		return RoleMapper.toDomain(await document.save());
 	}
 
 	public async deleteRole(name: string): Promise<Role> {

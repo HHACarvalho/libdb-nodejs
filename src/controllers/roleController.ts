@@ -17,7 +17,7 @@ export default class RoleController implements IRoleController {
 
 	public async createRole(req: Request, res: Response, next: NextFunction) {
 		try {
-			const result = (await this.serviceInstance.createRole(req.body)) as Result<any>;
+			const result = (await this.serviceInstance.createRole(req.body)) as Result<IRoleDTO>;
 			if (!result.isSuccess) {
 				this.logger.warn(Utils.logMessage(false, this.createRole.name));
 
@@ -28,7 +28,7 @@ export default class RoleController implements IRoleController {
 			this.logger.info(Utils.logMessage(true, this.createRole.name));
 
 			res.status(201);
-			return res.send('Successfully created role');
+			return res.json(result.value);
 		} catch (e) {
 			return next(e);
 		}
@@ -57,7 +57,7 @@ export default class RoleController implements IRoleController {
 		try {
 			const nameParameter = req.query.name as string;
 
-			const result = (await this.serviceInstance.updateRole(nameParameter, req.body)) as Result<any>;
+			const result = (await this.serviceInstance.updateRole(nameParameter, req.body)) as Result<IRoleDTO>;
 			if (!result.isSuccess) {
 				this.logger.warn(Utils.logMessage(false, this.updateRole.name));
 
@@ -68,7 +68,7 @@ export default class RoleController implements IRoleController {
 			this.logger.info(Utils.logMessage(true, this.updateRole.name));
 
 			res.status(200);
-			return res.send('Successfully updated role');
+			return res.json(result.value);
 		} catch (e) {
 			return next(e);
 		}
@@ -78,7 +78,7 @@ export default class RoleController implements IRoleController {
 		try {
 			const nameParameter = req.query.name as string;
 
-			const result = (await this.serviceInstance.deleteRole(nameParameter)) as Result<any>;
+			const result = (await this.serviceInstance.deleteRole(nameParameter)) as Result<IRoleDTO>;
 			if (!result.isSuccess) {
 				this.logger.warn(Utils.logMessage(false, this.deleteRole.name));
 
@@ -89,7 +89,7 @@ export default class RoleController implements IRoleController {
 			this.logger.info(Utils.logMessage(true, this.deleteRole.name));
 
 			res.status(200);
-			return res.send('Successfully deleted role');
+			return res.json(result.value);
 		} catch (e) {
 			return next(e);
 		}
