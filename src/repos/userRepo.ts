@@ -11,19 +11,10 @@ import { Inject, Service } from 'typedi';
 export default class UserRepo implements IUserRepo {
 	constructor(@Inject(config.schemas.user) private schema: Model<IUserPersistence & Document>) {}
 
-	public async exists(email: string): Promise<boolean> {
-		const document = await this.schema.findOne({ email: email });
-		return !!document === true;
-	}
-
 	public async createUser(user: User): Promise<User> {
-		try {
-			const persistence = UserMapper.toPersistence(user);
-			const document = await this.schema.create(persistence);
-			return UserMapper.toDomain(document);
-		} catch (e) {
-			throw e;
-		}
+		const persistence = UserMapper.toPersistence(user);
+		const document = await this.schema.create(persistence);
+		return UserMapper.toDomain(document);
 	}
 
 	public async findUser(email: string): Promise<User> {
@@ -36,20 +27,15 @@ export default class UserRepo implements IUserRepo {
 	}
 
 	public async updateUser(user: User): Promise<User> {
-		try {
-			const document = await this.schema.findOne({ email: user.email });
+		const document = await this.schema.findOne({ email: user.email });
 
-			document.email = user.email;
-			document.password = user.password;
-			document.firstName = user.firstName;
-			document.lastName = user.lastName;
-			document.role = user.role;
+		document.email = user.email;
+		document.password = user.password;
+		document.firstName = user.firstName;
+		document.lastName = user.lastName;
+		document.role = user.role;
 
-			const persisted = await document.save();
-			return UserMapper.toDomain(persisted);
-		} catch (e) {
-			throw e;
-		}
+		return UserMapper.toDomain(await document.save());
 	}
 
 	public async deleteUser(email: string): Promise<User> {

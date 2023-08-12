@@ -18,113 +18,93 @@ export default class UserService implements IUserService {
 	) {}
 
 	public async signUp(reqBody: any): Promise<Result<any>> {
-		try {
-			const userExists = await this.userRepoInstance.exists(reqBody.email);
-			if (userExists) {
-				return Result.fail<any>('User with the email "' + reqBody.email + '" already exists');
-			}
-
-			const hashedPassword = await hash(reqBody.password, 10);
-
-			const user = User.create({
-				email: reqBody.email,
-				password: hashedPassword,
-				firstName: reqBody.firstName,
-				lastName: reqBody.lastName,
-				role: 'User',
-			});
-
-			const result = await this.userRepoInstance.createUser(user);
-
-			const token = this.signToken(UserMapper.toDTO(result));
-			return Result.ok<any>(token);
-		} catch (e) {
-			throw e;
+		const userExists = await this.userRepoInstance.findUser(reqBody.email);
+		if (userExists) {
+			return Result.fail<any>('User with the email "' + reqBody.email + '" already exists');
 		}
+
+		const hashedPassword = await hash(reqBody.password, 10);
+
+		const user = User.create({
+			email: reqBody.email,
+			password: hashedPassword,
+			firstName: reqBody.firstName,
+			lastName: reqBody.lastName,
+			role: 'User',
+		});
+
+		const result = await this.userRepoInstance.createUser(user);
+
+		const token = this.signToken(UserMapper.toDTO(result));
+		return Result.ok<any>(token);
 	}
 
 	public async login(reqBody: any): Promise<Result<any>> {
-		try {
-			const user = await this.userRepoInstance.findUser(reqBody.email);
-			if (user == null) {
-				return Result.fail<any>('No user with the email "' + reqBody.email + '" was found');
-			}
-
-			const passwordIsMatch = await compare(reqBody.password, user.password);
-			if (!passwordIsMatch) {
-				return Result.fail<any>('Incorrect password');
-			}
-
-			const token = this.signToken(UserMapper.toDTO(user));
-			return Result.ok<any>(token);
-		} catch (e) {
-			throw e;
+		const user = await this.userRepoInstance.findUser(reqBody.email);
+		if (user == null) {
+			return Result.fail<any>('No user with the email "' + reqBody.email + '" was found');
 		}
+
+		const passwordIsMatch = await compare(reqBody.password, user.password);
+		if (!passwordIsMatch) {
+			return Result.fail<any>('Incorrect password');
+		}
+
+		const token = this.signToken(UserMapper.toDTO(user));
+		return Result.ok<any>(token);
 	}
 
 	public async updateProfile(email: string, reqBody: any): Promise<Result<any>> {
-		try {
-			const user = await this.userRepoInstance.findUser(email);
-			if (user == null) {
-				return Result.fail<any>('No user with the email "' + reqBody.email + '" was found');
-			}
-
-			if (email != reqBody.email) {
-				const userExists = await this.userRepoInstance.exists(reqBody.email);
-				if (userExists) {
-					return Result.fail<any>('User with the email "' + reqBody.email + '" already exists');
-				}
-			}
-
-			const hashedPassword = await hash(reqBody.password, 10);
-
-			user.email = reqBody.email;
-			user.password = hashedPassword;
-			user.firstName = reqBody.firstName;
-			user.lastName = reqBody.lastName;
-
-			const result = await this.userRepoInstance.updateUser(user);
-
-			const token = this.signToken(UserMapper.toDTO(result));
-			return Result.ok<any>(token);
-		} catch (e) {
-			throw e;
+		const user = await this.userRepoInstance.findUser(email);
+		if (user == null) {
+			return Result.fail<any>('No user with the email "' + reqBody.email + '" was found');
 		}
+
+		if (email != reqBody.email) {
+			const userExists = await this.userRepoInstance.findUser(reqBody.email);
+			if (userExists) {
+				return Result.fail<any>('User with the email "' + reqBody.email + '" already exists');
+			}
+		}
+
+		const hashedPassword = await hash(reqBody.password, 10);
+
+		user.email = reqBody.email;
+		user.password = hashedPassword;
+		user.firstName = reqBody.firstName;
+		user.lastName = reqBody.lastName;
+
+		const result = await this.userRepoInstance.updateUser(user);
+
+		const token = this.signToken(UserMapper.toDTO(result));
+		return Result.ok<any>(token);
 	}
 
 	public async updateUserRole(email: string, role: string): Promise<Result<any>> {
-		try {
-			const user = await this.userRepoInstance.findUser(email);
-			if (user == null) {
-				return Result.fail<any>('No user with the email "' + email + '" was found');
-			}
-
-			const roleExists = await this.roleRepoInstance.exists(role);
-			if (!roleExists) {
-				return Result.fail<any>('No role with the name "' + role + '" was found');
-			}
-
-			user.role = role;
-
-			await this.userRepoInstance.updateUser(user);
-			return Result.ok<any>();
-		} catch (e) {
-			throw e;
+		const user = await this.userRepoInstance.findUser(email);
+		if (user == null) {
+			return Result.fail<any>('No user with the email "' + email + '" was found');
 		}
+
+		const roleExists = await this.roleRepoInstance.findRole(role);
+		if (!roleExists) {
+			return Result.fail<any>('No role with the name "' + role + '" was found');
+		}
+
+		user.role = role;
+
+		await this.userRepoInstance.updateUser(user);
+		return Result.ok<any>();
 	}
 
 	public async deleteUser(email: string): Promise<Result<any>> {
-		try {
-			const userExists = await this.userRepoInstance.exists(email);
-			if (!userExists) {
-				return Result.fail<any>('No user with the email "' + email + '" was found');
-			}
-
-			await this.userRepoInstance.deleteUser(email);
-			return Result.ok<any>();
-		} catch (e) {
-			throw e;
+		const userExists = await this.userRepoInstance.findUser(email);
+		if (!userExists) {
+			return Result.fail<any>('No user with the email "' + email + '" was found');
 		}
+
+		await this.userRepoInstance.deleteUser(email);
+		return Result.ok<any>();
 	}
 
 	private signToken(data: any): string {
