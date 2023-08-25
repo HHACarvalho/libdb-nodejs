@@ -17,10 +17,10 @@ export default class UserService implements IUserService {
 		@Inject(config.repos.role) private roleRepoInstance: IRoleRepo
 	) {}
 
-	public async signUp(reqBody: any): Promise<Result<any>> {
+	public async signUp(reqBody: any): Promise<Result<string>> {
 		const userExists = await this.userRepoInstance.findUser(reqBody.email);
 		if (userExists) {
-			return Result.fail<any>('User with the email "' + reqBody.email + '" already exists');
+			return Result.fail<string>('User with the email "' + reqBody.email + '" already exists');
 		}
 
 		const hashedPassword = await hash(reqBody.password, 10);
@@ -36,34 +36,34 @@ export default class UserService implements IUserService {
 		const result = await this.userRepoInstance.createUser(user);
 
 		const token = this.signToken(UserMapper.toDTO(result));
-		return Result.ok<any>(token);
+		return Result.ok<string>(token);
 	}
 
-	public async login(reqBody: any): Promise<Result<any>> {
+	public async login(reqBody: any): Promise<Result<string>> {
 		const user = await this.userRepoInstance.findUser(reqBody.email);
 		if (user == null) {
-			return Result.fail<any>('No user with the email "' + reqBody.email + '" was found');
+			return Result.fail<string>('No user with the email "' + reqBody.email + '" was found');
 		}
 
 		const passwordIsMatch = await compare(reqBody.password, user.password);
 		if (!passwordIsMatch) {
-			return Result.fail<any>('Incorrect password');
+			return Result.fail<string>('Incorrect password');
 		}
 
 		const token = this.signToken(UserMapper.toDTO(user));
-		return Result.ok<any>(token);
+		return Result.ok<string>(token);
 	}
 
-	public async updateProfile(email: string, reqBody: any): Promise<Result<any>> {
+	public async updateProfile(email: string, reqBody: any): Promise<Result<string>> {
 		const user = await this.userRepoInstance.findUser(email);
 		if (user == null) {
-			return Result.fail<any>('No user with the email "' + reqBody.email + '" was found');
+			return Result.fail<string>('No user with the email "' + reqBody.email + '" was found');
 		}
 
 		if (email != reqBody.email) {
 			const userExists = await this.userRepoInstance.findUser(reqBody.email);
 			if (userExists) {
-				return Result.fail<any>('User with the email "' + reqBody.email + '" already exists');
+				return Result.fail<string>('User with the email "' + reqBody.email + '" already exists');
 			}
 		}
 
@@ -77,7 +77,7 @@ export default class UserService implements IUserService {
 		const result = await this.userRepoInstance.updateUser(user);
 
 		const token = this.signToken(UserMapper.toDTO(result));
-		return Result.ok<any>(token);
+		return Result.ok<string>(token);
 	}
 
 	public async updateUserRole(email: string, role: string): Promise<Result<any>> {

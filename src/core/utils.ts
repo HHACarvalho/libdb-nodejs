@@ -1,12 +1,10 @@
 export class Utils {
-	static logMessage(success: boolean, method: string) {
+	static logMessage(isSuccess: boolean, methodName: string) {
 		const currentDate = new Date();
 
 		return (
-			(success ? 'SUCCESS' : 'FAILURE') +
-			' | ' +
-			method +
-			'() request received -> ' +
+			(isSuccess ? 'SUCCESS | ' : 'FAILURE | ') +
+			methodName + '() request received -> ' +
 			String(currentDate.getDate()).padStart(2, '0') +
 			'/' +
 			String(currentDate.getMonth() + 1).padStart(2, '0') +
