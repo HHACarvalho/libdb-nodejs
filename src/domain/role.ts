@@ -1,12 +1,6 @@
 import { Entity } from '../core/domain/entity';
 import { EntityID } from '../core/domain/entityID';
 
-export enum Permissions {
-	manageMovies,
-	manageRoles,
-	manageUsers,
-}
-
 interface RoleProps {
 	name: string;
 	permissions: {
