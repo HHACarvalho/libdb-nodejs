@@ -1,4 +1,5 @@
 import config from '../../config';
+import {Permissions} from "../core/permissions";
 import { Role } from '../domain/role';
 import { RoleMapper } from '../mappers/roleMapper';
 import { Result } from '../core/result';
@@ -6,6 +7,7 @@ import IRoleDTO from '../dtos/IRoleDTO';
 import IRoleRepo from '../repos/IRepos/IRoleRepo';
 import IRoleService from './IServices/IRoleService';
 
+import { verify } from 'jsonwebtoken';
 import { Inject, Service } from 'typedi';
 
 @Service()
@@ -25,6 +27,23 @@ export default class RoleService implements IRoleService {
 
 		const result = await this.repoInstance.createRole(role);
 		return Result.ok<IRoleDTO>(RoleMapper.toDTO(result));
+	}
+
+	public async checkPermissions(cookie: string, requiredPermissions: number[]): Promise<Result<any>> {
+		const token = await verify(cookie, config.jwtAccessSecret);
+
+		const role = await this.repoInstance.findRole(token.role);
+		if (role == null) {
+			return Result.fail<IRoleDTO>('No role with the name "' + token.name + '" was found');
+		}
+
+		for (const e of requiredPermissions){
+			if (role.permissions[Object.values(Permissions)[e]] === false) {
+				return Result.fail<any>('Insufficient permissions');
+			}
+		}
+
+		return Result.ok<any>();
 	}
 
 	public async findAllRoles(): Promise<Result<IRoleDTO[]>> {

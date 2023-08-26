@@ -25,8 +25,18 @@ export default (app: Router) => {
 		}),
 	});
 
-	roleRoute.post('', fullBodySchema, userValidation([Permissions.manageRoles]), (req, res, next) => {
+	const permissionsSchema = celebrate({
+		[Segments.BODY]: Joi.object({
+			permissions: Joi.array().items(Joi.number()).required(),
+		}),
+	});
+
+	roleRoute.post('/', fullBodySchema, userValidation([Permissions.manageRoles]), (req, res, next) => {
 		controller.createRole(req, res, next);
+	});
+
+	roleRoute.post('/permissions', permissionsSchema, userValidation(), (req, res, next) => {
+		controller.checkPermissions(req, res, next);
 	});
 
 	roleRoute.get('/all', (req, res, next) => {

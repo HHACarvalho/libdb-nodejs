@@ -10,11 +10,11 @@ export class Result<T> {
 		Object.freeze(this);
 	}
 
-	public static ok<U>(value?: U): Result<U> {
-		return new Result<U>(true, null, value);
+	public static ok<T>(value?: T): Result<T> {
+		return new Result<T>(true, null, value);
 	}
 
-	public static fail<U>(error: any): Result<U> {
-		return new Result<U>(false, error, null);
+	public static fail<T>(error: any): Result<T> {
+		return new Result<T>(false, error, null);
 	}
 }

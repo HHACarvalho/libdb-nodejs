@@ -7,12 +7,13 @@ import IRoleService from '../services/IServices/IRoleService';
 
 import { NextFunction, Request, Response } from 'express';
 import { Inject, Service } from 'typedi';
+import { Logger } from 'winston';
 
 @Service()
 export default class RoleController implements IRoleController {
 	constructor(
 		@Inject(config.services.role) private serviceInstance: IRoleService,
-		@Inject('logger') private logger
+		@Inject('logger') private logger: Logger
 	) {}
 
 	public async createRole(req: Request, res: Response, next: NextFunction) {
@@ -29,6 +30,27 @@ export default class RoleController implements IRoleController {
 
 			res.status(201);
 			return res.json(result.value);
+		} catch (e) {
+			return next(e);
+		}
+	}
+
+	public async checkPermissions(req: Request, res: Response, next: NextFunction) {
+		try {
+			const cookie = req.cookies.token as string;
+
+			const result = (await this.serviceInstance.checkPermissions(cookie, req.body.permissions)) as Result<any>;
+			if (!result.isSuccess) {
+				this.logger.warn(Utils.logMessage(false, this.checkPermissions.name));
+
+				res.status(403);
+				return res.send(result.error);
+			}
+
+			this.logger.info(Utils.logMessage(true, this.checkPermissions.name));
+
+			res.status(200);
+			return res.send();
 		} catch (e) {
 			return next(e);
 		}
