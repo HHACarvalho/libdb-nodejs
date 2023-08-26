@@ -22,25 +22,21 @@ export default {
 	environment: 'development',
 
 	controllers: {
-		movie: 'movieController',
 		role: 'roleController',
 		user: 'userController',
 	},
 
 	services: {
-		movie: 'movieService',
 		role: 'roleService',
 		user: 'userService',
 	},
 
 	repos: {
-		movie: 'movieRepo',
 		role: 'roleRepo',
 		user: 'userRepo',
 	},
 
 	schemas: {
-		movie: 'movieSchema',
 		role: 'roleSchema',
 		user: 'userSchema',
 	},
