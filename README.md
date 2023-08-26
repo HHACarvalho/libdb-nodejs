@@ -32,7 +32,7 @@ Sign up as a new user
 
 ```json
 {
-    "email": "example@gmail.com",
+    "email": "erica.lopes@gmail.com",
     "password": "12345678",
     "firstName": "Erica",
     "lastName": "Lopes"
@@ -47,7 +47,7 @@ Login as user
 
 ```json
 {
-    "email": "example@gmail.com",
+    "email": "erica.lopes@gmail.com",
     "password": "12345678"
 }
 ```
@@ -60,7 +60,7 @@ Updates the current user's profile (only a logged-in user may preform this reque
 
 ```json
 {
-    "email": "example@gmail.com",
+    "email": "filipa.lopes@gmail.com",
     "password": "12345678",
     "firstName": "Filipa",
     "lastName": "Lopes"

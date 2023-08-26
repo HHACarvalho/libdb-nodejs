@@ -30,11 +30,11 @@ export default (app: Router) => {
 		}),
 	});
 
-	userRoute.post('', bodySchema, (req, res, next) => {
+	userRoute.post('/signup', bodySchema, (req, res, next) => {
 		controller.signUp(req, res, next);
 	});
 
-	userRoute.get('', loginSchema, (req, res, next) => {
+	userRoute.post('/login', loginSchema, (req, res, next) => {
 		controller.login(req, res, next);
 	});
 
