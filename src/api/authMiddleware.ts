@@ -1,5 +1,5 @@
 import config from '../../config';
-import { Permissions } from '../domain/role';
+import { Permissions } from '../core/permissions';
 import IRoleRepo from '../repos/IRepos/IRoleRepo';
 
 import { NextFunction, Request, Response } from 'express';
@@ -52,9 +52,9 @@ async function checkPermissions(requiredPermissions: number[], userRole: string)
 		throw new JsonWebTokenError('invalid role');
 	}
 
-	requiredPermissions.forEach((e) => {
+	for (const e of requiredPermissions) {
 		if (role.permissions[Object.values(Permissions)[e]] === false) {
 			throw new JsonWebTokenError('insufficient permissions');
 		}
-	});
+	}
 }

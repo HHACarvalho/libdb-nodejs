@@ -4,7 +4,8 @@ export class Utils {
 
 		return (
 			(isSuccess ? 'SUCCESS | ' : 'FAILURE | ') +
-			methodName + '() request received -> ' +
+			methodName +
+			'() request received -> ' +
 			String(currentDate.getDate()).padStart(2, '0') +
 			'/' +
 			String(currentDate.getMonth() + 1).padStart(2, '0') +

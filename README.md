@@ -1,6 +1,6 @@
-# MovieDB NodeJS API
+# MovieDB Node.js API
 
-REST API built with NodeJS and Express
+REST API built with Node.js and Express
 
 ### Compiles and hot-reloads for development
 
@@ -24,9 +24,9 @@ npm build
 
 ## User
 
-### Sign Up - http://localhost:3000/user - POST
+### Sign up - http://localhost:3000/user - POST
 
-Sign up as a new user
+Sign up as a new user.
 
 **Body:**
 
@@ -41,7 +41,7 @@ Sign up as a new user
 
 ### Login - http://localhost:3000/user - GET
 
-Login as user
+Login as user.
 
 **Body:**
 
@@ -52,7 +52,7 @@ Login as user
 }
 ```
 
-### Update Profile - http://localhost:3000/user - PUT
+### Update user profile - http://localhost:3000/user - PUT
 
 Updates the current user's profile (only a logged-in user may preform this request on his own account).
 
@@ -67,34 +67,34 @@ Updates the current user's profile (only a logged-in user may preform this reque
 }
 ```
 
-### Update User Role - http://localhost:3000/user - PATCH
+### Update user role - http://localhost:3000/user - PATCH
 
 Updates a user's role (only a logged-in user with sufficient permissions may preform this request).
 
 **Parameters:**
 
 | Parameter | Value                 |
-|-----------|-----------------------|
+|:----------|:----------------------|
 | email     | erica.lopes@gmail.com |
 | role      | Admin                 |
 
-### Delete User - http://localhost:3000/user - DELETE
+### Delete user - http://localhost:3000/user - DELETE
 
 Closes the current user's account (only a logged-in user may preform this request on his own account).
 
 **Parameters:**
 
 | Parameter | Value                 |
-|-----------|-----------------------|
+|:----------|:----------------------|
 | email     | erica.lopes@gmail.com |
 
 ___
 
 ## Role
 
-### Create Role - http://localhost:3000/role - POST
+### Create role - http://localhost:3000/role - POST
 
-Creates a new role with no permissions.
+Adds a new role to the database.
 
 **Body:**
 
@@ -109,11 +109,11 @@ Creates a new role with no permissions.
 }
 ```
 
-### Find All Roles - http://localhost:3000/role/all - GET
+### Find all roles - http://localhost:3000/role/all - GET
 
 Retrieves a list of all roles.
 
-### Update Role - http://localhost:3000/role - PUT
+### Update role - http://localhost:3000/role - PUT
 
 Updates an existing role (sending the name in the parameters allows for renaming).
 
@@ -133,17 +133,17 @@ Updates an existing role (sending the name in the parameters allows for renaming
 **Parameters:**
 
 | Parameter | Value   |
-|-----------|---------|
+|:----------|:--------|
 | name      | Default |
 
-### Delete Role - http://localhost:3000/role - DELETE
+### Delete role - http://localhost:3000/role - DELETE
 
-Deletes a role.
+Deletes a role from the database.
 
 **Parameters:**
 
 | Parameter | Value   |
-|-----------|---------|
+|:----------|:--------|
 | name      | Default |
 
 ---

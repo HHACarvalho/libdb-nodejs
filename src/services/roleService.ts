@@ -1,5 +1,5 @@
 import config from '../../config';
-import {Permissions} from "../core/permissions";
+import { Permissions } from '../core/permissions';
 import { Role } from '../domain/role';
 import { RoleMapper } from '../mappers/roleMapper';
 import { Result } from '../core/result';
@@ -37,7 +37,7 @@ export default class RoleService implements IRoleService {
 			return Result.fail<IRoleDTO>('No role with the name "' + token.name + '" was found');
 		}
 
-		for (const e of requiredPermissions){
+		for (const e of requiredPermissions) {
 			if (role.permissions[Object.values(Permissions)[e]] === false) {
 				return Result.fail<any>('Insufficient permissions');
 			}
