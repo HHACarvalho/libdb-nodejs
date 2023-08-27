@@ -7,13 +7,12 @@ import IRoleService from '../services/IServices/IRoleService';
 
 import { NextFunction, Request, Response } from 'express';
 import { Inject, Service } from 'typedi';
-import { Logger } from 'winston';
 
 @Service()
 export default class RoleController implements IRoleController {
 	constructor(
 		@Inject(config.services.role) private serviceInstance: IRoleService,
-		@Inject('logger') private logger: Logger
+		@Inject('logger') private logger
 	) {}
 
 	public async createRole(req: Request, res: Response, next: NextFunction) {

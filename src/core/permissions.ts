@@ -1,5 +1,5 @@
 export enum Permissions {
-    manageMovies,
-    manageRoles,
-    manageUsers,
+    MANAGE_MOVIES,
+    MANAGE_ROLES,
+    MANAGE_USERS,
 }

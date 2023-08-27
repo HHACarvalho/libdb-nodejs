@@ -31,7 +31,7 @@ export default (app: Router) => {
 		}),
 	});
 
-	roleRoute.post('/', fullBodySchema, userValidation([Permissions.manageRoles]), (req, res, next) => {
+	roleRoute.post('/', fullBodySchema, userValidation([Permissions.MANAGE_ROLES]), (req, res, next) => {
 		controller.createRole(req, res, next);
 	});
 
@@ -43,11 +43,11 @@ export default (app: Router) => {
 		controller.findAllRoles(req, res, next);
 	});
 
-	roleRoute.put('/', fullBodySchema, userValidation([Permissions.manageRoles]), (req, res, next) => {
+	roleRoute.put('/', fullBodySchema, userValidation([Permissions.MANAGE_ROLES]), (req, res, next) => {
 		controller.updateRole(req, res, next);
 	});
 
-	roleRoute.delete('/', userValidation([Permissions.manageRoles]), (req, res, next) => {
+	roleRoute.delete('/', userValidation([Permissions.MANAGE_ROLES]), (req, res, next) => {
 		controller.deleteRole(req, res, next);
 	});
 };

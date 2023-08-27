@@ -42,7 +42,7 @@ export default (app: Router) => {
 		controller.updateProfile(req, res, next);
 	});
 
-	userRoute.patch('/', userValidation([Permissions.manageUsers]), (req, res, next) => {
+	userRoute.patch('/', userValidation([Permissions.MANAGE_USERS]), (req, res, next) => {
 		controller.updateUserRole(req, res, next);
 	});
 
