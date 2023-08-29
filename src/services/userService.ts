@@ -2,6 +2,7 @@ import config from '../../config';
 import { User } from '../domain/user';
 import { UserMapper } from '../mappers/userMapper';
 import { Result } from '../core/result';
+import IUserDTO from "../dtos/IUserDTO";
 import IRoleRepo from '../repos/IRepos/IRoleRepo';
 import IUserRepo from '../repos/IRepos/IUserRepo';
 import IUserService from './IServices/IUserService';
@@ -80,31 +81,31 @@ export default class UserService implements IUserService {
 		return Result.ok<string>(token);
 	}
 
-	public async updateUserRole(email: string, role: string): Promise<Result<any>> {
+	public async updateUserRole(email: string, role: string): Promise<Result<IUserDTO>> {
 		const user = await this.userRepoInstance.findUser(email);
 		if (user == null) {
-			return Result.fail<any>('No user with the email "' + email + '" was found');
+			return Result.fail<IUserDTO>('No user with the email "' + email + '" was found');
 		}
 
 		const roleExists = await this.roleRepoInstance.findRole(role);
 		if (!roleExists) {
-			return Result.fail<any>('No role with the name "' + role + '" was found');
+			return Result.fail<IUserDTO>('No role with the name "' + role + '" was found');
 		}
 
 		user.role = role;
 
 		await this.userRepoInstance.updateUser(user);
-		return Result.ok<any>();
+		return Result.ok<IUserDTO>();
 	}
 
-	public async deleteUser(email: string): Promise<Result<any>> {
+	public async deleteUser(email: string): Promise<Result<IUserDTO>> {
 		const userExists = await this.userRepoInstance.findUser(email);
 		if (!userExists) {
-			return Result.fail<any>('No user with the email "' + email + '" was found');
+			return Result.fail<IUserDTO>('No user with the email "' + email + '" was found');
 		}
 
 		await this.userRepoInstance.deleteUser(email);
-		return Result.ok<any>();
+		return Result.ok<IUserDTO>();
 	}
 
 	private signToken(data: any): string {

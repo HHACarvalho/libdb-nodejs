@@ -1,5 +1,4 @@
 import config from '../../config';
-import { Result } from '../core/result';
 import { Utils } from '../core/utils';
 import IUserController from './IControllers/IUserController';
 import IUserService from '../services/IServices/IUserService';
@@ -16,7 +15,7 @@ export default class UserController implements IUserController {
 
 	public async signUp(req: Request, res: Response, next: NextFunction) {
 		try {
-			const result = (await this.serviceInstance.signUp(req.body)) as Result<any>;
+			const result = await this.serviceInstance.signUp(req.body);
 			if (!result.isSuccess) {
 				this.logger.warn(Utils.logMessage(false, this.signUp.name));
 
@@ -36,7 +35,7 @@ export default class UserController implements IUserController {
 
 	public async login(req: Request, res: Response, next: NextFunction) {
 		try {
-			const result = (await this.serviceInstance.login(req.body)) as Result<any>;
+			const result = await this.serviceInstance.login(req.body);
 			if (!result.isSuccess) {
 				this.logger.warn(Utils.logMessage(false, this.login.name));
 
@@ -56,7 +55,9 @@ export default class UserController implements IUserController {
 
 	public async updateProfile(req: Request, res: Response, next: NextFunction) {
 		try {
-			const result = (await this.serviceInstance.updateProfile(req['token'].email, req.body)) as Result<any>;
+			const userEmail = req['token'].email as string;
+
+			const result = await this.serviceInstance.updateProfile(userEmail, req.body);
 			if (!result.isSuccess) {
 				this.logger.warn(Utils.logMessage(false, this.updateProfile.name));
 
@@ -76,10 +77,10 @@ export default class UserController implements IUserController {
 
 	public async updateUserRole(req: Request, res: Response, next: NextFunction) {
 		try {
-			const emailParameter = req.query.email as string;
-			const roleParameter = req.query.role as string;
+			const userEmail = req.query.email as string;
+			const roleName = req.query.role as string;
 
-			const result = (await this.serviceInstance.updateUserRole(emailParameter, roleParameter)) as Result<any>;
+			const result = await this.serviceInstance.updateUserRole(userEmail, roleName);
 			if (!result.isSuccess) {
 				this.logger.warn(Utils.logMessage(false, this.updateUserRole.name));
 
@@ -98,7 +99,9 @@ export default class UserController implements IUserController {
 
 	public async deleteAccount(req: Request, res: Response, next: NextFunction) {
 		try {
-			const result = (await this.serviceInstance.deleteUser(req['token'].email)) as Result<any>;
+			const userEmail = req['token'].email as string;
+
+			const result = await this.serviceInstance.deleteUser(userEmail);
 			if (!result.isSuccess) {
 				this.logger.warn(Utils.logMessage(false, this.deleteAccount.name));
 

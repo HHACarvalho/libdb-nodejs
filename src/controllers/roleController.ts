@@ -53,7 +53,6 @@ export default class RoleController implements IRoleController {
 
 	public async updateRole(req: Request, res: Response, next: NextFunction) {
 		try {
-			//TODO: roleId
 			const roleName = req.query.name as string;
 
 			const result = await this.serviceInstance.updateRole(roleName, req.body);
@@ -75,7 +74,6 @@ export default class RoleController implements IRoleController {
 
 	public async deleteRole(req: Request, res: Response, next: NextFunction) {
 		try {
-			//TODO: roleId
 			const roleName = req.query.name as string;
 
 			const result = await this.serviceInstance.deleteRole(roleName);

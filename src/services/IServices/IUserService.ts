@@ -1,4 +1,5 @@
 import { Result } from '../../core/result';
+import IUserDTO from "../../dtos/IUserDTO";
 
 export default interface IUserService {
 	signUp(reqBody: any): Promise<Result<string>>;
@@ -7,7 +8,7 @@ export default interface IUserService {
 
 	updateProfile(email: string, reqBody: any): Promise<Result<string>>;
 
-	updateUserRole(email: string, role: string): Promise<Result<any>>;
+	updateUserRole(email: string, role: string): Promise<Result<IUserDTO>>;
 
-	deleteUser(email: string): Promise<Result<any>>;
+	deleteUser(email: string): Promise<Result<IUserDTO>>;
 }
