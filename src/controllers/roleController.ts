@@ -1,8 +1,6 @@
 import config from '../../config';
-import { Result } from '../core/result';
 import { Utils } from '../core/utils';
 import IRoleController from './IControllers/IRoleController';
-import IRoleDTO from '../dtos/IRoleDTO';
 import IRoleService from '../services/IServices/IRoleService';
 
 import { NextFunction, Request, Response } from 'express';
@@ -17,7 +15,7 @@ export default class RoleController implements IRoleController {
 
 	public async createRole(req: Request, res: Response, next: NextFunction) {
 		try {
-			const result = (await this.serviceInstance.createRole(req.body)) as Result<IRoleDTO>;
+			const result = await this.serviceInstance.createRole(req.body);
 			if (!result.isSuccess) {
 				this.logger.warn(Utils.logMessage(false, this.createRole.name));
 
@@ -34,30 +32,9 @@ export default class RoleController implements IRoleController {
 		}
 	}
 
-	public async checkPermissions(req: Request, res: Response, next: NextFunction) {
-		try {
-			const cookie = req.cookies.token as string;
-
-			const result = (await this.serviceInstance.checkPermissions(cookie, req.body.permissions)) as Result<any>;
-			if (!result.isSuccess) {
-				this.logger.warn(Utils.logMessage(false, this.checkPermissions.name));
-
-				res.status(403);
-				return res.send(result.error);
-			}
-
-			this.logger.info(Utils.logMessage(true, this.checkPermissions.name));
-
-			res.status(200);
-			return res.send();
-		} catch (e) {
-			return next(e);
-		}
-	}
-
 	public async findAllRoles(req: Request, res: Response, next: NextFunction) {
 		try {
-			const result = (await this.serviceInstance.findAllRoles()) as Result<IRoleDTO[]>;
+			const result = await this.serviceInstance.findAllRoles();
 			if (!result.isSuccess) {
 				this.logger.warn(Utils.logMessage(false, this.findAllRoles.name));
 
@@ -76,9 +53,10 @@ export default class RoleController implements IRoleController {
 
 	public async updateRole(req: Request, res: Response, next: NextFunction) {
 		try {
-			const nameParameter = req.query.name as string;
+			//TODO: roleId
+			const roleName = req.query.name as string;
 
-			const result = (await this.serviceInstance.updateRole(nameParameter, req.body)) as Result<IRoleDTO>;
+			const result = await this.serviceInstance.updateRole(roleName, req.body);
 			if (!result.isSuccess) {
 				this.logger.warn(Utils.logMessage(false, this.updateRole.name));
 
@@ -97,9 +75,10 @@ export default class RoleController implements IRoleController {
 
 	public async deleteRole(req: Request, res: Response, next: NextFunction) {
 		try {
-			const nameParameter = req.query.name as string;
+			//TODO: roleId
+			const roleName = req.query.name as string;
 
-			const result = (await this.serviceInstance.deleteRole(nameParameter)) as Result<IRoleDTO>;
+			const result = await this.serviceInstance.deleteRole(roleName);
 			if (!result.isSuccess) {
 				this.logger.warn(Utils.logMessage(false, this.deleteRole.name));
 
