@@ -13,23 +13,37 @@ export const userValidation = (permissions?: number[]) => {
 				return next();
 			}
 
-			await validateJWT(req, res);
+			await validateJWT(req, res, req.cookies.token);
 
 			if (permissions) {
 				await validatePermissions(req, res, permissions);
 			}
 
 			return next();
-		} catch (e: JsonWebTokenError) {
+		} catch (e) {
 			return next(e);
 		}
 	};
 };
 
-async function validateJWT(req: Request, res: Response) {
+export const externalUserValidation = async (req: Request, res: Response, next: NextFunction) => {
 	try {
-		req['token'] = await verify(req.cookies.token, config.jwtAccessSecret);
-	} catch (e: JsonWebTokenError) {
+		await validateJWT(req, res, req.body.token);
+
+		if (req.body.permissions) {
+			await validatePermissions(req, res, req.body.permissions);
+		}
+
+		return next();
+	} catch (e) {
+		return next(e);
+	}
+};
+
+async function validateJWT(req: Request, res: Response, token: string) {
+	try {
+		req['token'] = await verify(token, config.jwtAccessSecret);
+	} catch (e) {
 		res.status(401);
 		throw e;
 	}
@@ -38,7 +52,7 @@ async function validateJWT(req: Request, res: Response) {
 async function validatePermissions(req: Request, res: Response, permissions: number[]) {
 	try {
 		await checkPermissions(permissions, req['token'].role);
-	} catch (e: JsonWebTokenError) {
+	} catch (e) {
 		res.status(403);
 		throw e;
 	}

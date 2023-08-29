@@ -1,5 +1,5 @@
 import config from '../../../config';
-import { userValidation } from '../authMiddleware';
+import { externalUserValidation, userValidation } from '../authMiddleware';
 import { Permissions } from '../../core/permissions';
 import IRoleController from '../../controllers/IControllers/IRoleController';
 
@@ -14,7 +14,7 @@ export default (app: Router) => {
 
 	const controller = Container.get(config.controllers.role) as IRoleController;
 
-	const fullBodySchema = celebrate({
+	const bodySchema = celebrate({
 		[Segments.BODY]: Joi.object({
 			name: Joi.string().min(2).max(32).required(),
 			permissions: Joi.object({
@@ -27,27 +27,29 @@ export default (app: Router) => {
 
 	const permissionsSchema = celebrate({
 		[Segments.BODY]: Joi.object({
+			token: Joi.string().required(),
 			permissions: Joi.array().items(Joi.number()).required(),
 		}),
 	});
 
-	roleRoute.post('/', fullBodySchema, userValidation([Permissions.MANAGE_ROLES]), (req, res, next) => {
+	roleRoute.post('', bodySchema, userValidation([Permissions.manageRoles]), (req, res, next) => {
 		controller.createRole(req, res, next);
 	});
 
-	roleRoute.post('/permissions', permissionsSchema, userValidation(), (req, res, next) => {
-		controller.checkPermissions(req, res, next);
+	roleRoute.post('/permissions', permissionsSchema, externalUserValidation, (req, res, next) => {
+		res.status(200);
+		res.send('Ok');
 	});
 
 	roleRoute.get('/all', (req, res, next) => {
 		controller.findAllRoles(req, res, next);
 	});
 
-	roleRoute.put('/', fullBodySchema, userValidation([Permissions.MANAGE_ROLES]), (req, res, next) => {
+	roleRoute.put('', bodySchema, userValidation([Permissions.manageRoles]), (req, res, next) => {
 		controller.updateRole(req, res, next);
 	});
 
-	roleRoute.delete('/', userValidation([Permissions.MANAGE_ROLES]), (req, res, next) => {
+	roleRoute.delete('', userValidation([Permissions.manageRoles]), (req, res, next) => {
 		controller.deleteRole(req, res, next);
 	});
 };
