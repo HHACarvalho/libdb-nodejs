@@ -27,6 +27,21 @@ export default class RoleService implements IRoleService {
 		return Result.ok<IRoleDTO>(RoleMapper.toDTO(result));
 	}
 
+	public async checkPermissions(roleName: string, requiredPermissions: number[]): Promise<Result<IRoleDTO>> {
+		const role = await this.repoInstance.findRole(roleName);
+		if (role == null) {
+			return Result.fail<IRoleDTO>('No role with the name "' + roleName + '" was found');
+		}
+
+		for (const e of requiredPermissions) {
+			if (role.permissions[Object.values(Permissions)[e]] === false) {
+				return Result.fail<IRoleDTO>('insufficient permissions');
+			}
+		}
+
+		return Result.ok<IRoleDTO>();
+	}
+
 	public async findAllRoles(): Promise<Result<IRoleDTO[]>> {
 		const roleList = await this.repoInstance.findAllRoles();
 		if (roleList.length === 0) {

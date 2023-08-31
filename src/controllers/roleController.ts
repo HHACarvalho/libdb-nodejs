@@ -32,6 +32,25 @@ export default class RoleController implements IRoleController {
 		}
 	}
 
+	public async checkPermissions(req: Request, res: Response, next: NextFunction) {
+		try {
+			const result = await this.serviceInstance.checkPermissions(req.body.token, req.body.permissions);
+			if (!result.isSuccess) {
+				this.logger.warn(Utils.logMessage(false, this.checkPermissions.name));
+
+				res.status(403);
+				return res.send(result.error);
+			}
+
+			this.logger.info(Utils.logMessage(true, this.checkPermissions.name));
+
+			res.status(200);
+			return res.json(result.value);
+		} catch (e) {
+			return next(e);
+		}
+	}
+
 	public async findAllRoles(req: Request, res: Response, next: NextFunction) {
 		try {
 			const result = await this.serviceInstance.findAllRoles();

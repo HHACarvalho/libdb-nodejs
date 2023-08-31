@@ -36,9 +36,8 @@ export default (app: Router) => {
 		controller.createRole(req, res, next);
 	});
 
-	roleRoute.post('/permissions', permissionsSchema, externalUserValidation, (req, res, next) => {
-		res.status(200);
-		res.send('Ok');
+	roleRoute.post('/permissions', permissionsSchema, oldUserValidation, (req, res, next) => {
+		controller.checkPermissions(req, res, next);
 	});
 
 	roleRoute.get('/all', (req, res, next) => {
