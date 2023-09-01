@@ -33,10 +33,6 @@ export default class RoleController implements IRoleController {
 		}
 	}
 
-	public async checkPermissions(req: Request, res: Response, next: NextFunction) {
-
-	}
-
 	public async findAllRoles(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const result = await this.serviceInstance.findAllRoles();
