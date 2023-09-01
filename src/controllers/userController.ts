@@ -13,47 +13,49 @@ export default class UserController implements IUserController {
 		@Inject('logger') private logger
 	) {}
 
-	public async signUp(req: Request, res: Response, next: NextFunction) {
+	public async signUp(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const result = await this.serviceInstance.signUp(req.body);
 			if (!result.isSuccess) {
 				this.logger.warn(Utils.logMessage(false, this.signUp.name));
 
 				res.status(400);
-				return res.send(result.error);
+				res.send(result.error);
+				return;
 			}
 
 			this.logger.info(Utils.logMessage(true, this.signUp.name));
 
 			res.status(201);
 			res.cookie('token', result.value, { httpOnly: true, maxAge: config.jwtDuration * 1000 });
-			return res.send('Successful signup');
+			res.send('Successful signup');
 		} catch (e) {
-			return next(e);
+			next(e);
 		}
 	}
 
-	public async login(req: Request, res: Response, next: NextFunction) {
+	public async login(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const result = await this.serviceInstance.login(req.body);
 			if (!result.isSuccess) {
 				this.logger.warn(Utils.logMessage(false, this.login.name));
 
 				res.status(404);
-				return res.send(result.error);
+				res.send(result.error);
+				return;
 			}
 
 			this.logger.info(Utils.logMessage(true, this.login.name));
 
 			res.status(200);
 			res.cookie('token', result.value, { httpOnly: true, maxAge: config.jwtDuration * 1000 });
-			return res.send('Successful login');
+			res.send('Successful login');
 		} catch (e) {
-			return next(e);
+			next(e);
 		}
 	}
 
-	public async updateProfile(req: Request, res: Response, next: NextFunction) {
+	public async updateProfile(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const userEmail = req['token'].email as string;
 
@@ -62,20 +64,21 @@ export default class UserController implements IUserController {
 				this.logger.warn(Utils.logMessage(false, this.updateProfile.name));
 
 				res.status(404);
-				return res.send(result.error);
+				res.send(result.error);
+				return;
 			}
 
 			this.logger.info(Utils.logMessage(true, this.updateProfile.name));
 
 			res.status(200);
 			res.cookie('token', result.value, { httpOnly: true, maxAge: config.jwtDuration * 1000 });
-			return res.send('Successfully updated user profile');
+			res.send('Successfully updated user profile');
 		} catch (e) {
-			return next(e);
+			next(e);
 		}
 	}
 
-	public async updateUserRole(req: Request, res: Response, next: NextFunction) {
+	public async updateUserRole(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const userEmail = req.query.email as string;
 			const roleName = req.query.role as string;
@@ -85,19 +88,20 @@ export default class UserController implements IUserController {
 				this.logger.warn(Utils.logMessage(false, this.updateUserRole.name));
 
 				res.status(404);
-				return res.send(result.error);
+				res.send(result.error);
+				return;
 			}
 
 			this.logger.info(Utils.logMessage(true, this.updateUserRole.name));
 
 			res.status(200);
-			return res.send('Successfully updated user role');
+			res.send('Successfully updated user role');
 		} catch (e) {
-			return next(e);
+			next(e);
 		}
 	}
 
-	public async deleteAccount(req: Request, res: Response, next: NextFunction) {
+	public async deleteAccount(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const userEmail = req['token'].email as string;
 
@@ -106,16 +110,17 @@ export default class UserController implements IUserController {
 				this.logger.warn(Utils.logMessage(false, this.deleteAccount.name));
 
 				res.status(404);
-				return res.send(result.error);
+				res.send(result.error);
+				return;
 			}
 
 			this.logger.info(Utils.logMessage(true, this.deleteAccount.name));
 
 			res.status(200);
 			res.clearCookie('token');
-			return res.send('Successfully deleted account');
+			res.send('Successfully deleted account');
 		} catch (e) {
-			return next(e);
+			next(e);
 		}
 	}
 }

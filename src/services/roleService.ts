@@ -27,21 +27,6 @@ export default class RoleService implements IRoleService {
 		return Result.ok<IRoleDTO>(RoleMapper.toDTO(result));
 	}
 
-	public async checkPermissions(roleName: string, requiredPermissions: number[]): Promise<Result<IRoleDTO>> {
-		const role = await this.repoInstance.findRole(roleName);
-		if (role == null) {
-			return Result.fail<IRoleDTO>('No role with the name "' + roleName + '" was found');
-		}
-
-		for (const e of requiredPermissions) {
-			if (role.permissions[Object.values(Permissions)[e]] === false) {
-				return Result.fail<IRoleDTO>('insufficient permissions');
-			}
-		}
-
-		return Result.ok<IRoleDTO>();
-	}
-
 	public async findAllRoles(): Promise<Result<IRoleDTO[]>> {
 		const roleList = await this.repoInstance.findAllRoles();
 		if (roleList.length === 0) {
@@ -51,10 +36,10 @@ export default class RoleService implements IRoleService {
 		return Result.ok<IRoleDTO[]>(roleList.map((e) => RoleMapper.toDTO(e)));
 	}
 
-	public async updateRole(name: string, reqBody: any): Promise<Result<IRoleDTO>> {
-		const role = await this.repoInstance.findRole(name);
+	public async updateRole(roleName: string, reqBody: any): Promise<Result<IRoleDTO>> {
+		const role = await this.repoInstance.findRole(roleName);
 		if (role == null) {
-			return Result.fail<IRoleDTO>('No role with the name "' + name + '" was found');
+			return Result.fail<IRoleDTO>('No role with the name "' + roleName + '" was found');
 		}
 
 		role.name = reqBody.name;
@@ -64,13 +49,13 @@ export default class RoleService implements IRoleService {
 		return Result.ok<IRoleDTO>(RoleMapper.toDTO(result));
 	}
 
-	public async deleteRole(name: string): Promise<Result<IRoleDTO>> {
-		const roleExists = await this.repoInstance.findRole(name);
+	public async deleteRole(roleName: string): Promise<Result<IRoleDTO>> {
+		const roleExists = await this.repoInstance.findRole(roleName);
 		if (!roleExists) {
-			return Result.fail<IRoleDTO>('No role with the name "' + name + '" was found');
+			return Result.fail<IRoleDTO>('No role with the name "' + roleName + '" was found');
 		}
 
-		const result = await this.repoInstance.deleteRole(name);
+		const result = await this.repoInstance.deleteRole(roleName);
 		return Result.ok<IRoleDTO>(RoleMapper.toDTO(result));
 	}
 }
