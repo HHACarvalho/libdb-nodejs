@@ -35,17 +35,17 @@ async function validateJWT(req: Request, res: Response, token: string): Promise<
 
 async function validatePermissions(req: Request, res: Response, permissions: number[]): Promise<void> {
 	try {
-		await checkPermissions(permissions, req['token'].role);
+		await checkPermissions(req['token'].role, permissions);
 	} catch (e) {
 		res.status(403);
 		throw e;
 	}
 }
 
-async function checkPermissions(requiredPermissions: number[], userRole: string): Promise<void> {
+async function checkPermissions(roleName: string, requiredPermissions: number[]): Promise<void> {
 	const roleRepo = Container.get(config.repos.role) as IRoleRepo;
 
-	const role = await roleRepo.findRole(userRole);
+	const role = await roleRepo.findRole(roleName);
 	if (role == null) {
 		throw new JsonWebTokenError('invalid user role');
 	}

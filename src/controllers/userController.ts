@@ -80,8 +80,8 @@ export default class UserController implements IUserController {
 
 	public async updateUserRole(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
-			const userEmail = req.query.email as string;
-			const roleName = req.query.role as string;
+			const userEmail = req.query.userEmail as string;
+			const roleName = req.query.roleName as string;
 
 			const result = await this.serviceInstance.updateUserRole(userEmail, roleName);
 			if (!result.isSuccess) {
