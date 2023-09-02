@@ -30,7 +30,7 @@ export class UserMapper {
 
 	public static toPersistence(user: User): IUserPersistence {
 		return {
-			_id: user.id.toValue(),
+			_id: user.id.getValue(),
 			email: user.email,
 			password: user.password,
 			firstName: user.firstName,

@@ -25,7 +25,7 @@ export class RoleMapper {
 
 	public static toPersistence(role: Role): IRolePersistence {
 		return {
-			_id: role.id.toValue(),
+			_id: role.id.getValue(),
 			name: role.name,
 			permissions: role.permissions,
 		} as IRolePersistence;
