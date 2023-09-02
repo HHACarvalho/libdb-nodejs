@@ -2,6 +2,8 @@
 
 REST API built with Node.js and Express
 
+# Commands
+
 ### Compiles and hot-reloads for development
 
 ```
@@ -39,6 +41,11 @@ Sign up as a new user.
 }
 ```
 
+**Returns:** If successful returns the code 201 and a signed JSON Web Token. Otherwise, the code 400 and an error message.
+
+---
+___
+
 ### Login - http://localhost:3000/user - GET
 
 Login as user.
@@ -52,9 +59,16 @@ Login as user.
 }
 ```
 
+**Returns:** If successful returns the code 200 and a signed JSON Web Token. Otherwise, the code 404 and an error message.
+
+---
+___
+
 ### Update user profile - http://localhost:3000/user - PUT
 
 Updates the current user's profile (only a logged-in user may preform this request on his own account).
+
+**Pre-requisites:** A successful login to acquire a JWT.
 
 **Body:**
 
@@ -67,9 +81,16 @@ Updates the current user's profile (only a logged-in user may preform this reque
 }
 ```
 
+**Returns:** If successful returns the code 200 and an updated JSON Web Token. Otherwise, the code 404 and an error message.
+
+---
+___
+
 ### Update user role - http://localhost:3000/user - PATCH
 
 Updates a user's role (only a logged-in user with sufficient permissions may preform this request).
+
+**Pre-requisites:** A successful login to acquire a JWT and sufficient permissions.
 
 **Parameters:**
 
@@ -78,9 +99,16 @@ Updates a user's role (only a logged-in user with sufficient permissions may pre
 | email     | erica.lopes@gmail.com |
 | role      | Admin                 |
 
+**Returns:** If successful returns the code 200. Otherwise, the code 404 and an error message.
+
+---
+___
+
 ### Delete user - http://localhost:3000/user - DELETE
 
 Closes the current user's account (only a logged-in user may preform this request on his own account).
+
+**Pre-requisites:** A successful login to acquire a JWT.
 
 **Parameters:**
 
@@ -88,6 +116,9 @@ Closes the current user's account (only a logged-in user may preform this reques
 |:----------|:----------------------|
 | email     | erica.lopes@gmail.com |
 
+**Returns:** If successful returns the code 200 and erases the current JSON Web Token. Otherwise, the code 404 and an error message.
+
+---
 ___
 
 ## Role
@@ -109,9 +140,19 @@ Adds a new role to the database.
 }
 ```
 
+**Returns:** If successful returns the code 201 and a copy of the created role. Otherwise, the code 400 and an error message.
+
+---
+___
+
 ### Find all roles - http://localhost:3000/role/all - GET
 
 Retrieves a list of all roles.
+
+**Returns:** If successful returns the code 200 and a list of all roles. Otherwise, the code 404 and an error message.
+
+---
+___
 
 ### Update role - http://localhost:3000/role - PUT
 
@@ -136,6 +177,11 @@ Updates an existing role (sending the name in the parameters allows for renaming
 |:----------|:--------|
 | name      | Default |
 
+**Returns:** If successful returns the code 200 and a copy of the update role. Otherwise, the code 404 and an error message.
+
+---
+___
+
 ### Delete role - http://localhost:3000/role - DELETE
 
 Deletes a role from the database.
@@ -146,4 +192,7 @@ Deletes a role from the database.
 |:----------|:--------|
 | name      | Default |
 
+**Returns:** If successful returns the code 200 and a copy of the deleted role. Otherwise, the code 404 and an error message.
+
 ---
+___
