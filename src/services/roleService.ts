@@ -38,11 +38,10 @@ export default class RoleService implements IRoleService {
 
 	public async updateRole(roleName: string, reqBody: any): Promise<Result<IRoleDTO>> {
 		const role = await this.repoInstance.findRole(roleName);
-		if (role == null) {
+		if (!role) {
 			return Result.fail<IRoleDTO>('No role with the name "' + roleName + '" was found');
 		}
 
-		role.name = reqBody.name;
 		role.permissions = reqBody.permissions;
 
 		const result = await this.repoInstance.updateRole(role);
@@ -52,7 +51,7 @@ export default class RoleService implements IRoleService {
 	public async deleteRole(roleName: string): Promise<Result<IRoleDTO>> {
 		const roleExists = await this.repoInstance.findRole(roleName);
 		if (!roleExists) {
-			return Result.fail<IRoleDTO>('No role with the name "' + roleName + '" was found');
+			return Result.fail<IRoleDTO>('No role with the id "' + roleName + '" was found');
 		}
 
 		const result = await this.repoInstance.deleteRole(roleName);

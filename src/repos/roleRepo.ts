@@ -17,8 +17,8 @@ export default class RoleRepo implements IRoleRepo {
 		return RoleMapper.toDomain(document);
 	}
 
-	public async findRole(name: string): Promise<Role> {
-		const document = await this.schema.findOne({ name: name });
+	public async findRole(roleName: string): Promise<Role> {
+		const document = await this.schema.findOne({ name: roleName });
 		if (document == null) {
 			return null;
 		}
@@ -34,14 +34,13 @@ export default class RoleRepo implements IRoleRepo {
 	public async updateRole(role: Role): Promise<Role> {
 		const document = await this.schema.findOne({ name: role.name });
 
-		document.name = role.name;
 		document.permissions = role.permissions;
 
 		return RoleMapper.toDomain(await document.save());
 	}
 
-	public async deleteRole(name: string): Promise<Role> {
-		const document = await this.schema.findOne({ name: name });
+	public async deleteRole(roleName: string): Promise<Role> {
+		const document = await this.schema.findOne({ name: roleName });
 		if (document == null) {
 			return null;
 		}
