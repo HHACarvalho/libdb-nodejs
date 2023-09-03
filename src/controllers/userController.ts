@@ -7,7 +7,7 @@ import { Inject, Service } from 'typedi';
 
 @Service()
 export default class UserController implements IUserController {
-	constructor(@Inject(config.services.user) private serviceInstance: IUserService,) {}
+	constructor(@Inject(config.services.user) private serviceInstance: IUserService) {}
 
 	public async signUp(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
