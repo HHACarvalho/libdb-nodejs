@@ -27,7 +27,7 @@ export default class UserRepo implements IUserRepo {
 	}
 
 	public async updateUser(user: User): Promise<User> {
-		const document = await this.schema.findOne({ email: user.email });
+		const document = await this.schema.findOne({ _id: user.id.getValue() });
 
 		document.email = user.email;
 		document.password = user.password;
