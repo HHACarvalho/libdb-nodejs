@@ -1,5 +1,4 @@
 import config from '../../config';
-import { Utils } from '../core/utils';
 import IUserController from './IControllers/IUserController';
 import IUserService from '../services/IServices/IUserService';
 
@@ -8,27 +7,19 @@ import { Inject, Service } from 'typedi';
 
 @Service()
 export default class UserController implements IUserController {
-	constructor(
-		@Inject(config.services.user) private serviceInstance: IUserService,
-		@Inject('logger') private logger
-	) {}
+	constructor(@Inject(config.services.user) private serviceInstance: IUserService,) {}
 
 	public async signUp(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const result = await this.serviceInstance.signUp(req.body);
 			if (!result.isSuccess) {
-				this.logger.warn(Utils.logMessage(false, this.signUp.name));
-
 				res.status(400);
 				res.send(result.error);
-				return;
+			} else {
+				res.status(201);
+				res.cookie('token', result.value, { httpOnly: true, maxAge: config.jwtDuration * 1000 });
+				res.send('Successful signup');
 			}
-
-			this.logger.info(Utils.logMessage(true, this.signUp.name));
-
-			res.status(201);
-			res.cookie('token', result.value, { httpOnly: true, maxAge: config.jwtDuration * 1000 });
-			res.send('Successful signup');
 		} catch (e) {
 			next(e);
 		}
@@ -38,18 +29,13 @@ export default class UserController implements IUserController {
 		try {
 			const result = await this.serviceInstance.login(req.body);
 			if (!result.isSuccess) {
-				this.logger.warn(Utils.logMessage(false, this.login.name));
-
 				res.status(404);
 				res.send(result.error);
-				return;
+			} else {
+				res.status(200);
+				res.cookie('token', result.value, { httpOnly: true, maxAge: config.jwtDuration * 1000 });
+				res.send('Successful login');
 			}
-
-			this.logger.info(Utils.logMessage(true, this.login.name));
-
-			res.status(200);
-			res.cookie('token', result.value, { httpOnly: true, maxAge: config.jwtDuration * 1000 });
-			res.send('Successful login');
 		} catch (e) {
 			next(e);
 		}
@@ -61,17 +47,12 @@ export default class UserController implements IUserController {
 
 			const result = await this.serviceInstance.findUser(userId);
 			if (!result.isSuccess) {
-				this.logger.warn(Utils.logMessage(false, this.findUser.name));
-
 				res.status(404);
 				res.send(result.error);
-				return;
+			} else {
+				res.status(200);
+				res.json(result.value);
 			}
-
-			this.logger.info(Utils.logMessage(true, this.findUser.name));
-
-			res.status(200);
-			res.json(result.value);
 		} catch (e) {
 			next(e);
 		}
@@ -83,18 +64,13 @@ export default class UserController implements IUserController {
 
 			const result = await this.serviceInstance.updateProfile(userEmail, req.body);
 			if (!result.isSuccess) {
-				this.logger.warn(Utils.logMessage(false, this.updateProfile.name));
-
 				res.status(404);
 				res.send(result.error);
-				return;
+			} else {
+				res.status(200);
+				res.cookie('token', result.value, { httpOnly: true, maxAge: config.jwtDuration * 1000 });
+				res.send('Successfully updated user profile');
 			}
-
-			this.logger.info(Utils.logMessage(true, this.updateProfile.name));
-
-			res.status(200);
-			res.cookie('token', result.value, { httpOnly: true, maxAge: config.jwtDuration * 1000 });
-			res.send('Successfully updated user profile');
 		} catch (e) {
 			next(e);
 		}
@@ -107,17 +83,12 @@ export default class UserController implements IUserController {
 
 			const result = await this.serviceInstance.updateUserRole(userEmail, roleName);
 			if (!result.isSuccess) {
-				this.logger.warn(Utils.logMessage(false, this.updateUserRole.name));
-
 				res.status(404);
 				res.send(result.error);
-				return;
+			} else {
+				res.status(200);
+				res.send('Successfully updated user role');
 			}
-
-			this.logger.info(Utils.logMessage(true, this.updateUserRole.name));
-
-			res.status(200);
-			res.send('Successfully updated user role');
 		} catch (e) {
 			next(e);
 		}
@@ -129,18 +100,13 @@ export default class UserController implements IUserController {
 
 			const result = await this.serviceInstance.deleteUser(userEmail);
 			if (!result.isSuccess) {
-				this.logger.warn(Utils.logMessage(false, this.deleteAccount.name));
-
 				res.status(404);
 				res.send(result.error);
-				return;
+			} else {
+				res.status(200);
+				res.clearCookie('token');
+				res.send('Successfully deleted account');
 			}
-
-			this.logger.info(Utils.logMessage(true, this.deleteAccount.name));
-
-			res.status(200);
-			res.clearCookie('token');
-			res.send('Successfully deleted account');
 		} catch (e) {
 			next(e);
 		}
