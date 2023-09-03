@@ -10,7 +10,7 @@ export default interface IUserService {
 
 	updateProfile(userEmail: string, reqBody: any): Promise<Result<string>>;
 
-	updateUserRole(userEmail: string, roleName: string): Promise<Result<IUserDTO>>;
+	updateUserRole(userId: string, roleName: string): Promise<Result<IUserDTO>>;
 
 	deleteUser(userEmail: string): Promise<Result<IUserDTO>>;
 }

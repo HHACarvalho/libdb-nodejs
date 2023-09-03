@@ -90,10 +90,10 @@ export default class UserService implements IUserService {
 		return Result.ok<string>(token);
 	}
 
-	public async updateUserRole(userEmail: string, roleName: string): Promise<Result<IUserDTO>> {
-		const user = await this.userRepoInstance.findUser({ email: userEmail });
+	public async updateUserRole(userId: string, roleName: string): Promise<Result<IUserDTO>> {
+		const user = await this.userRepoInstance.findUser({ _id: userId });
 		if (user == null) {
-			return Result.fail<IUserDTO>('No user with the email "' + userEmail + '" was found');
+			return Result.fail<IUserDTO>('No user with the id "' + userId + '" was found');
 		}
 
 		const roleExists = await this.roleRepoInstance.findRole(roleName);
