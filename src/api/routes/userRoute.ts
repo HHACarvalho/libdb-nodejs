@@ -38,6 +38,10 @@ export default (app: Router) => {
 		controller.login(req, res, next);
 	});
 
+	userRoute.get('/user/:userId', (req, res, next) => {
+		controller.findUser(req, res, next);
+	});
+
 	userRoute.put('', bodySchema, userValidation(), (req, res, next) => {
 		controller.updateProfile(req, res, next);
 	});

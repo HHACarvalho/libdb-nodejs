@@ -55,6 +55,28 @@ export default class UserController implements IUserController {
 		}
 	}
 
+	public async findUser(req: Request, res: Response, next: NextFunction): Promise<void> {
+		try {
+			const userId = req.params.userId as string;
+
+			const result = await this.serviceInstance.findUser(userId);
+			if (!result.isSuccess) {
+				this.logger.warn(Utils.logMessage(false, this.findUser.name));
+
+				res.status(404);
+				res.send(result.error);
+				return;
+			}
+
+			this.logger.info(Utils.logMessage(true, this.findUser.name));
+
+			res.status(200);
+			res.json(result.value);
+		} catch (e) {
+			next(e);
+		}
+	}
+
 	public async updateProfile(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const userEmail = req['token'].email as string;

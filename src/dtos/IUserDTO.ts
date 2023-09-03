@@ -1,5 +1,5 @@
 export interface IUserDTO {
-    id: string
+	id: string;
 	email: string;
 	firstName: string;
 	lastName: string;
@@ -13,10 +13,10 @@ export interface IUserLiteDTO {
 }
 
 export interface IUserPersistence {
-    _id: string;
-    email: string;
-    password: string;
-    firstName: string;
-    lastName: string;
-    role: string;
+	_id: string;
+	email: string;
+	password: string;
+	firstName: string;
+	lastName: string;
+	role: string;
 }

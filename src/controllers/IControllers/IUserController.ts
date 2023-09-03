@@ -5,6 +5,8 @@ export default interface IUserController {
 
 	login(req: Request, res: Response, next: NextFunction): Promise<void>;
 
+	findUser(req: Request, res: Response, next: NextFunction): Promise<void>;
+
 	updateProfile(req: Request, res: Response, next: NextFunction): Promise<void>;
 
 	updateUserRole(req: Request, res: Response, next: NextFunction): Promise<void>;

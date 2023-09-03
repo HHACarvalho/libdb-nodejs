@@ -17,8 +17,8 @@ export default class UserRepo implements IUserRepo {
 		return UserMapper.toDomain(document);
 	}
 
-	public async findUser(email: string): Promise<User> {
-		const document = await this.schema.findOne({ email: email });
+	public async findUser(queryFilter: any): Promise<User> {
+		const document = await this.schema.findOne(queryFilter);
 		if (document == null) {
 			return null;
 		}
