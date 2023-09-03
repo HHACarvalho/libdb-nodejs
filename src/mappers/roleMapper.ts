@@ -1,7 +1,6 @@
-import { Role } from '../domain/role';
 import { EntityID } from '../core/domain/entityID';
-import IRoleDTO from '../dtos/IRoleDTO';
-import IRolePersistence from '../dtos/IRolePersistence';
+import { IRoleDTO, IRolePersistence } from '../dtos/IRoleDTO';
+import { Role } from '../domain/role';
 
 import { Document, Model } from 'mongoose';
 

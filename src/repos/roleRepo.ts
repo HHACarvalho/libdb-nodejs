@@ -1,7 +1,7 @@
 import config from '../../config';
+import { IRolePersistence } from '../dtos/IRoleDTO';
 import { Role } from '../domain/role';
 import { RoleMapper } from '../mappers/roleMapper';
-import IRolePersistence from '../dtos/IRolePersistence';
 import IRoleRepo from './IRepos/IRoleRepo';
 
 import { Document, Model } from 'mongoose';

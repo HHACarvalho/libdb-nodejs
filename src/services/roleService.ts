@@ -1,8 +1,8 @@
 import config from '../../config';
+import { IRoleDTO } from '../dtos/IRoleDTO';
 import { Role } from '../domain/role';
 import { RoleMapper } from '../mappers/roleMapper';
 import { Result } from '../core/result';
-import IRoleDTO from '../dtos/IRoleDTO';
 import IRoleRepo from '../repos/IRepos/IRoleRepo';
 import IRoleService from './IServices/IRoleService';
 

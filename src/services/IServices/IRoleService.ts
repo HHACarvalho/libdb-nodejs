@@ -1,5 +1,5 @@
+import { IRoleDTO } from '../../dtos/IRoleDTO';
 import { Result } from '../../core/result';
-import IRoleDTO from '../../dtos/IRoleDTO';
 
 export default interface IRoleService {
 	createRole(reqBody: any): Promise<Result<IRoleDTO>>;

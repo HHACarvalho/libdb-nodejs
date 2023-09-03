@@ -1,9 +1,9 @@
 import 'reflect-metadata';
 
 import config from '../../config';
+import { IRoleDTO } from '../../src/dtos/IRoleDTO';
 import { Result } from '../../src/core/result';
 import { Role } from '../../src/domain/role';
-import IRoleDTO from "../../src/dtos/IRoleDTO";
 import IRoleRepo from '../../src/repos/IRepos/IRoleRepo';
 import RoleService from '../../src/services/roleService';
 

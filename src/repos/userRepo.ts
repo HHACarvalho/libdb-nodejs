@@ -1,7 +1,7 @@
 import config from '../../config';
+import { IUserPersistence } from '../dtos/IUserDTO';
 import { User } from '../domain/user';
 import { UserMapper } from '../mappers/userMapper';
-import IUserPersistence from '../dtos/IUserPersistence';
 import IUserRepo from './IRepos/IUserRepo';
 
 import { Document, Model } from 'mongoose';

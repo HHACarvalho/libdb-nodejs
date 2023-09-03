@@ -1,4 +1,4 @@
-import IUserPersistence from '../dtos/IUserPersistence';
+import { IUserPersistence } from '../dtos/IUserDTO';
 
 import { Document, model, Schema } from 'mongoose';
 

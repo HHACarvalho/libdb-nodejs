@@ -1,4 +1,4 @@
-import IRolePersistence from '../dtos/IRolePersistence';
+import { IRolePersistence } from '../dtos/IRoleDTO';
 
 import { Document, model, Schema } from 'mongoose';
 
