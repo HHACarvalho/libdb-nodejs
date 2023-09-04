@@ -6,6 +6,8 @@ export default interface IUserService {
 
 	login(reqBody: any): Promise<Result<string>>;
 
+	findAllUsers(): Promise<Result<IUserLiteDTO[]>>;
+
 	findUser(userId: string): Promise<Result<IUserLiteDTO>>;
 
 	updateProfile(userEmail: string, reqBody: any): Promise<Result<string>>;

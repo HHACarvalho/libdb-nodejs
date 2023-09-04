@@ -38,6 +38,10 @@ export default (app: Router) => {
 		controller.login(req, res, next);
 	});
 
+	userRoute.get('/all', userValidation([Permissions.manageUsers]), (req, res, next) => {
+		controller.findAllUsers(req, res, next);
+	});
+
 	userRoute.get('/:userId', (req, res, next) => {
 		controller.findUser(req, res, next);
 	});

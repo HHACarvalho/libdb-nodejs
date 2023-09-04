@@ -55,6 +55,15 @@ export default class UserService implements IUserService {
 		return Result.ok<string>(token);
 	}
 
+	public async findAllUsers(): Promise<Result<IUserDTO[]>> {
+		const userList = await this.userRepoInstance.findAllUsers();
+		if (userList.length === 0) {
+			return Result.fail<IUserDTO[]>('There are no users');
+		}
+
+		return Result.ok<IUserDTO[]>(userList.map((e) => UserMapper.toDTO(e)));
+	}
+
 	public async findUser(userId: string): Promise<Result<IUserLiteDTO>> {
 		const user = await this.userRepoInstance.findUser({ _id: userId });
 		if (user == null) {
