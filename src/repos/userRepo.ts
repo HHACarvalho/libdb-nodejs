@@ -33,12 +33,13 @@ export default class UserRepo implements IUserRepo {
 				password: user.password,
 				firstName: user.firstName,
 				lastName: user.lastName,
+				$inc: { _version: 1 },
 			}
 		);
 	}
 
 	public async updateUserRole(user: User): Promise<void> {
-		await this.schema.findOneAndUpdate({ _id: user.id.getValue() }, { role: user.role });
+		await this.schema.findOneAndUpdate({ _id: user.id.getValue(), $inc: { _version: 1 } }, { role: user.role });
 	}
 
 	public async deleteUser(email: string): Promise<User> {

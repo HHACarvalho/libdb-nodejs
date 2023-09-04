@@ -31,7 +31,10 @@ export default class RoleRepo implements IRoleRepo {
 	}
 
 	public async updateRole(role: Role): Promise<void> {
-		await this.schema.findOneAndUpdate({ name: role.name }, { permissions: role.permissions });
+		await this.schema.findOneAndUpdate(
+			{ name: role.name },
+			{ permissions: role.permissions, $inc: { _version: 1 } }
+		);
 	}
 
 	public async deleteRole(roleName: string): Promise<Role> {
