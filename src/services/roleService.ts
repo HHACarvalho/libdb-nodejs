@@ -1,8 +1,8 @@
 import config from '../../config';
 import { IRoleDTO } from '../dtos/IRoleDTO';
+import { Result } from '../core/result';
 import { Role } from '../domain/role';
 import { RoleMapper } from '../mappers/roleMapper';
-import { Result } from '../core/result';
 import IRoleRepo from '../repos/IRepos/IRoleRepo';
 import IRoleService from './IServices/IRoleService';
 
@@ -23,8 +23,8 @@ export default class RoleService implements IRoleService {
 			permissions: reqBody.permissions,
 		});
 
-		const result = await this.repoInstance.createRole(role);
-		return Result.ok<IRoleDTO>(RoleMapper.toDTO(result));
+		await this.repoInstance.createRole(role);
+		return Result.ok<IRoleDTO>(RoleMapper.toDTO(role));
 	}
 
 	public async findAllRoles(): Promise<Result<IRoleDTO[]>> {
@@ -44,17 +44,16 @@ export default class RoleService implements IRoleService {
 
 		role.permissions = reqBody.permissions;
 
-		const result = await this.repoInstance.updateRole(role);
-		return Result.ok<IRoleDTO>(RoleMapper.toDTO(result));
+		await this.repoInstance.updateRole(role);
+		return Result.ok<IRoleDTO>(RoleMapper.toDTO(role));
 	}
 
 	public async deleteRole(roleName: string): Promise<Result<IRoleDTO>> {
-		const roleExists = await this.repoInstance.findRole(roleName);
-		if (!roleExists) {
-			return Result.fail<IRoleDTO>('No role with the id "' + roleName + '" was found');
+		const result = await this.repoInstance.deleteRole(roleName);
+		if (!result) {
+			return Result.fail<IRoleDTO>('No role with the name "' + roleName + '" was found');
 		}
 
-		const result = await this.repoInstance.deleteRole(roleName);
 		return Result.ok<IRoleDTO>(RoleMapper.toDTO(result));
 	}
 }
