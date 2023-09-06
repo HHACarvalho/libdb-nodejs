@@ -24,9 +24,11 @@ npm build
 
 # Routes
 
+Default API url - http://localhost:3000
+
 # User route
 
-### Sign up - http://localhost:3000/user/signup - POST
+### Sign up - POST /user/signup
 
 Sign up as a new user.
 
@@ -45,7 +47,7 @@ Sign up as a new user.
 
 ---
 
-### Login - http://localhost:3000/user/login - GET
+### Login - GET /user/login
 
 Login as an existing user.
 
@@ -62,7 +64,7 @@ Login as an existing user.
 
 ---
 
-### Find all users - http://localhost:3000/user/all - GET
+### Find all users - GET /user/all
 
 Retrieves a list of all users.
 
@@ -72,9 +74,9 @@ Retrieves a list of all users.
 
 ---
 
-### Find user - http://localhost:3000/user?userId=VALUE - GET
+### Find user - GET /user?userId
 
-Retrieves a single user.
+Retrieves a single user by their ID.
 
 **Parameters:**
 
@@ -86,7 +88,7 @@ Retrieves a single user.
 
 ---
 
-### Update user profile - http://localhost:3000/user - PUT
+### Update user profile - PUT /user
 
 Updates the current user's profile.
 
@@ -107,7 +109,7 @@ Updates the current user's profile.
 
 ---
 
-### Update user role - http://localhost:3000/user?userId=VALUE&roleName=VALUE - PATCH
+### Update user role - PATCH /user?userId&roleName
 
 Updates a user's role.
 
@@ -124,7 +126,7 @@ Updates a user's role.
 
 ---
 
-### Delete account - http://localhost:3000/user - DELETE
+### Delete account - DELETE /user
 
 Deletes the current user's account.
 
@@ -137,7 +139,7 @@ ___
 
 # Role route
 
-### Create role - http://localhost:3000/role - POST
+### Create role - POST /role
 
 Adds a new role to the database.
 
@@ -160,7 +162,7 @@ Adds a new role to the database.
 
 ---
 
-### Find all roles - http://localhost:3000/role/all - GET
+### Find all roles - GET /role/all
 
 Retrieves a list of all roles.
 
@@ -170,7 +172,7 @@ Retrieves a list of all roles.
 
 ---
 
-### Update role - http://localhost:3000/role?roleName=VALUE - PUT
+### Update role - PUT /role?roleName
 
 Updates an existing role.
 
@@ -199,7 +201,7 @@ Updates an existing role.
 
 ---
 
-### Delete role - http://localhost:3000/role?roleName=VALUE - DELETE
+### Delete role - DELETE /role?roleName
 
 Deletes a role from the database.
 
