@@ -24,9 +24,9 @@ npm build
 
 # Routes
 
-## User
+# User route
 
-### Sign up - http://localhost:3000/user - POST
+### Sign up - http://localhost:3000/user/signup - POST
 
 Sign up as a new user.
 
@@ -41,13 +41,13 @@ Sign up as a new user.
 }
 ```
 
-**Returns:** If successful returns the code 201 and a signed JSON Web Token. Otherwise, the code 400 and an error message.
+**Returns:** If successful, it returns the code 201 and a signed JSON Web Token. Otherwise, the code 400 and an error message.
 
 ---
 
-### Login - http://localhost:3000/user - GET
+### Login - http://localhost:3000/user/login - GET
 
-Login as user.
+Login as an existing user.
 
 **Body:**
 
@@ -58,15 +58,39 @@ Login as user.
 }
 ```
 
-**Returns:** If successful returns the code 200 and a signed JSON Web Token. Otherwise, the code 404 and an error message.
+**Returns:** If successful, it returns the code 200 and a signed JSON Web Token. Otherwise, the code 404 and an error message.
+
+---
+
+### Find all users - http://localhost:3000/user/all - GET
+
+Retrieves a list of all users.
+
+**Pre-requisites:** A successful login and a role with sufficient permissions.
+
+**Returns:** If successful, it returns the code 200 and a list of all users. Otherwise, the code 404 and an error message.
+
+---
+
+### Find user - http://localhost:3000/user?userId=VALUE - GET
+
+Retrieves a single user.
+
+**Parameters:**
+
+| Parameter | Value                                |
+|:----------|:-------------------------------------|
+| userId    | f0000000-b444-b444-b444-f00000000000 |
+
+**Returns:** If successful, it returns the code 200 and a single user. Otherwise, the code 404 and an error message.
 
 ---
 
 ### Update user profile - http://localhost:3000/user - PUT
 
-Updates the current user's profile (only a logged-in user may preform this request on his own account).
+Updates the current user's profile.
 
-**Pre-requisites:** A successful login to acquire a JWT.
+**Pre-requisites:** A successful login.
 
 **Body:**
 
@@ -79,49 +103,45 @@ Updates the current user's profile (only a logged-in user may preform this reque
 }
 ```
 
-**Returns:** If successful returns the code 200 and an updated JSON Web Token. Otherwise, the code 404 and an error message.
+**Returns:** If successful, it returns the code 200 and an updated JSON Web Token. Otherwise, the code 404 and an error message.
 
 ---
 
-### Update user role - http://localhost:3000/user - PATCH
+### Update user role - http://localhost:3000/user?userId=VALUE&roleName=VALUE - PATCH
 
-Updates a user's role (only a logged-in user with sufficient permissions may preform this request).
+Updates a user's role.
 
-**Pre-requisites:** A successful login to acquire a JWT and sufficient permissions.
+**Pre-requisites:** A successful login and a role with sufficient permissions.
 
 **Parameters:**
 
-| Parameter | Value                 |
-|:----------|:----------------------|
-| email     | erica.lopes@gmail.com |
-| role      | Admin                 |
+| Parameter | Value                                |
+|:----------|:-------------------------------------|
+| userId    | f0000000-b444-b444-b444-f00000000000 |
+| roleName  | Admin                                |
 
-**Returns:** If successful returns the code 200. Otherwise, the code 404 and an error message.
+**Returns:** If successful, it returns the code 200. Otherwise, the code 404 and an error message.
 
 ---
 
 ### Delete account - http://localhost:3000/user - DELETE
 
-Closes the current user's account (only a logged-in user may preform this request on his own account).
+Deletes the current user's account.
 
-**Pre-requisites:** A successful login to acquire a JWT.
+**Pre-requisites:** A successful login.
 
-**Parameters:**
-
-| Parameter | Value                 |
-|:----------|:----------------------|
-| email     | erica.lopes@gmail.com |
-
-**Returns:** If successful returns the code 200 and erases the current JSON Web Token. Otherwise, the code 404 and an error message.
+**Returns:** If successful, it returns the code 200 and erases the current JSON Web Token. Otherwise, the code 404 and an error message.
 
 ---
 ___
 
-## Role
+# Role route
 
 ### Create role - http://localhost:3000/role - POST
 
 Adds a new role to the database.
+
+**Pre-requisites:** A successful login and a role with sufficient permissions.
 
 **Body:**
 
@@ -136,7 +156,7 @@ Adds a new role to the database.
 }
 ```
 
-**Returns:** If successful returns the code 201 and a copy of the created role. Otherwise, the code 400 and an error message.
+**Returns:** If successful, it returns the code 201 and a copy of the created role. Otherwise, the code 400 and an error message.
 
 ---
 
@@ -144,19 +164,29 @@ Adds a new role to the database.
 
 Retrieves a list of all roles.
 
-**Returns:** If successful returns the code 200 and a list of all roles. Otherwise, the code 404 and an error message.
+**Pre-requisites:** A successful login and a role with sufficient permissions.
+
+**Returns:** If successful, it returns the code 200 and a list of all roles. Otherwise, the code 404 and an error message.
 
 ---
 
-### Update role - http://localhost:3000/role - PUT
+### Update role - http://localhost:3000/role?roleName=VALUE - PUT
 
-Updates an existing role (sending the name in the parameters allows for renaming).
+Updates an existing role.
+
+**Pre-requisites:** A successful login and a role with sufficient permissions.
+
+**Parameters:**
+
+| Parameter | Value       |
+|:----------|:------------|
+| roleName  | ExampleRole |
 
 **Body:**
 
 ```json
 {
-    "name": "Default",
+    "name": "ExampleRoleModified",
     "permissions": {
         "manageMovies": true,
         "manageRoles": true,
@@ -165,27 +195,22 @@ Updates an existing role (sending the name in the parameters allows for renaming
 }
 ```
 
-**Parameters:**
-
-| Parameter | Value   |
-|:----------|:--------|
-| name      | Default |
-
-**Returns:** If successful returns the code 200 and a copy of the update role. Otherwise, the code 404 and an error message.
+**Returns:** If successful, it returns the code 200 and a copy of the update role. Otherwise, the code 404 and an error message.
 
 ---
 
-### Delete role - http://localhost:3000/role - DELETE
+### Delete role - http://localhost:3000/role?roleName=VALUE - DELETE
 
 Deletes a role from the database.
 
+**Pre-requisites:** A successful login and a role with sufficient permissions.
+
 **Parameters:**
 
-| Parameter | Value   |
-|:----------|:--------|
-| name      | Default |
+| Parameter | Value               |
+|:----------|:--------------------|
+| roleName  | ExampleRoleModified |
 
-**Returns:** If successful returns the code 200 and a copy of the deleted role. Otherwise, the code 404 and an error message.
+**Returns:** If successful, it returns the code 200 and a copy of the deleted role. Otherwise, the code 404 and an error message.
 
 ---
-___

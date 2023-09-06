@@ -1,6 +1,6 @@
 import config from '../../../config';
-import { userValidation } from '../authMiddleware';
 import { Permissions } from '../../core/permissions';
+import { userValidation } from '../authMiddleware';
 import IRoleController from '../../controllers/IControllers/IRoleController';
 
 import { celebrate, Joi, Segments } from 'celebrate';

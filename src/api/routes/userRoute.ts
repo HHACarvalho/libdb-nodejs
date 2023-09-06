@@ -1,6 +1,6 @@
 import config from '../../../config';
-import { userValidation } from '../authMiddleware';
 import { Permissions } from '../../core/permissions';
+import { userValidation } from '../authMiddleware';
 import IUserController from '../../controllers/IControllers/IUserController';
 
 import { celebrate, Joi, Segments } from 'celebrate';
@@ -42,7 +42,7 @@ export default (app: Router) => {
 		controller.findAllUsers(req, res, next);
 	});
 
-	userRoute.get('/:userId', (req, res, next) => {
+	userRoute.get('', (req, res, next) => {
 		controller.findUser(req, res, next);
 	});
 
