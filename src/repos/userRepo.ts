@@ -44,7 +44,13 @@ export default class UserRepo implements IUserRepo {
 	}
 
 	public async updateUserRole(user: User): Promise<void> {
-		await this.schema.findOneAndUpdate({ _id: user.id.getValue(), $inc: { _version: 1 } }, { role: user.role });
+		await this.schema.findOneAndUpdate(
+			{ _id: user.id.getValue() },
+			{
+				role: user.role,
+				$inc: { _version: 1 },
+			}
+		);
 	}
 
 	public async deleteUser(email: string): Promise<User> {

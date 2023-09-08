@@ -93,7 +93,8 @@ export default class UserController implements IUserController {
 
 	public async updateUserRole(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
-			const userId = req.query.userId as string;
+			//TODO: Change to ID
+			const userId = req.query.userEmail as string;
 			const roleName = req.query.roleName as string;
 
 			const result = await this.serviceInstance.updateUserRole(userId, roleName);

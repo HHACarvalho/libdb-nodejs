@@ -100,7 +100,8 @@ export default class UserService implements IUserService {
 	}
 
 	public async updateUserRole(userId: string, roleName: string): Promise<Result<IUserDTO>> {
-		const user = await this.userRepoInstance.findUser({ _id: userId });
+		//TODO: Change to ID
+		const user = await this.userRepoInstance.findUser({ email: userId });
 		if (user == null) {
 			return Result.fail<IUserDTO>('No user with the id "' + userId + '" was found');
 		}
