@@ -11,7 +11,7 @@ export class RoleMapper {
 				name: schema.name,
 				permissions: schema.permissions,
 			},
-			new EntityID(schema.id)
+			new EntityID(schema._id)
 		);
 	}
 

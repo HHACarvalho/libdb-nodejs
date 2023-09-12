@@ -14,7 +14,7 @@ export class UserMapper {
 				lastName: schema.lastName,
 				role: schema.role,
 			},
-			new EntityID(schema.id)
+			new EntityID(schema._id)
 		);
 	}
 
