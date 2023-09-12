@@ -58,18 +58,18 @@ describe('Role service', function () {
 
 	it('Create role - success', async function () {
 		const roleRepoInstance = Container.get(config.repos.role);
-		sinon.stub(roleRepoInstance, 'exists').returns(Promise.resolve(false));
+		sinon.stub(roleRepoInstance, 'findRole').returns(Promise.resolve(null));
 		sinon.stub(roleRepoInstance, 'createRole').returns(Promise.resolve(obj));
 
 		const service = new RoleService(roleRepoInstance as IRoleRepo);
 		const returnValue = await service.createRole(body);
 
-		sinon.assert.match(returnValue, Result.ok<any>());
+		sinon.assert.match(returnValue, Result.ok<IRoleDTO>(body));
 	});
 
 	it('Create role - failure', async function () {
 		const roleRepoInstance = Container.get(config.repos.role);
-		sinon.stub(roleRepoInstance, 'exists').returns(Promise.resolve(true));
+		sinon.stub(roleRepoInstance, 'findRole').returns(Promise.resolve(obj));
 
 		const service = new RoleService(roleRepoInstance as IRoleRepo);
 		const returnValue = await service.createRole(body);
@@ -100,12 +100,12 @@ describe('Role service', function () {
 	it('Update role - success', async function () {
 		const roleRepoInstance = Container.get(config.repos.role);
 		sinon.stub(roleRepoInstance, 'findRole').returns(Promise.resolve(obj));
-		sinon.stub(roleRepoInstance, 'updateRole').returns(Promise.resolve(obj));
+		sinon.stub(roleRepoInstance, 'updateRole').returns(Promise.resolve(updatedObj));
 
 		const service = new RoleService(roleRepoInstance as IRoleRepo);
 		const returnValue = await service.updateRole(body.name, updatedBody);
 
-		sinon.assert.match(returnValue, Result.ok<any>());
+		sinon.assert.match(returnValue, Result.ok<IRoleDTO>(updatedBody));
 	});
 
 	it('Update role - failure', async function () {
@@ -120,22 +120,21 @@ describe('Role service', function () {
 
 	it('Delete role - success', async function () {
 		const roleRepoInstance = Container.get(config.repos.role);
-		sinon.stub(roleRepoInstance, 'exists').returns(Promise.resolve(true));
-		sinon.stub(roleRepoInstance, 'deleteRole').returns(Promise.resolve(obj));
+		sinon.stub(roleRepoInstance, 'deleteRole').returns(Promise.resolve(updatedObj));
 
 		const service = new RoleService(roleRepoInstance as IRoleRepo);
-		const returnValue = await service.deleteRole(body.name);
+		const returnValue = await service.deleteRole(updatedBody.name);
 
-		sinon.assert.match(returnValue, Result.ok<any>());
+		sinon.assert.match(returnValue, Result.ok<IRoleDTO>(updatedBody));
 	});
 
 	it('Delete role - failure', async function () {
 		const roleRepoInstance = Container.get(config.repos.role);
-		sinon.stub(roleRepoInstance, 'exists').returns(Promise.resolve(false));
+		sinon.stub(roleRepoInstance, 'deleteRole').returns(Promise.resolve(null));
 
 		const service = new RoleService(roleRepoInstance as IRoleRepo);
-		const returnValue = await service.deleteRole(body.name);
+		const returnValue = await service.deleteRole(updatedBody.name);
 
-		sinon.assert.match(returnValue, Result.fail<any>('No role with the name "' + body.name + '" was found'));
+		sinon.assert.match(returnValue, Result.fail<any>('No role with the name "' + updatedBody.name + '" was found'));
 	});
 });

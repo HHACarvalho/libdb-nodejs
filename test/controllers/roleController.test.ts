@@ -50,7 +50,7 @@ describe('Role controller', function () {
 
 	it('Create role - success', async function () {
 		const req: Partial<Request> = { body: body };
-		const res: Partial<Response> = { status: sinon.spy(), send: sinon.spy() };
+		const res: Partial<Response> = { status: sinon.spy(), json: sinon.spy() };
 		const next: Partial<NextFunction> = () => {};
 
 		const roleServiceInstance = Container.get(config.services.role);
@@ -61,17 +61,16 @@ describe('Role controller', function () {
 			})
 		);
 
-		const logger = Container.get('logger');
-		const controller = new RoleController(roleServiceInstance as IRoleService, logger);
+		const controller = new RoleController(roleServiceInstance as IRoleService);
 		await controller.createRole(<Request>req, <Response>res, <NextFunction>next);
 
 		sinon.assert.calledWith(res.status, sinon.match(201));
-		sinon.assert.calledWith(res.send, sinon.match('Successfully created role'));
+		sinon.assert.calledWith(res.json, sinon.match(body));
 	});
 
 	it('Create role - failure', async function () {
 		const req: Partial<Request> = { body: body };
-		const res: Partial<Response> = { status: sinon.spy(), json: sinon.spy() };
+		const res: Partial<Response> = { status: sinon.spy(), send: sinon.spy() };
 		const next: Partial<NextFunction> = () => {};
 
 		const roleServiceInstance = Container.get(config.services.role);
@@ -79,12 +78,11 @@ describe('Role controller', function () {
 			.stub(roleServiceInstance, 'createRole')
 			.returns(Result.fail<IRoleDTO>('Role with the name "' + body.name + '" already exists'));
 
-		const logger = Container.get('logger');
-		const controller = new RoleController(roleServiceInstance as IRoleService, logger);
+		const controller = new RoleController(roleServiceInstance as IRoleService);
 		await controller.createRole(<Request>req, <Response>res, <NextFunction>next);
 
 		sinon.assert.calledWith(res.status, sinon.match(400));
-		sinon.assert.calledWith(res.json, sinon.match('Role with the name "' + body.name + '" already exists'));
+		sinon.assert.calledWith(res.send, sinon.match('Role with the name "' + body.name + '" already exists'));
 	});
 
 	it('Find all roles - success', async function () {
@@ -95,8 +93,7 @@ describe('Role controller', function () {
 		const roleServiceInstance = Container.get(config.services.role);
 		sinon.stub(roleServiceInstance, 'findAllRoles').returns(Result.ok<IRoleDTO[]>([]));
 
-		const logger = Container.get('logger');
-		const controller = new RoleController(roleServiceInstance as IRoleService, logger);
+		const controller = new RoleController(roleServiceInstance as IRoleService);
 		await controller.findAllRoles(<Request>req, <Response>res, <NextFunction>next);
 
 		sinon.assert.calledWith(res.status, sinon.match(200));
@@ -105,23 +102,22 @@ describe('Role controller', function () {
 
 	it('Find all roles - failure', async function () {
 		const req: Partial<Request> = {};
-		const res: Partial<Response> = { status: sinon.spy(), json: sinon.spy() };
+		const res: Partial<Response> = { status: sinon.spy(), send: sinon.spy() };
 		const next: Partial<NextFunction> = () => {};
 
 		const roleServiceInstance = Container.get(config.services.role);
 		sinon.stub(roleServiceInstance, 'findAllRoles').returns(Result.fail<IRoleDTO[]>('There are no roles'));
 
-		const logger = Container.get('logger');
-		const controller = new RoleController(roleServiceInstance as IRoleService, logger);
+		const controller = new RoleController(roleServiceInstance as IRoleService);
 		await controller.findAllRoles(<Request>req, <Response>res, <NextFunction>next);
 
 		sinon.assert.calledWith(res.status, sinon.match(404));
-		sinon.assert.calledWith(res.json, sinon.match('There are no roles'));
+		sinon.assert.calledWith(res.send, sinon.match('There are no roles'));
 	});
 
 	it('Update role - success', async function () {
 		const req: Partial<Request> = { query: query, body: body };
-		const res: Partial<Response> = { status: sinon.spy(), send: sinon.spy() };
+		const res: Partial<Response> = { status: sinon.spy(), json: sinon.spy() };
 		const next: Partial<NextFunction> = () => {};
 
 		const roleServiceInstance = Container.get(config.services.role);
@@ -132,17 +128,16 @@ describe('Role controller', function () {
 			})
 		);
 
-		const logger = Container.get('logger');
-		const controller = new RoleController(roleServiceInstance as IRoleService, logger);
+		const controller = new RoleController(roleServiceInstance as IRoleService);
 		await controller.updateRole(<Request>req, <Response>res, <NextFunction>next);
 
 		sinon.assert.calledWith(res.status, sinon.match(200));
-		sinon.assert.calledWith(res.send, sinon.match('Successfully updated role'));
+		sinon.assert.calledWith(res.json, sinon.match(body));
 	});
 
 	it('Update role - failure', async function () {
 		const req: Partial<Request> = { query: query, body: body };
-		const res: Partial<Response> = { status: sinon.spy(), json: sinon.spy() };
+		const res: Partial<Response> = { status: sinon.spy(), send: sinon.spy() };
 		const next: Partial<NextFunction> = () => {};
 
 		const roleServiceInstance = Container.get(config.services.role);
@@ -150,33 +145,36 @@ describe('Role controller', function () {
 			.stub(roleServiceInstance, 'updateRole')
 			.returns(Result.fail<IRoleDTO>('No role with the name "' + req.body.name + '" was found'));
 
-		const logger = Container.get('logger');
-		const controller = new RoleController(roleServiceInstance as IRoleService, logger);
+		const controller = new RoleController(roleServiceInstance as IRoleService);
 		await controller.updateRole(<Request>req, <Response>res, <NextFunction>next);
 
 		sinon.assert.calledWith(res.status, sinon.match(404));
-		sinon.assert.calledWith(res.json, sinon.match('No role with the name "' + req.body.name + '" was found'));
+		sinon.assert.calledWith(res.send, sinon.match('No role with the name "' + req.body.name + '" was found'));
 	});
 
 	it('Delete role - success', async function () {
 		const req: Partial<Request> = { query: query };
-		const res: Partial<Response> = { status: sinon.spy(), send: sinon.spy() };
+		const res: Partial<Response> = { status: sinon.spy(), json: sinon.spy() };
 		const next: Partial<NextFunction> = () => {};
 
 		const roleServiceInstance = Container.get(config.services.role);
-		sinon.stub(roleServiceInstance, 'deleteRole').returns(Result.ok<IRoleDTO>());
+		sinon.stub(roleServiceInstance, 'deleteRole').returns(
+			Result.ok<IRoleDTO>({
+				name: body.name,
+				permissions: body.permissions,
+			})
+		);
 
-		const logger = Container.get('logger');
-		const controller = new RoleController(roleServiceInstance as IRoleService, logger);
+		const controller = new RoleController(roleServiceInstance as IRoleService);
 		await controller.deleteRole(<Request>req, <Response>res, <NextFunction>next);
 
 		sinon.assert.calledWith(res.status, sinon.match(200));
-		sinon.assert.calledWith(res.send, sinon.match('Successfully deleted role'));
+		sinon.assert.calledWith(res.json, sinon.match(body));
 	});
 
 	it('Delete role - failure', async function () {
 		const req: Partial<Request> = { query: query };
-		const res: Partial<Response> = { status: sinon.spy(), json: sinon.spy() };
+		const res: Partial<Response> = { status: sinon.spy(), send: sinon.spy() };
 		const next: Partial<NextFunction> = () => {};
 
 		const roleServiceInstance = Container.get(config.services.role);
@@ -184,11 +182,10 @@ describe('Role controller', function () {
 			.stub(roleServiceInstance, 'deleteRole')
 			.returns(Result.fail<IRoleDTO>('No role with the name "' + req.query.name + '" was found'));
 
-		const logger = Container.get('logger');
-		const controller = new RoleController(roleServiceInstance as IRoleService, logger);
+		const controller = new RoleController(roleServiceInstance as IRoleService);
 		await controller.deleteRole(<Request>req, <Response>res, <NextFunction>next);
 
 		sinon.assert.calledWith(res.status, sinon.match(404));
-		sinon.assert.calledWith(res.json, sinon.match('No role with the name "' + req.query.name + '" was found'));
+		sinon.assert.calledWith(res.send, sinon.match('No role with the name "' + req.query.name + '" was found'));
 	});
 });
