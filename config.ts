@@ -21,6 +21,9 @@ export default {
 	// Affects logging procedure
 	environment: 'development',
 
+	// Default user role for new users
+	defaultRole: 'User',
+
 	controllers: {
 		role: 'roleController',
 		user: 'userController',

@@ -31,7 +31,7 @@ export default class UserService implements IUserService {
 			password: hashedPassword,
 			firstName: reqBody.firstName,
 			lastName: reqBody.lastName,
-			role: 'User',
+			role: config.defaultRole,
 		});
 
 		await this.userRepoInstance.createUser(user);
@@ -106,9 +106,11 @@ export default class UserService implements IUserService {
 			return Result.fail<IUserDTO>('No user with the id "' + userId + '" was found');
 		}
 
-		const roleExists = await this.roleRepoInstance.findRole(roleName);
-		if (!roleExists) {
-			return Result.fail<IUserDTO>('No role with the name "' + roleName + '" was found');
+		if (roleName !== config.defaultRole) {
+			const roleExists = await this.roleRepoInstance.findRole(roleName);
+			if (!roleExists) {
+				return Result.fail<IUserDTO>('No role with the name "' + roleName + '" was found');
+			}
 		}
 
 		user.role = roleName;

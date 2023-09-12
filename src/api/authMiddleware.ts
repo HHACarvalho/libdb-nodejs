@@ -43,6 +43,10 @@ async function validatePermissions(req: Request, res: Response, permissions: num
 }
 
 async function checkPermissions(roleName: string, requiredPermissions: number[]): Promise<void> {
+	if (roleName == config.defaultRole) {
+		throw new JsonWebTokenError('insufficient permissions');
+	}
+
 	const roleRepo = Container.get(config.repos.role) as IRoleRepo;
 
 	const role = await roleRepo.findRole(roleName);
