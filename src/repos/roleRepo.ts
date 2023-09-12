@@ -16,12 +16,12 @@ export default class RoleRepo implements IRoleRepo {
 		await this.schema.create(persistence);
 	}
 
-	public async findAllRoles(): Promise<Role[]> {
+	public async findRoles(): Promise<Role[]> {
 		const documents = await this.schema.find();
 		return documents.map((e) => RoleMapper.toDomain(e));
 	}
 
-	public async findRole(roleName: string): Promise<Role> {
+	public async findOneRole(roleName: string): Promise<Role> {
 		const document = await this.schema.findOne({ name: roleName });
 		if (document == null) {
 			return null;

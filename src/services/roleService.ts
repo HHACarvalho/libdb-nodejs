@@ -13,7 +13,7 @@ export default class RoleService implements IRoleService {
 	constructor(@Inject(config.repos.role) private repoInstance: IRoleRepo) {}
 
 	public async createRole(reqBody: any): Promise<Result<IRoleDTO>> {
-		const roleExists = await this.repoInstance.findRole(reqBody.name);
+		const roleExists = await this.repoInstance.findOneRole(reqBody.name);
 		if (roleExists) {
 			return Result.fail<IRoleDTO>('Role with the name "' + reqBody.name + '" already exists');
 		}
@@ -28,7 +28,7 @@ export default class RoleService implements IRoleService {
 	}
 
 	public async findAllRoles(): Promise<Result<IRoleDTO[]>> {
-		const roleList = await this.repoInstance.findAllRoles();
+		const roleList = await this.repoInstance.findRoles();
 		if (roleList.length === 0) {
 			return Result.fail<IRoleDTO[]>('There are no roles');
 		}
@@ -37,7 +37,7 @@ export default class RoleService implements IRoleService {
 	}
 
 	public async updateRole(roleName: string, reqBody: any): Promise<Result<IRoleDTO>> {
-		const role = await this.repoInstance.findRole(roleName);
+		const role = await this.repoInstance.findOneRole(roleName);
 		if (!role) {
 			return Result.fail<IRoleDTO>('No role with the name "' + roleName + '" was found');
 		}

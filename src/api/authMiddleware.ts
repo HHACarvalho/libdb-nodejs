@@ -49,7 +49,7 @@ async function checkPermissions(roleName: string, requiredPermissions: number[])
 
 	const roleRepo = Container.get(config.repos.role) as IRoleRepo;
 
-	const role = await roleRepo.findRole(roleName);
+	const role = await roleRepo.findOneRole(roleName);
 	if (role == null) {
 		throw new JsonWebTokenError('invalid user role');
 	}

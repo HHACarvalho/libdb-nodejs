@@ -3,9 +3,9 @@ import { User } from '../../domain/user';
 export default interface IUserRepo {
 	createUser(user: User): Promise<void>;
 
-	findAllUsers(): Promise<User[]>;
+	findUsers(queryFilter?: any): Promise<User[]>;
 
-	findUser(queryFilter: { _id: string } | { email: string }): Promise<User>;
+	findOneUser(queryFilter?: any): Promise<User>;
 
 	updateUserProfile(user: User): Promise<void>;
 

@@ -16,12 +16,12 @@ export default class UserRepo implements IUserRepo {
 		await this.schema.create(persistence);
 	}
 
-	public async findAllUsers(): Promise<User[]> {
-		const documents = await this.schema.find();
+	public async findUsers(queryFilter?: any): Promise<User[]> {
+		const documents = await this.schema.find(queryFilter);
 		return documents.map((e) => UserMapper.toDomain(e));
 	}
 
-	public async findUser(queryFilter: { _id: string } | { email: string }): Promise<User> {
+	public async findOneUser(queryFilter?: any): Promise<User> {
 		const document = await this.schema.findOne(queryFilter);
 		if (document == null) {
 			return null;
