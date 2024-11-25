@@ -1,0 +1,12 @@
+build/
+node_modules/
+postman/
+test/
+.dockerignore
+.git
+.gitignore
+Dockerfile
+jest.config.json
+nodemon.json
+publish.sh
+README.md
