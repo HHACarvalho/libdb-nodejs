@@ -3,9 +3,9 @@ import { Permissions } from '../../core/permissions';
 import { userValidation } from '../authMiddleware';
 import IUserController from '../../controllers/IControllers/IUserController';
 
-import { celebrate, Joi, Segments } from 'celebrate';
 import { Router } from 'express';
 import { Container } from 'typedi';
+import { z } from 'zod';
 
 const userRoute = Router();
 
@@ -14,27 +14,33 @@ export default (app: Router) => {
 
 	const controller = Container.get(config.controllers.user) as IUserController;
 
-	const bodySchema = celebrate({
-		[Segments.BODY]: Joi.object({
-			email: Joi.string().email().required(),
-			password: Joi.string().min(8).max(32).required(),
-			firstName: Joi.string().alphanum().min(2).max(32).required(),
-			lastName: Joi.string().alphanum().min(2).max(32).required(),
-		}),
+	const userSignUpBody = z.object({
+		email: z.string().email(),
+		password: z.string().min(2).max(32),
+		firstName: z
+			.string()
+			.regex(/^[a-zA-Z0-9]+$/)
+			.min(2)
+			.max(32),
+		lastName: z
+			.string()
+			.regex(/^[a-zA-Z0-9]+$/)
+			.min(2)
+			.max(32),
 	});
 
-	const loginSchema = celebrate({
-		[Segments.BODY]: Joi.object({
-			email: Joi.string().email().required(),
-			password: Joi.string().min(8).max(32).required(),
-		}),
+	const userLoginBody = z.object({
+		email: z.string().email(),
+		password: z.string().min(2).max(32),
 	});
 
-	userRoute.post('/signup', bodySchema, (req, res, next) => {
+	userRoute.post('/signup', (req, res, next) => {
+		userSignUpBody.parse(req.body);
 		controller.signUp(req, res, next);
 	});
 
-	userRoute.post('/login', loginSchema, (req, res, next) => {
+	userRoute.post('/login', (req, res, next) => {
+		userLoginBody.parse(req.body);
 		controller.login(req, res, next);
 	});
 
@@ -46,11 +52,12 @@ export default (app: Router) => {
 		controller.findUser(req, res, next);
 	});
 
-	userRoute.put('', bodySchema, userValidation(), (req, res, next) => {
+	userRoute.put('/profile', userValidation(), (req, res, next) => {
+		userSignUpBody.parse(req.body);
 		controller.updateProfile(req, res, next);
 	});
 
-	userRoute.patch('', userValidation([Permissions.manageUsers]), (req, res, next) => {
+	userRoute.put('/roles', userValidation([Permissions.manageUsers]), (req, res, next) => {
 		controller.updateUserRole(req, res, next);
 	});
 

@@ -1,11 +1,11 @@
 import routes from '../../api';
 
-import { CelebrateError } from 'celebrate';
-import { Application } from 'express';
-import { JsonWebTokenError } from 'jsonwebtoken';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
+import { Application, NextFunction, Request, Response } from 'express';
+import { JsonWebTokenError } from 'jsonwebtoken';
+import { z } from 'zod';
 
 export default (expressApp: Application) => {
 	// Middleware for req.body
@@ -34,11 +34,12 @@ export default (expressApp: Application) => {
 	});
 
 	// Error handling
-	expressApp.use((err, req, res, next) => {
-		if (err instanceof CelebrateError) {
+	expressApp.use((err: any, req: Request, res: Response, next: NextFunction) => {
+		if (err instanceof z.ZodError) {
 			res.status(400);
-			res.json('Celebrate: ' + err.details.get('body').details[0].message);
+			res.json({ error: err.errors[0].path.join('.') + ': ' + err.errors[0].message });
 		} else if (err instanceof JsonWebTokenError) {
+			res.status(400);
 			res.json('JWT: ' + err.message);
 		} else {
 			res.status(500);

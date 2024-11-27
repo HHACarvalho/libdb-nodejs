@@ -3,9 +3,9 @@ import { Permissions } from '../../core/permissions';
 import { userValidation } from '../authMiddleware';
 import IRoleController from '../../controllers/IControllers/IRoleController';
 
-import { celebrate, Joi, Segments } from 'celebrate';
 import { Router } from 'express';
 import { Container } from 'typedi';
+import { z } from 'zod';
 
 const roleRoute = Router();
 roleRoute.use(userValidation([Permissions.manageRoles]));
@@ -15,18 +15,17 @@ export default (app: Router) => {
 
 	const controller = Container.get(config.controllers.role) as IRoleController;
 
-	const bodySchema = celebrate({
-		[Segments.BODY]: Joi.object({
-			name: Joi.string().min(2).max(32).required(),
-			permissions: Joi.object({
-				manageMovies: Joi.boolean().required(),
-				manageRoles: Joi.boolean().required(),
-				manageUsers: Joi.boolean().required(),
-			}).required(),
+	const roleCreateBody = z.object({
+		name: z.string().min(2).max(32),
+		permissions: z.object({
+			manageMovies: z.boolean(),
+			manageRoles: z.boolean(),
+			manageUsers: z.boolean(),
 		}),
 	});
 
-	roleRoute.post('', bodySchema, (req, res, next) => {
+	roleRoute.post('', (req, res, next) => {
+		roleCreateBody.parse(req.body);
 		controller.createRole(req, res, next);
 	});
 
@@ -34,7 +33,8 @@ export default (app: Router) => {
 		controller.findAllRoles(req, res, next);
 	});
 
-	roleRoute.put('', bodySchema, (req, res, next) => {
+	roleRoute.put('', (req, res, next) => {
+		roleCreateBody.parse(req.body);
 		controller.updateRole(req, res, next);
 	});
 
