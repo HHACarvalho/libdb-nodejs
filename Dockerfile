@@ -1,5 +1,5 @@
-# Use the Node.js runtime image
-FROM node:18-alpine AS build_application
+# Use the latest Node.js alpine runtime image
+FROM node:alpine AS build_application
 WORKDIR /app/
 
 # Copy the project files
@@ -11,8 +11,8 @@ RUN npm install
 # Build the application
 RUN npm run build
 
-# Use the Node.js runtime image
-FROM node:18-alpine AS build_dependencies
+# Use the latest Node.js alpine runtime image
+FROM node:alpine AS build_dependencies
 WORKDIR /app/
 
 # Copy package.json and package-lock.json
@@ -21,8 +21,8 @@ COPY package*.json ./
 # Install production dependencies
 RUN npm install --production
 
-# Use the Node.js runtime image
-FROM node:18-alpine AS runtime
+# Use the latest Node.js alpine runtime image
+FROM node:alpine AS runtime
 WORKDIR /app/
 
 # Copy the published application, .env file, package.json and production dependencies
