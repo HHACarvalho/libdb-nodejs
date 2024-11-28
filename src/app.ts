@@ -10,14 +10,14 @@ async function startServer() {
 
 	await require('./core/loaders').default(app);
 
-	app.listen(config.apiPort, () => {
-		Logger.info(
-			`\n===========================\n= Listening on port: ${config.apiPort} =\n===========================\n`
-		);
-	}).on('error', (err) => {
-		Logger.error(err);
-		process.exit(1);
-	});
+	app
+		.listen(config.apiPort, () => {
+			Logger.info(`Now listening on: http://localhost:${config.apiPort}`);
+		})
+		.on('error', (err) => {
+			Logger.error(err);
+			process.exit(1);
+		});
 }
 
 startServer();
