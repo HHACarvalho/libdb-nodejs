@@ -4,43 +4,43 @@ config();
 
 export default {
 	// Port used by the API
-	apiPort: parseInt(process.env.API_PORT),
+	apiPort: 3000,
 
 	// MongoDB's connection string
-	databaseURL: process.env.DATABASE_URL,
+	databaseURL:
+		process.env.ENVIRONMENT === 'PRODUCTION'
+			? process.env.DB_CONNECTION_PRODUCTION
+			: process.env.DB_CONNECTION_DEVELOPMENT,
 
 	// JSON Web Token's expiration time in seconds
-	jwtDuration: parseInt(process.env.JWT_DURATION),
+	jwtDuration: 30,
 
 	// JSON Web Token's access secret
-	jwtAccessSecret: process.env.JWT_ACCESS_SECRET,
+	jwtAccessSecret: process.env.JWT_SECRET_ACCESS,
 
 	// JSON Web Token's refresh secret
-	jwtRefreshSecret: process.env.JWT_REFRESH_SECRET,
-
-	// Affects logging procedure
-	environment: 'development',
+	jwtRefreshSecret: process.env.JWT_SECRET_REFRESH,
 
 	// Default user role for new users
 	defaultRole: 'User',
 
 	controllers: {
 		role: 'roleController',
-		user: 'userController',
+		user: 'userController'
 	},
 
 	services: {
 		role: 'roleService',
-		user: 'userService',
+		user: 'userService'
 	},
 
 	repos: {
 		role: 'roleRepo',
-		user: 'userRepo',
+		user: 'userRepo'
 	},
 
 	schemas: {
 		role: 'roleSchema',
-		user: 'userSchema',
-	},
+		user: 'userSchema'
+	}
 };
