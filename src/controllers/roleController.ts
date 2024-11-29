@@ -1,75 +1,60 @@
-import config from '../../config';
-import IRoleController from './IControllers/IRoleController';
+import { TYPES } from '../../config';
+import CoreController from './coreController';
 import IRoleService from '../services/IServices/IRoleService';
 
-import { NextFunction, Request, Response } from 'express';
-import { Inject, Service } from 'typedi';
+import { Request, Response, Router } from 'express';
+import { inject, injectable } from 'inversify';
 
-@Service()
-export default class RoleController implements IRoleController {
-	constructor(@Inject(config.services.role) private serviceInstance: IRoleService) {}
+@injectable()
+export default class RoleController extends CoreController {
+	private roleService: IRoleService;
 
-	public async createRole(req: Request, res: Response, next: NextFunction): Promise<void> {
-		try {
-			const result = await this.serviceInstance.createRole(req.body);
-			if (!result.isSuccess) {
-				res.status(400);
-				res.send(result.error);
-			} else {
-				res.status(201);
-				res.json(result.value);
-			}
-		} catch (e) {
-			next(e);
-		}
+	constructor(@inject(TYPES.IRoleService) roleService: IRoleService) {
+		super();
+		this.roleService = roleService;
 	}
 
-	public async findAllRoles(req: Request, res: Response, next: NextFunction): Promise<void> {
-		try {
-			const result = await this.serviceInstance.findAllRoles();
-			if (!result.isSuccess) {
-				res.status(404);
-				res.send(result.error);
-			} else {
-				res.status(200);
-				res.json(result.value);
-			}
-		} catch (e) {
-			next(e);
-		}
+	public registerRoutes(): Router {
+		const router = Router();
+
+		router.post('', this.createRole.bind(this));
+		router.get('/all', this.findAllRoles.bind(this));
+		router.get('/search', this.findRoles.bind(this));
+		router.get('/', this.findOneRole.bind(this));
+		router.put('', this.updateRole.bind(this));
+		router.delete('', this.deleteRole.bind(this));
+
+		return router;
 	}
 
-	public async updateRole(req: Request, res: Response, next: NextFunction): Promise<void> {
-		try {
-			const roleName = req.query.roleName as string;
-
-			const result = await this.serviceInstance.updateRole(roleName, req.body);
-			if (!result.isSuccess) {
-				res.status(404);
-				res.send(result.error);
-			} else {
-				res.status(200);
-				res.json(result.value);
-			}
-		} catch (e) {
-			next(e);
-		}
+	private async createRole(req: Request, res: Response): Promise<void> {
+		await this.handleServiceCall(() => this.roleService.createRole(req.body), res);
 	}
 
-	public async deleteRole(req: Request, res: Response, next: NextFunction): Promise<void> {
-		try {
-			const roleName = req.query.roleName as string;
+	private async findAllRoles(req: Request, res: Response): Promise<void> {
+		await this.handleServiceCall(() => this.roleService.findAllRoles(), res);
+	}
 
-			const result = await this.serviceInstance.deleteRole(roleName);
-			if (!result.isSuccess) {
-				res.status(404);
-				res.send(result.error);
-			} else {
-				res.status(200);
-				res.json(result.value);
-			}
-		} catch (e) {
-			next(e);
-		}
+	private async findRoles(req: Request, res: Response): Promise<void> {
+		await this.handleServiceCall(() => this.roleService.findRoles('Example'), res);
+	}
+
+	private async findOneRole(req: Request, res: Response): Promise<void> {
+		await this.handleServiceCall(() => this.roleService.findOneRole('ExampleRole'), res);
+	}
+
+	private async updateRole(req: Request, res: Response): Promise<void> {
+		await this.handleServiceCall(() => this.roleService.updateRole('ExampleRole', req.body), res);
+	}
+
+	private async deleteRole(req: Request, res: Response): Promise<void> {
+		await this.handleServiceCall(() => this.roleService.deleteRole('ExampleRole'), res);
 	}
 }
+
+//import { z } from 'zod';
+
+// const roleCreateBody = z.object({
+// 	name: z.string().min(2).max(32),
+// 	permissions: z.array(z.string())
+// });
