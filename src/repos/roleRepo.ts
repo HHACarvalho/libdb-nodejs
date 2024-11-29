@@ -5,23 +5,35 @@ import { RoleMapper } from '../mappers/roleMapper';
 import IRoleRepo from './IRepos/IRoleRepo';
 
 import { Document, Model } from 'mongoose';
-import { Inject, Service } from 'typedi';
 
-@Service()
+import { inject, injectable } from 'inversify';
+import { TYPES } from '../../config';
+
+@injectable()
 export default class RoleRepo implements IRoleRepo {
-	constructor(@Inject(config.schemas.role) private schema: Model<IRolePersistence & Document>) {}
+	constructor(@inject(TYPES.IRoleSchema) private schema: Model<IRolePersistence & Document>) {}
 
-	public async createRole(role: Role): Promise<void> {
+	public async createRole(role: Role): Promise<boolean> {
 		const persistence = RoleMapper.toPersistence(role);
-		await this.schema.create(persistence);
+		const document = await this.schema.create(persistence);
+		if (document == null) {
+			return false;
+		}
+
+		return true;
 	}
 
-	public async findRoles(): Promise<Role[]> {
+	public async findAllRoles(): Promise<Role[]> {
 		const documents = await this.schema.find();
 		return documents.map((e) => RoleMapper.toDomain(e));
 	}
 
-	public async findOneRole(roleName: string): Promise<Role> {
+	public async findRoles(roleName: string): Promise<Role[]> {
+		const documents = await this.schema.find({ name: { $regex: roleName, $options: 'i' } });
+		return documents.map((e) => RoleMapper.toDomain(e));
+	}
+
+	public async findOneRole(roleName: string): Promise<Role | null> {
 		const document = await this.schema.findOne({ name: roleName });
 		if (document == null) {
 			return null;
@@ -30,22 +42,24 @@ export default class RoleRepo implements IRoleRepo {
 		return RoleMapper.toDomain(document);
 	}
 
-	public async updateRole(role: Role): Promise<void> {
-		await this.schema.findOneAndUpdate(
+	public async updateRole(role: Role): Promise<boolean> {
+		const document = await this.schema.findOneAndUpdate(
 			{ name: role.name },
-			{
-				permissions: role.permissions,
-				$inc: { _version: 1 },
-			}
+			{ permissions: role.permissions, $inc: { _version: 1 } }
 		);
-	}
-
-	public async deleteRole(roleName: string): Promise<Role> {
-		const document = await this.schema.findOneAndDelete({ name: roleName });
 		if (document == null) {
-			return null;
+			return false;
 		}
 
-		return RoleMapper.toDomain(document);
+		return true;
+	}
+
+	public async deleteRole(roleName: string): Promise<boolean> {
+		const document = await this.schema.findOneAndDelete({ name: roleName });
+		if (document == null) {
+			return false;
+		}
+
+		return true;
 	}
 }

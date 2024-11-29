@@ -1,13 +1,15 @@
 import { Role } from '../../domain/role';
 
 export default interface IRoleRepo {
-	createRole(role: Role): Promise<void>;
+	createRole(role: Role): Promise<boolean>;
 
-	findRoles(): Promise<Role[]>;
+	findAllRoles(): Promise<Role[]>;
 
-	findOneRole(roleName: string): Promise<Role>;
+	findRoles(roleName: string): Promise<Role[]>;
 
-	updateRole(role: Role): Promise<void>;
+	findOneRole(roleName: string): Promise<Role | null>;
 
-	deleteRole(roleName: string): Promise<Role>;
+	updateRole(role: Role): Promise<boolean>;
+
+	deleteRole(roleName: string): Promise<boolean>;
 }
