@@ -1,16 +1,16 @@
-import config from '../../config';
+import { TYPES } from '../../config';
 import { IRoleDTO } from '../dtos/IRoleDTO';
-import { Result } from '../core/result';
-import { Role } from '../domain/role';
-import { RoleMapper } from '../mappers/roleMapper';
 import IRoleRepo from '../repos/IRepos/IRoleRepo';
 import IRoleService from './IServices/IRoleService';
+import { Role } from '../domain/role';
+import { RoleMapper } from '../mappers/roleMapper';
+import { Result } from '../core/result';
 
-import { Inject, Service } from 'typedi';
+import { inject, injectable } from 'inversify';
 
-@Service()
+@injectable()
 export default class RoleService implements IRoleService {
-	constructor(@Inject(config.repos.role) private repoInstance: IRoleRepo) {}
+	constructor(@inject(TYPES.IRoleRepo) private repoInstance: IRoleRepo) {}
 
 	public async createRole(reqBody: any): Promise<Result<IRoleDTO>> {
 		const roleExists = await this.repoInstance.findOneRole(reqBody.name);
@@ -20,20 +20,42 @@ export default class RoleService implements IRoleService {
 
 		const role = Role.create({
 			name: reqBody.name,
-			permissions: reqBody.permissions,
+			permissions: reqBody.permissions
 		});
 
-		await this.repoInstance.createRole(role);
+		const bResult = await this.repoInstance.createRole(role);
+		if (!bResult) {
+			return Result.fail<IRoleDTO>('Failed to create role');
+		}
+
 		return Result.ok<IRoleDTO>(RoleMapper.toDTO(role));
 	}
 
 	public async findAllRoles(): Promise<Result<IRoleDTO[]>> {
-		const roleList = await this.repoInstance.findRoles();
+		const roleList = await this.repoInstance.findAllRoles();
 		if (roleList.length === 0) {
 			return Result.fail<IRoleDTO[]>('There are no roles');
 		}
 
 		return Result.ok<IRoleDTO[]>(roleList.map((e) => RoleMapper.toDTO(e)));
+	}
+
+	public async findRoles(roleName: string): Promise<Result<IRoleDTO[]>> {
+		const roleList = await this.repoInstance.findRoles(roleName);
+		if (roleList.length === 0) {
+			return Result.fail<IRoleDTO[]>('No roles matching the criteria were found');
+		}
+
+		return Result.ok<IRoleDTO[]>(roleList.map((e) => RoleMapper.toDTO(e)));
+	}
+
+	public async findOneRole(roleName: string): Promise<Result<IRoleDTO>> {
+		const role = await this.repoInstance.findOneRole(roleName);
+		if (!role) {
+			return Result.fail<IRoleDTO>('No role with the name "' + roleName + '" was found');
+		}
+
+		return Result.ok<IRoleDTO>(RoleMapper.toDTO(role));
 	}
 
 	public async updateRole(roleName: string, reqBody: any): Promise<Result<IRoleDTO>> {
@@ -44,16 +66,19 @@ export default class RoleService implements IRoleService {
 
 		role.permissions = reqBody.permissions;
 
-		await this.repoInstance.updateRole(role);
-		return Result.ok<IRoleDTO>(RoleMapper.toDTO(role));
+		const bResult = await this.repoInstance.updateRole(role);
+		if (!bResult) {
+			return Result.fail<IRoleDTO>('Failed to update role');
+		}
+		return Result.ok<IRoleDTO>();
 	}
 
 	public async deleteRole(roleName: string): Promise<Result<IRoleDTO>> {
-		const result = await this.repoInstance.deleteRole(roleName);
-		if (!result) {
+		const bResult = await this.repoInstance.deleteRole(roleName);
+		if (!bResult) {
 			return Result.fail<IRoleDTO>('No role with the name "' + roleName + '" was found');
 		}
 
-		return Result.ok<IRoleDTO>(RoleMapper.toDTO(result));
+		return Result.ok<IRoleDTO>();
 	}
 }
