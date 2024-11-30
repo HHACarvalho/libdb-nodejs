@@ -9,7 +9,7 @@ export default interface IRoleRepo {
 
 	findOneRole(roleName: string): Promise<Role | null>;
 
-	updateRole(role: Role): Promise<boolean>;
+	updateRole(roleName: string, role: Role): Promise<boolean>;
 
 	deleteRole(roleName: string): Promise<boolean>;
 }

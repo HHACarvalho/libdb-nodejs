@@ -6,5 +6,5 @@ export interface IRoleDTO {
 export interface IRolePersistence {
 	_id: string;
 	name: string;
-	permissions: any;
+	permissions: string[];
 }

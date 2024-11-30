@@ -8,17 +8,8 @@ import { z } from 'zod';
 
 const roleCreateBody = z.object({
 	name: z.string().min(2).max(32),
-	permissions: z.object({
-		manageMovies: z.boolean(),
-		manageRoles: z.boolean(),
-		manageUsers: z.boolean()
-	})
+	permissions: z.array(z.string())
 });
-
-// const roleCreateBody = z.object({
-// 	name: z.string().min(2).max(32),
-// 	permissions: z.array(z.string())
-// });
 
 @injectable()
 export default class RoleController extends CoreController {

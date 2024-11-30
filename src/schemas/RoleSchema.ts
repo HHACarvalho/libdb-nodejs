@@ -6,15 +6,11 @@ const schema = new Schema(
 	{
 		_id: String,
 		name: String,
-		permissions: {
-			manageMovies: Boolean,
-			manageRoles: Boolean,
-			manageUsers: Boolean,
-		},
+		permissions: [String]
 	},
 	{
 		versionKey: '_version',
-		collection: 'roles_table',
+		collection: 'roles_table'
 	}
 );
 

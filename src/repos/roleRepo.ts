@@ -1,13 +1,11 @@
-import config from '../../config';
+import { TYPES } from '../../config';
+import IRoleRepo from './IRepos/IRoleRepo';
 import { IRolePersistence } from '../dtos/IRoleDTO';
 import { Role } from '../domain/role';
 import { RoleMapper } from '../mappers/roleMapper';
-import IRoleRepo from './IRepos/IRoleRepo';
-
-import { Document, Model } from 'mongoose';
 
 import { inject, injectable } from 'inversify';
-import { TYPES } from '../../config';
+import { Document, Model } from 'mongoose';
 
 @injectable()
 export default class RoleRepo implements IRoleRepo {
@@ -42,11 +40,12 @@ export default class RoleRepo implements IRoleRepo {
 		return RoleMapper.toDomain(document);
 	}
 
-	public async updateRole(role: Role): Promise<boolean> {
+	public async updateRole(roleName: string, role: Role): Promise<boolean> {
 		const document = await this.schema.findOneAndUpdate(
-			{ name: role.name },
-			{ permissions: role.permissions, $inc: { _version: 1 } }
+			{ name: roleName },
+			{ name: role.name, permissions: role.permissions, $inc: { _version: 1 } }
 		);
+
 		if (document == null) {
 			return false;
 		}
