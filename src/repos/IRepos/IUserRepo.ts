@@ -1,15 +1,17 @@
 import { User } from '../../domain/user';
 
 export default interface IUserRepo {
-	createUser(user: User): Promise<void>;
+	createUser(user: User): Promise<boolean>;
 
-	findUsers(queryFilter?: any): Promise<User[]>;
+	findAllUsers(queryFilter?: any): Promise<User[]>;
 
-	findOneUser(queryFilter?: any): Promise<User>;
+	findUsers(email: string): Promise<User[]>;
 
-	updateUserProfile(user: User): Promise<void>;
+	findOneUser(email: string): Promise<User | null>;
 
-	updateUserRole(user: User): Promise<void>;
+	updateUserProfile(user: User): Promise<boolean>;
 
-	deleteUser(email: string): Promise<User>;
+	updateUserRole(user: User): Promise<boolean>;
+
+	deleteUser(email: string): Promise<boolean>;
 }

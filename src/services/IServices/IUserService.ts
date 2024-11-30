@@ -1,18 +1,19 @@
-import { IUserDTO, IUserLiteDTO } from '../../dtos/IUserDTO';
 import { Result } from '../../core/result';
 
 export default interface IUserService {
-	signUp(reqBody: any): Promise<Result<string>>;
+	signUp(reqBody: any): Promise<Result>;
 
-	login(reqBody: any): Promise<Result<string>>;
+	login(reqBody: any): Promise<Result>;
 
-	findAllUsers(): Promise<Result<IUserLiteDTO[]>>;
+	findAllUsers(): Promise<Result>;
 
-	findUser(userId: string): Promise<Result<IUserLiteDTO>>;
+	findUsers(email: string): Promise<Result>;
 
-	updateProfile(userEmail: string, reqBody: any): Promise<Result<string>>;
+	findOneUser(email: string): Promise<Result>;
 
-	updateUserRole(userId: string, roleName: string): Promise<Result<IUserDTO>>;
+	updateProfile(email: string, reqBody: any): Promise<Result>;
 
-	deleteUser(userEmail: string): Promise<Result<IUserDTO>>;
+	updateUserRole(email: string, roleName: string): Promise<Result>;
+
+	deleteUser(email: string): Promise<Result>;
 }
