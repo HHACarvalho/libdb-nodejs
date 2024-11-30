@@ -1,4 +1,5 @@
 import config from '../../config';
+import { TYPES } from '../../config';
 import { IUserDTO, IUserLiteDTO } from '../dtos/IUserDTO';
 import { Result } from '../core/result';
 import { User } from '../domain/user';
@@ -8,20 +9,20 @@ import IUserRepo from '../repos/IRepos/IUserRepo';
 import IUserService from './IServices/IUserService';
 
 import { compare, hash } from 'bcrypt';
+import { inject, injectable } from 'inversify';
 import { sign } from 'jsonwebtoken';
-import { Inject, Service } from 'typedi';
 
-@Service()
+@injectable()
 export default class UserService implements IUserService {
 	constructor(
-		@Inject(config.repos.user) private userRepoInstance: IUserRepo,
-		@Inject(config.repos.role) private roleRepoInstance: IRoleRepo
+		@inject(TYPES.IUserRepo) private userRepo: IUserRepo,
+		@inject(TYPES.IRoleRepo) private roleRepo: IRoleRepo
 	) {}
 
-	public async signUp(reqBody: any): Promise<Result<string>> {
-		const userExists = await this.userRepoInstance.findOneUser({ email: reqBody.email });
+	public async signUp(reqBody: any): Promise<Result> {
+		const userExists = await this.userRepo.findOneUser(reqBody.email);
 		if (userExists) {
-			return Result.fail<string>('User with the email "' + reqBody.email + '" already exists');
+			return Result.fail('User with the email "' + reqBody.email + '" already exists');
 		}
 
 		const hashedPassword = await hash(reqBody.password, 10);
@@ -31,101 +32,110 @@ export default class UserService implements IUserService {
 			password: hashedPassword,
 			firstName: reqBody.firstName,
 			lastName: reqBody.lastName,
-			role: config.defaultRole,
+			role: 'User' //TODO: Change to ID
 		});
 
-		await this.userRepoInstance.createUser(user);
+		await this.userRepo.createUser(user);
 
 		const token = this.signToken(UserMapper.toDTO(user));
-		return Result.ok<string>(token);
+		return Result.ok(token, 201);
 	}
 
-	public async login(reqBody: any): Promise<Result<string>> {
-		const user = await this.userRepoInstance.findOneUser({ email: reqBody.email });
+	public async login(reqBody: any): Promise<Result> {
+		const user = await this.userRepo.findOneUser(reqBody.email);
 		if (user == null) {
-			return Result.fail<string>('No user with the email "' + reqBody.email + '" was found');
+			return Result.fail('No user with the email "' + reqBody.email + '" was found');
 		}
 
 		const passwordIsMatch = await compare(reqBody.password, user.password);
 		if (!passwordIsMatch) {
-			return Result.fail<string>('Incorrect password');
+			return Result.fail('Incorrect password');
 		}
 
 		const token = this.signToken(UserMapper.toDTO(user));
-		return Result.ok<string>(token);
+		return Result.ok(token);
 	}
 
-	public async findAllUsers(): Promise<Result<IUserLiteDTO[]>> {
-		const userList = await this.userRepoInstance.findUsers();
+	public async findAllUsers(): Promise<Result> {
+		const userList = await this.userRepo.findAllUsers();
 		if (userList.length === 0) {
-			return Result.fail<IUserLiteDTO[]>('There are no users');
+			return Result.fail('There are no users');
 		}
 
-		return Result.ok<IUserLiteDTO[]>(userList.map((e) => UserMapper.toLiteDTO(e)));
+		return Result.ok(userList.map((e) => UserMapper.toLiteDTO(e)));
 	}
 
-	public async findUser(userId: string): Promise<Result<IUserLiteDTO>> {
-		const user = await this.userRepoInstance.findOneUser({ _id: userId });
-		if (user == null) {
-			return Result.fail<IUserLiteDTO>('No user with the id "' + userId + '" was found');
+	public async findUsers(email: string): Promise<Result> {
+		const userList = await this.userRepo.findUsers(email);
+		if (userList.length === 0) {
+			return Result.fail('There are no users');
 		}
 
-		return Result.ok<IUserLiteDTO>(UserMapper.toLiteDTO(user));
+		return Result.ok(userList.map((e) => UserMapper.toLiteDTO(e)));
 	}
 
-	public async updateProfile(userEmail: string, reqBody: any): Promise<Result<string>> {
-		const user = await this.userRepoInstance.findOneUser({ email: userEmail });
+	public async findOneUser(email: string): Promise<Result> {
+		const user = await this.userRepo.findOneUser(email);
 		if (user == null) {
-			return Result.fail<string>('No user with the email "' + reqBody.email + '" was found');
+			return Result.fail('No user with the id "' + email + '" was found');
 		}
 
-		if (userEmail != reqBody.email) {
-			const userExists = await this.userRepoInstance.findOneUser({ email: reqBody.email });
+		return Result.ok(UserMapper.toLiteDTO(user));
+	}
+
+	public async updateProfile(email: string, reqBody: any): Promise<Result> {
+		const user = await this.userRepo.findOneUser(email);
+		if (user == null) {
+			return Result.fail('No user with the email "' + email + '" was found');
+		}
+
+		if (email !== reqBody.email) {
+			const userExists = await this.userRepo.findOneUser(reqBody.email);
 			if (userExists) {
-				return Result.fail<string>('User with the email "' + reqBody.email + '" already exists');
+				return Result.fail('User with the email "' + reqBody.email + '" already exists');
 			}
+			user.email = reqBody.email;
 		}
 
 		const hashedPassword = await hash(reqBody.password, 10);
 
-		user.email = reqBody.email;
 		user.password = hashedPassword;
 		user.firstName = reqBody.firstName;
 		user.lastName = reqBody.lastName;
 
-		await this.userRepoInstance.updateUserProfile(user);
+		await this.userRepo.updateUserProfile(user);
 
 		const token = this.signToken(UserMapper.toDTO(user));
-		return Result.ok<string>(token);
+		return Result.ok(token);
 	}
 
-	public async updateUserRole(userId: string, roleName: string): Promise<Result<IUserDTO>> {
-		//TODO: Change to ID
-		const user = await this.userRepoInstance.findOneUser({ email: userId });
+	public async updateUserRole(email: string, roleName: string): Promise<Result> {
+		const user = await this.userRepo.findOneUser(email);
 		if (user == null) {
-			return Result.fail<IUserDTO>('No user with the id "' + userId + '" was found');
+			return Result.fail('No user with the email "' + email + '" was found');
 		}
 
 		if (roleName !== config.defaultRole) {
-			const roleExists = await this.roleRepoInstance.findOneRole(roleName);
+			//TODO: defaultRole???
+			const roleExists = await this.roleRepo.findOneRole(roleName);
 			if (!roleExists) {
-				return Result.fail<IUserDTO>('No role with the name "' + roleName + '" was found');
+				return Result.fail('No role with the name "' + roleName + '" was found');
 			}
 		}
 
 		user.role = roleName;
 
-		await this.userRepoInstance.updateUserRole(user);
-		return Result.ok<IUserDTO>();
+		await this.userRepo.updateUserRole(user);
+		return Result.ok(null);
 	}
 
-	public async deleteUser(userEmail: string): Promise<Result<IUserDTO>> {
-		const result = await this.userRepoInstance.deleteUser(userEmail);
+	public async deleteUser(email: string): Promise<Result> {
+		const result = await this.userRepo.deleteUser(email);
 		if (!result) {
-			return Result.fail<IUserDTO>('No user with the email "' + userEmail + '" was found');
+			return Result.fail('No user with the email "' + email + '" was found');
 		}
 
-		return Result.ok<IUserDTO>();
+		return Result.ok(null);
 	}
 
 	private signToken(data: any): string {
