@@ -1,130 +1,90 @@
-import config from '../../config';
-import IUserController from './IControllers/IUserController';
+import { TYPES } from '../../config';
+import CoreController from './coreController';
 import IUserService from '../services/IServices/IUserService';
 
-import { NextFunction, Request, Response } from 'express';
-import { Inject, Service } from 'typedi';
+import { Request, Response, Router } from 'express';
+import { inject, injectable } from 'inversify';
+import { z } from 'zod';
 
-@Service()
-export default class UserController implements IUserController {
-	constructor(@Inject(config.services.user) private serviceInstance: IUserService) {}
+const userSignUpBody = z.object({
+	email: z.string().email(),
+	password: z.string().min(2).max(32),
+	firstName: z
+		.string()
+		.regex(/^[a-zA-Z]+$/)
+		.min(2)
+		.max(32),
+	lastName: z
+		.string()
+		.regex(/^[a-zA-Z]+$/)
+		.min(2)
+		.max(32)
+});
 
-	public async signUp(req: Request, res: Response, next: NextFunction): Promise<void> {
-		try {
-			const result = await this.serviceInstance.signUp(req.body);
-			if (!result.isSuccess) {
-				res.status(400);
-				res.send(result.error);
-			} else {
-				res.status(201);
-				res.cookie('token', result.value, { httpOnly: true, maxAge: config.jwtDuration * 1000 });
-				res.send('Successful signup');
-			}
-		} catch (e) {
-			next(e);
-		}
+const userLoginBody = z.object({
+	email: z.string().email(),
+	password: z.string().min(2).max(32)
+});
+
+@injectable()
+export default class UserController extends CoreController {
+	constructor(@inject(TYPES.IUserService) private userService: IUserService) {
+		super();
 	}
 
-	public async login(req: Request, res: Response, next: NextFunction): Promise<void> {
-		try {
-			const result = await this.serviceInstance.login(req.body);
-			if (!result.isSuccess) {
-				res.status(404);
-				res.send(result.error);
-			} else {
-				res.status(200);
-				res.cookie('token', result.value, { httpOnly: true, maxAge: config.jwtDuration * 1000 });
-				res.send('Successful login');
-			}
-		} catch (e) {
-			next(e);
-		}
+	public registerRoutes(): Router {
+		const router = Router();
+
+		router.post('/signup', this.signup.bind(this));
+		router.post('/login', this.login.bind(this));
+		router.get('/', this.findAllUsers.bind(this));
+		router.get('/search', this.findUsers.bind(this));
+		router.get('/:email', this.findOneUser.bind(this));
+		router.put('/profile/:email', this.updateUserProfile.bind(this));
+		router.put('/role', this.updateUserRole.bind(this));
+		router.delete('/:email', this.deleteUser.bind(this));
+
+		return router;
 	}
 
-	public async findAllUsers(req: Request, res: Response, next: NextFunction): Promise<void> {
-		try {
-			const result = await this.serviceInstance.findAllUsers();
-			if (!result.isSuccess) {
-				res.status(404);
-				res.send(result.error);
-			} else {
-				res.status(200);
-				res.json(result.value);
-			}
-		} catch (e) {
-			next(e);
-		}
+	private async signup(req: Request, res: Response): Promise<void> {
+		const data = userSignUpBody.parse(req.body);
+		await this.handleServiceCall(() => this.userService.signUp(data), res);
 	}
 
-	public async findUser(req: Request, res: Response, next: NextFunction): Promise<void> {
-		try {
-			const userId = req.query.userId as string;
-
-			const result = await this.serviceInstance.findUser(userId);
-			if (!result.isSuccess) {
-				res.status(404);
-				res.send(result.error);
-			} else {
-				res.status(200);
-				res.json(result.value);
-			}
-		} catch (e) {
-			next(e);
-		}
+	private async login(req: Request, res: Response): Promise<void> {
+		const data = userLoginBody.parse(req.body);
+		await this.handleServiceCall(() => this.userService.login(data), res);
 	}
 
-	public async updateProfile(req: Request, res: Response, next: NextFunction): Promise<void> {
-		try {
-			const userEmail = req['token'].email as string;
-
-			const result = await this.serviceInstance.updateProfile(userEmail, req.body);
-			if (!result.isSuccess) {
-				res.status(404);
-				res.send(result.error);
-			} else {
-				res.status(200);
-				res.cookie('token', result.value, { httpOnly: true, maxAge: config.jwtDuration * 1000 });
-				res.send('Successfully updated user profile');
-			}
-		} catch (e) {
-			next(e);
-		}
+	private async findAllUsers(req: Request, res: Response): Promise<void> {
+		await this.handleServiceCall(() => this.userService.findAllUsers(), res);
 	}
 
-	public async updateUserRole(req: Request, res: Response, next: NextFunction): Promise<void> {
-		try {
-			//TODO: Change to ID
-			const userId = req.query.userEmail as string;
-			const roleName = req.query.roleName as string;
-
-			const result = await this.serviceInstance.updateUserRole(userId, roleName);
-			if (!result.isSuccess) {
-				res.status(404);
-				res.send(result.error);
-			} else {
-				res.status(200);
-				res.send('Successfully updated user role');
-			}
-		} catch (e) {
-			next(e);
-		}
+	private async findUsers(req: Request, res: Response): Promise<void> {
+		const email = (req.query.email as string) || '';
+		await this.handleServiceCall(() => this.userService.findUsers(email), res);
 	}
 
-	public async deleteAccount(req: Request, res: Response, next: NextFunction): Promise<void> {
-		try {
-			const userEmail = req['token'].email as string;
+	private async findOneUser(req: Request, res: Response): Promise<void> {
+		const { email } = req.params;
+		await this.handleServiceCall(() => this.userService.findOneUser(email), res);
+	}
 
-			const result = await this.serviceInstance.deleteUser(userEmail);
-			if (!result.isSuccess) {
-				res.status(404);
-				res.send(result.error);
-			} else {
-				res.status(200);
-				res.clearCookie('token');
-				res.send('Successfully deleted account');
-			}
-		} catch (e) {
-			next(e);
-		}
+	private async updateUserProfile(req: Request, res: Response): Promise<void> {
+		const { email } = req.params;
+		const data = userSignUpBody.parse(req.body);
+		await this.handleServiceCall(() => this.userService.updateProfile(email, data), res);
+	}
+
+	private async updateUserRole(req: Request, res: Response): Promise<void> {
+		const email = (req.query.email as string) || '';
+		const role = (req.query.role as string) || '';
+		await this.handleServiceCall(() => this.userService.updateUserRole(email, role), res);
+	}
+
+	private async deleteUser(req: Request, res: Response): Promise<void> {
+		const { email } = req.params;
+		await this.handleServiceCall(() => this.userService.deleteUser(email), res);
 	}
 }
