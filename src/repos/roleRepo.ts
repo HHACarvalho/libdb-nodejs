@@ -1,7 +1,7 @@
 import { TYPES } from '../../config';
 import IRoleRepo from './IRepos/IRoleRepo';
 import { IRolePersistence } from '../dtos/IRoleDTO';
-import { Role } from '../domain/role';
+import Role from '../domain/role';
 import { RoleMapper } from '../mappers/roleMapper';
 
 import { inject, injectable } from 'inversify';
@@ -14,7 +14,7 @@ export default class RoleRepo implements IRoleRepo {
 	public async createRole(role: Role): Promise<boolean> {
 		const persistence = RoleMapper.toPersistence(role);
 		const document = await this.schema.create(persistence);
-		if (document == null) {
+		if (document === null) {
 			return false;
 		}
 
@@ -33,7 +33,7 @@ export default class RoleRepo implements IRoleRepo {
 
 	public async findOneRole(roleName: string): Promise<Role | null> {
 		const document = await this.schema.findOne({ name: roleName });
-		if (document == null) {
+		if (document === null) {
 			return null;
 		}
 
@@ -46,7 +46,7 @@ export default class RoleRepo implements IRoleRepo {
 			{ name: role.name, permissions: role.permissions, $inc: { _version: 1 } }
 		);
 
-		if (document == null) {
+		if (document === null) {
 			return false;
 		}
 
@@ -55,7 +55,7 @@ export default class RoleRepo implements IRoleRepo {
 
 	public async deleteRole(roleName: string): Promise<boolean> {
 		const document = await this.schema.findOneAndDelete({ name: roleName });
-		if (document == null) {
+		if (document === null) {
 			return false;
 		}
 

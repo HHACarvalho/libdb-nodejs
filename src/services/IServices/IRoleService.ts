@@ -1,4 +1,4 @@
-import { Result } from '../../core/result';
+import Result from '../../core/result';
 
 export default interface IRoleService {
 	createRole(reqBody: any): Promise<Result>;

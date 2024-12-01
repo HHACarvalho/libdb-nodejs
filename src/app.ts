@@ -7,8 +7,8 @@ import UserController from './controllers/userController';
 import Logger from './core/logger';
 
 import bodyParser from 'body-parser';
-import cookieParser from 'cookie-parser';
-import cors from 'cors';
+const cookieParser = require('cookie-parser');
+const cors = require('cors');
 import express from 'express';
 import { connect } from 'mongoose';
 
@@ -19,7 +19,9 @@ async function startServer() {
 	const app = express();
 
 	// Status endpoint
-	app.get('/status', (req, res) => res.sendStatus(200));
+	app.get('/status', (req, res) => {
+		res.sendStatus(200);
+	});
 
 	// Middlewares
 	app.use(cors());
@@ -31,7 +33,9 @@ async function startServer() {
 	app.use('/user', Container.resolve(UserController).registerRoutes());
 
 	// Unknown endpoint
-	app.use((req, res) => res.sendStatus(404));
+	app.use((req, res) => {
+		res.sendStatus(404);
+	});
 
 	app
 		.listen(config.apiPort, () => {

@@ -1,4 +1,4 @@
-export class Result {
+export default class Result {
 	public readonly isSuccess: boolean;
 	public readonly statusCode: number;
 	public readonly error: string | null;

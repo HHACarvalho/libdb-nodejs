@@ -1,9 +1,9 @@
 import { TYPES } from '../../config';
 import IRoleService from './IServices/IRoleService';
 import IRoleRepo from '../repos/IRepos/IRoleRepo';
-import { Role } from '../domain/role';
+import Role from '../domain/role';
 import { RoleMapper } from '../mappers/roleMapper';
-import { Result } from '../core/result';
+import Result from '../core/result';
 
 import { inject, injectable } from 'inversify';
 

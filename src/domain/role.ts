@@ -10,7 +10,7 @@ interface RoleProps {
 	};
 }
 
-export class Role extends Entity<RoleProps> {
+export default class Role extends Entity<RoleProps> {
 	get name(): string {
 		return this._props.name;
 	}

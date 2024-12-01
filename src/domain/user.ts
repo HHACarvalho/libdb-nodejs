@@ -9,7 +9,7 @@ interface UserProps {
 	role: string;
 }
 
-export class User extends Entity<UserProps> {
+export default class User extends Entity<UserProps> {
 	get email(): string {
 		return this._props.email;
 	}

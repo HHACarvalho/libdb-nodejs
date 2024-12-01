@@ -1,6 +1,6 @@
-import { EntityID } from '../core/domain/entityID';
 import { IUserDTO, IUserLiteDTO, IUserPersistence } from '../dtos/IUserDTO';
-import { User } from '../domain/user';
+import User from '../domain/user';
+import { EntityID } from '../core/domain/entityID';
 
 import { Document, Model } from 'mongoose';
 
@@ -12,7 +12,7 @@ export class UserMapper {
 				password: schema.password,
 				firstName: schema.firstName,
 				lastName: schema.lastName,
-				role: schema.role,
+				role: schema.role
 			},
 			new EntityID(schema._id)
 		);
@@ -24,7 +24,7 @@ export class UserMapper {
 			email: user.email,
 			firstName: user.firstName,
 			lastName: user.lastName,
-			role: user.role,
+			role: user.role
 		} as IUserDTO;
 	}
 
@@ -32,7 +32,7 @@ export class UserMapper {
 		return {
 			firstName: user.firstName,
 			lastName: user.lastName,
-			role: user.role,
+			role: user.role
 		} as IUserLiteDTO;
 	}
 
@@ -43,7 +43,7 @@ export class UserMapper {
 			password: user.password,
 			firstName: user.firstName,
 			lastName: user.lastName,
-			role: user.role,
+			role: user.role
 		} as IUserPersistence;
 	}
 }

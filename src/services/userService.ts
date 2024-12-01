@@ -1,16 +1,15 @@
 import config from '../../config';
 import { TYPES } from '../../config';
-import { IUserDTO, IUserLiteDTO } from '../dtos/IUserDTO';
-import { Result } from '../core/result';
-import { User } from '../domain/user';
-import { UserMapper } from '../mappers/userMapper';
-import IRoleRepo from '../repos/IRepos/IRoleRepo';
 import IUserRepo from '../repos/IRepos/IUserRepo';
 import IUserService from './IServices/IUserService';
+import IRoleRepo from '../repos/IRepos/IRoleRepo';
+import User from '../domain/user';
+import { UserMapper } from '../mappers/userMapper';
+import Result from '../core/result';
 
-import { compare, hash } from 'bcrypt';
 import { inject, injectable } from 'inversify';
-import { sign } from 'jsonwebtoken';
+const { compare, hash } = require('bcrypt');
+const { sign } = require('jsonwebtoken');
 
 @injectable()
 export default class UserService implements IUserService {
@@ -43,7 +42,7 @@ export default class UserService implements IUserService {
 
 	public async login(reqBody: any): Promise<Result> {
 		const user = await this.userRepo.findOneUser(reqBody.email);
-		if (user == null) {
+		if (user === null) {
 			return Result.fail('No user with the email "' + reqBody.email + '" was found');
 		}
 
@@ -76,7 +75,7 @@ export default class UserService implements IUserService {
 
 	public async findOneUser(email: string): Promise<Result> {
 		const user = await this.userRepo.findOneUser(email);
-		if (user == null) {
+		if (user === null) {
 			return Result.fail('No user with the id "' + email + '" was found');
 		}
 
@@ -85,7 +84,7 @@ export default class UserService implements IUserService {
 
 	public async updateProfile(email: string, reqBody: any): Promise<Result> {
 		const user = await this.userRepo.findOneUser(email);
-		if (user == null) {
+		if (user === null) {
 			return Result.fail('No user with the email "' + email + '" was found');
 		}
 
@@ -111,7 +110,7 @@ export default class UserService implements IUserService {
 
 	public async updateUserRole(email: string, roleName: string): Promise<Result> {
 		const user = await this.userRepo.findOneUser(email);
-		if (user == null) {
+		if (user === null) {
 			return Result.fail('No user with the email "' + email + '" was found');
 		}
 

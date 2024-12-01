@@ -1,4 +1,4 @@
-import { User } from '../../domain/user';
+import User from '../../domain/user';
 
 export default interface IUserRepo {
 	createUser(user: User): Promise<boolean>;

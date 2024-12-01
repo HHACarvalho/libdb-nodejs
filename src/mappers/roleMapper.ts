@@ -1,6 +1,6 @@
-import { EntityID } from '../core/domain/entityID';
 import { IRoleDTO, IRolePersistence } from '../dtos/IRoleDTO';
-import { Role } from '../domain/role';
+import Role from '../domain/role';
+import { EntityID } from '../core/domain/entityID';
 
 import { Document, Model } from 'mongoose';
 
@@ -9,7 +9,7 @@ export class RoleMapper {
 		return Role.create(
 			{
 				name: schema.name,
-				permissions: schema.permissions,
+				permissions: schema.permissions
 			},
 			new EntityID(schema._id)
 		);
@@ -18,7 +18,7 @@ export class RoleMapper {
 	public static toDTO(role: Role): IRoleDTO {
 		return {
 			name: role.name,
-			permissions: role.permissions,
+			permissions: role.permissions
 		} as IRoleDTO;
 	}
 
@@ -26,7 +26,7 @@ export class RoleMapper {
 		return {
 			_id: role.id.getValue(),
 			name: role.name,
-			permissions: role.permissions,
+			permissions: role.permissions
 		} as IRolePersistence;
 	}
 }
