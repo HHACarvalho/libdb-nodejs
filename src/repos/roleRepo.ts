@@ -1,18 +1,18 @@
 import { TYPES } from '../../config';
 import IRoleRepo from './IRepos/IRoleRepo';
-import { IRolePersistence } from '../dtos/IRoleDTO';
+import { IRolePersistence } from '../schemas/roleSchema';
 import Role from '../domain/role';
-import { RoleMapper } from '../mappers/roleMapper';
+import { RoleDTO } from '../dtos/roleDTO';
 
 import { inject, injectable } from 'inversify';
-import { Document, Model } from 'mongoose';
+import { Model } from 'mongoose';
 
 @injectable()
 export default class RoleRepo implements IRoleRepo {
-	constructor(@inject(TYPES.IRoleSchema) private schema: Model<IRolePersistence & Document>) {}
+	constructor(@inject(TYPES.IRoleSchema) private schema: Model<IRolePersistence>) {}
 
 	public async createRole(role: Role): Promise<boolean> {
-		const persistence = RoleMapper.toPersistence(role);
+		const persistence = RoleDTO.persistence(role);
 		const document = await this.schema.create(persistence);
 		if (document === null) {
 			return false;
@@ -23,12 +23,12 @@ export default class RoleRepo implements IRoleRepo {
 
 	public async findAllRoles(): Promise<Role[]> {
 		const documents = await this.schema.find();
-		return documents.map((e) => RoleMapper.toDomain(e));
+		return documents.map((e) => Role.restore(e));
 	}
 
 	public async findRoles(roleName: string): Promise<Role[]> {
 		const documents = await this.schema.find({ name: { $regex: roleName, $options: 'i' } });
-		return documents.map((e) => RoleMapper.toDomain(e));
+		return documents.map((e) => Role.restore(e));
 	}
 
 	public async findOneRole(roleName: string): Promise<Role | null> {
@@ -37,7 +37,7 @@ export default class RoleRepo implements IRoleRepo {
 			return null;
 		}
 
-		return RoleMapper.toDomain(document);
+		return Role.restore(document);
 	}
 
 	public async updateRole(roleName: string, role: Role): Promise<boolean> {

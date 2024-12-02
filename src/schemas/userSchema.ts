@@ -1,20 +1,27 @@
-import { IUserPersistence } from '../dtos/IUserDTO';
-
 import { Document, model, Schema } from 'mongoose';
 
-const schema = new Schema(
+export interface IUserPersistence extends Document {
+	_id: string;
+	email: string;
+	password: string;
+	firstName: string;
+	lastName: string;
+	role: string;
+}
+
+const userSchema = new Schema<IUserPersistence>(
 	{
 		_id: String,
 		email: String,
 		password: String,
 		firstName: String,
 		lastName: String,
-		role: String,
+		role: String
 	},
 	{
 		versionKey: '_version',
-		collection: 'users_table',
+		collection: 'users_table'
 	}
 );
 
-export default model<IUserPersistence & Document>('User', schema);
+export default model<IUserPersistence>('User', userSchema);

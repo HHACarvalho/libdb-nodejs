@@ -1,8 +1,12 @@
-import { IRolePersistence } from '../dtos/IRoleDTO';
-
 import { Document, model, Schema } from 'mongoose';
 
-const schema = new Schema(
+export interface IRolePersistence extends Document {
+	_id: string;
+	name: string;
+	permissions: string[];
+}
+
+const roleSchema = new Schema<IRolePersistence>(
 	{
 		_id: String,
 		name: String,
@@ -14,4 +18,4 @@ const schema = new Schema(
 	}
 );
 
-export default model<IRolePersistence & Document>('Role', schema);
+export default model<IRolePersistence>('Role', roleSchema);

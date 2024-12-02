@@ -1,11 +1,11 @@
 import config from '../../config';
 import { TYPES } from '../../config';
-import IUserRepo from '../repos/IRepos/IUserRepo';
 import IUserService from './IServices/IUserService';
+import IUserRepo from '../repos/IRepos/IUserRepo';
 import IRoleRepo from '../repos/IRepos/IRoleRepo';
 import User from '../domain/user';
-import { UserMapper } from '../mappers/userMapper';
 import Result from '../core/result';
+import { UserDTO } from '../dtos/userDTO';
 
 import { inject, injectable } from 'inversify';
 const { compare, hash } = require('bcrypt');
@@ -36,7 +36,7 @@ export default class UserService implements IUserService {
 
 		await this.userRepo.createUser(user);
 
-		const token = this.signToken(UserMapper.toDTO(user));
+		const token = this.signToken(UserDTO.detailed(user));
 		return Result.ok(token, 201);
 	}
 
@@ -51,7 +51,7 @@ export default class UserService implements IUserService {
 			return Result.fail('Incorrect password');
 		}
 
-		const token = this.signToken(UserMapper.toDTO(user));
+		const token = this.signToken(UserDTO.detailed(user));
 		return Result.ok(token);
 	}
 
@@ -61,7 +61,7 @@ export default class UserService implements IUserService {
 			return Result.fail('There are no users');
 		}
 
-		return Result.ok(userList.map((e) => UserMapper.toLiteDTO(e)));
+		return Result.ok(userList.map((user) => UserDTO.simple(user)));
 	}
 
 	public async findUsers(email: string): Promise<Result> {
@@ -70,7 +70,7 @@ export default class UserService implements IUserService {
 			return Result.fail('There are no users');
 		}
 
-		return Result.ok(userList.map((e) => UserMapper.toLiteDTO(e)));
+		return Result.ok(userList.map((user) => UserDTO.simple(user)));
 	}
 
 	public async findOneUser(email: string): Promise<Result> {
@@ -79,7 +79,7 @@ export default class UserService implements IUserService {
 			return Result.fail('No user with the id "' + email + '" was found');
 		}
 
-		return Result.ok(UserMapper.toLiteDTO(user));
+		return Result.ok(UserDTO.detailed(user));
 	}
 
 	public async updateProfile(email: string, reqBody: any): Promise<Result> {
@@ -104,7 +104,7 @@ export default class UserService implements IUserService {
 
 		await this.userRepo.updateUserProfile(user);
 
-		const token = this.signToken(UserMapper.toDTO(user));
+		const token = this.signToken(UserDTO.detailed(user));
 		return Result.ok(token);
 	}
 

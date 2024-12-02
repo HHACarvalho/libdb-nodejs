@@ -2,8 +2,8 @@ import { TYPES } from '../../config';
 import IRoleService from './IServices/IRoleService';
 import IRoleRepo from '../repos/IRepos/IRoleRepo';
 import Role from '../domain/role';
-import { RoleMapper } from '../mappers/roleMapper';
 import Result from '../core/result';
+import { RoleDTO } from '../dtos/roleDTO';
 
 import { inject, injectable } from 'inversify';
 
@@ -27,7 +27,7 @@ export default class RoleService implements IRoleService {
 			return Result.fail('Failed to create role');
 		}
 
-		return Result.ok(RoleMapper.toDTO(role), 201);
+		return Result.ok(RoleDTO.detailed(role), 201);
 	}
 
 	public async findAllRoles(): Promise<Result> {
@@ -36,7 +36,7 @@ export default class RoleService implements IRoleService {
 			return Result.fail('There are no roles');
 		}
 
-		return Result.ok(roleList.map((e) => RoleMapper.toDTO(e)));
+		return Result.ok(roleList.map((role) => RoleDTO.simple(role)));
 	}
 
 	public async findRoles(roleName: string): Promise<Result> {
@@ -45,7 +45,7 @@ export default class RoleService implements IRoleService {
 			return Result.fail('No roles matching the criteria were found');
 		}
 
-		return Result.ok(roleList.map((e) => RoleMapper.toDTO(e)));
+		return Result.ok(roleList.map((role) => RoleDTO.simple(role)));
 	}
 
 	public async findOneRole(roleName: string): Promise<Result> {
@@ -54,7 +54,7 @@ export default class RoleService implements IRoleService {
 			return Result.fail('No role with the name "' + roleName + '" was found');
 		}
 
-		return Result.ok(RoleMapper.toDTO(role));
+		return Result.ok(RoleDTO.detailed(role));
 	}
 
 	public async updateRole(roleName: string, reqBody: any): Promise<Result> {

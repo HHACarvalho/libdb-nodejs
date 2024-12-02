@@ -1,15 +1,10 @@
 import { TYPES } from '../../config';
 import CoreController from './coreController';
 import IRoleService from '../services/IServices/IRoleService';
+import { roleCreateBody } from '../dtos/roleDTO';
 
 import { Request, Response, Router } from 'express';
 import { inject, injectable } from 'inversify';
-import { z } from 'zod';
-
-const roleCreateBody = z.object({
-	name: z.string().min(2).max(32),
-	permissions: z.array(z.string())
-});
 
 @injectable()
 export default class RoleController extends CoreController {

@@ -1,5 +1,8 @@
 import { Entity } from '../core/domain/entity';
 import { EntityID } from '../core/domain/entityID';
+import { IUserPersistence } from '../schemas/userSchema';
+
+import { Model } from 'mongoose';
 
 interface UserProps {
 	email: string;
@@ -52,5 +55,18 @@ export default class User extends Entity<UserProps> {
 
 	public static create(props: UserProps, id?: EntityID): User {
 		return new User({ ...props }, id);
+	}
+
+	public static restore(schema: any | Model<IUserPersistence>): User {
+		return User.create(
+			{
+				email: schema.email,
+				password: schema.password,
+				firstName: schema.firstName,
+				lastName: schema.lastName,
+				role: schema.role
+			},
+			new EntityID(schema._id)
+		);
 	}
 }

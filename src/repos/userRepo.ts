@@ -1,18 +1,18 @@
 import { TYPES } from '../../config';
 import IUserRepo from './IRepos/IUserRepo';
-import { IUserPersistence } from '../dtos/IUserDTO';
+import { IUserPersistence } from '../schemas/userSchema';
 import User from '../domain/user';
-import { UserMapper } from '../mappers/userMapper';
+import { UserDTO } from '../dtos/userDTO';
 
 import { inject, injectable } from 'inversify';
-import { Document, Model } from 'mongoose';
+import { Model } from 'mongoose';
 
 @injectable()
 export default class UserRepo implements IUserRepo {
-	constructor(@inject(TYPES.IUserSchema) private schema: Model<IUserPersistence & Document>) {}
+	constructor(@inject(TYPES.IUserSchema) private schema: Model<IUserPersistence>) {}
 
 	public async createUser(user: User): Promise<boolean> {
-		const persistence = UserMapper.toPersistence(user);
+		const persistence = UserDTO.persistence(user);
 		const document = await this.schema.create(persistence);
 		if (document === null) {
 			return false;
@@ -23,12 +23,12 @@ export default class UserRepo implements IUserRepo {
 
 	public async findAllUsers(): Promise<User[]> {
 		const documents = await this.schema.find();
-		return documents.map((e) => UserMapper.toDomain(e));
+		return documents.map((e) => User.restore(e));
 	}
 
 	public async findUsers(email: string): Promise<User[]> {
 		const documents = await this.schema.find({ email: { $regex: email, $options: 'i' } });
-		return documents.map((e) => UserMapper.toDomain(e));
+		return documents.map((e) => User.restore(e));
 	}
 
 	public async findOneUser(email: string): Promise<User | null> {
@@ -37,7 +37,7 @@ export default class UserRepo implements IUserRepo {
 			return null;
 		}
 
-		return UserMapper.toDomain(document);
+		return User.restore(document);
 	}
 
 	public async updateUserProfile(user: User): Promise<boolean> {

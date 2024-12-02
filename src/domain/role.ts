@@ -1,13 +1,12 @@
 import { Entity } from '../core/domain/entity';
 import { EntityID } from '../core/domain/entityID';
+import { IRolePersistence } from '../schemas/roleSchema';
+
+import { Model } from 'mongoose';
 
 interface RoleProps {
 	name: string;
-	permissions: {
-		manageMovies: boolean;
-		manageRoles: boolean;
-		manageUsers: boolean;
-	};
+	permissions: string[];
 }
 
 export default class Role extends Entity<RoleProps> {
@@ -29,5 +28,15 @@ export default class Role extends Entity<RoleProps> {
 
 	public static create(props: RoleProps, id?: EntityID): Role {
 		return new Role({ ...props }, id);
+	}
+
+	public static restore(schema: any | Model<IRolePersistence>): Role {
+		return Role.create(
+			{
+				name: schema.name,
+				permissions: schema.permissions
+			},
+			new EntityID(schema._id)
+		);
 	}
 }

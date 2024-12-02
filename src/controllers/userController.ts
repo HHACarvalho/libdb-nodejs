@@ -1,30 +1,10 @@
 import { TYPES } from '../../config';
 import CoreController from './coreController';
 import IUserService from '../services/IServices/IUserService';
+import { userSignUpBody, userLoginBody } from '../dtos/userDTO';
 
 import { Request, Response, Router } from 'express';
 import { inject, injectable } from 'inversify';
-import { z } from 'zod';
-
-const userSignUpBody = z.object({
-	email: z.string().email(),
-	password: z.string().min(2).max(32),
-	firstName: z
-		.string()
-		.regex(/^[a-zA-Z]+$/)
-		.min(2)
-		.max(32),
-	lastName: z
-		.string()
-		.regex(/^[a-zA-Z]+$/)
-		.min(2)
-		.max(32)
-});
-
-const userLoginBody = z.object({
-	email: z.string().email(),
-	password: z.string().min(2).max(32)
-});
 
 @injectable()
 export default class UserController extends CoreController {
