@@ -1,4 +1,4 @@
-import config, { TYPES } from '../../../config';
+import config from '../../../config';
 import { Permissions } from '../permissions';
 import IRoleRepo from '../../repos/IRepos/IRoleRepo';
 
@@ -20,7 +20,7 @@ export default function authentication(requiredPermissions?: number[]) {
 
 function validateJwt(req: Request, res: Response, token: string) {
 	try {
-		req.token = verify(token, config.jwtAccessSecret);
+		req.token = verify(token, config.JWT_ACCESS_SECRET);
 	} catch (error) {
 		res.status(401);
 		res.send();
@@ -73,7 +73,7 @@ function validateJwt(req: Request, res: Response, token: string) {
 // 	const roleRepo = container.get<IRoleRepo>(TYPES.IRoleRepo);
 
 // 	const role = await roleRepo.findOneRole(roleName);
-// 	if (role === null) {
+// 	if (role == null) {
 // 		throw new JsonWebTokenError('invalid user role');
 // 	}
 

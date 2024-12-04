@@ -1,5 +1,4 @@
 import config from '../../config';
-import { TYPES } from '../../config';
 import IUserService from './IServices/IUserService';
 import IUserRepo from '../repos/IRepos/IUserRepo';
 import IRoleRepo from '../repos/IRepos/IRoleRepo';
@@ -14,8 +13,8 @@ const { sign } = require('jsonwebtoken');
 @injectable()
 export default class UserService implements IUserService {
 	constructor(
-		@inject(TYPES.IUserRepo) private userRepo: IUserRepo,
-		@inject(TYPES.IRoleRepo) private roleRepo: IRoleRepo
+		@inject(config.TYPES.IUserRepo) private userRepo: IUserRepo,
+		@inject(config.TYPES.IRoleRepo) private roleRepo: IRoleRepo
 	) {}
 
 	public async signUp(reqBody: any): Promise<Result> {
@@ -42,7 +41,7 @@ export default class UserService implements IUserService {
 
 	public async login(reqBody: any): Promise<Result> {
 		const user = await this.userRepo.findOneUser(reqBody.email);
-		if (user === null) {
+		if (user == null) {
 			return Result.fail('No user with the email "' + reqBody.email + '" was found');
 		}
 
@@ -75,7 +74,7 @@ export default class UserService implements IUserService {
 
 	public async findOneUser(email: string): Promise<Result> {
 		const user = await this.userRepo.findOneUser(email);
-		if (user === null) {
+		if (user == null) {
 			return Result.fail('No user with the id "' + email + '" was found');
 		}
 
@@ -84,7 +83,7 @@ export default class UserService implements IUserService {
 
 	public async updateProfile(email: string, reqBody: any): Promise<Result> {
 		const user = await this.userRepo.findOneUser(email);
-		if (user === null) {
+		if (user == null) {
 			return Result.fail('No user with the email "' + email + '" was found');
 		}
 
@@ -110,11 +109,11 @@ export default class UserService implements IUserService {
 
 	public async updateUserRole(email: string, roleName: string): Promise<Result> {
 		const user = await this.userRepo.findOneUser(email);
-		if (user === null) {
+		if (user == null) {
 			return Result.fail('No user with the email "' + email + '" was found');
 		}
 
-		if (roleName !== config.defaultRole) {
+		if (roleName !== config.DEFAULT_ROLE) {
 			//TODO: defaultRole???
 			const roleExists = await this.roleRepo.findOneRole(roleName);
 			if (!roleExists) {
@@ -138,6 +137,6 @@ export default class UserService implements IUserService {
 	}
 
 	private signToken(data: any): string {
-		return sign(data, config.jwtAccessSecret, { expiresIn: config.jwtDuration });
+		return sign(data, config.JWT_ACCESS_SECRET, { expiresIn: config.JWT_DURATION });
 	}
 }

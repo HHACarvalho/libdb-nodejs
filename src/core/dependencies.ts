@@ -1,4 +1,4 @@
-import { TYPES } from '../../config';
+import config from '../../config';
 
 import { IRolePersistence } from '../schemas/roleSchema';
 import roleSchema from '../schemas/roleSchema';
@@ -20,14 +20,14 @@ import { Model } from 'mongoose';
 
 const container = new Container();
 
-container.bind<Model<IRolePersistence>>(TYPES.IRoleSchema).toConstantValue(roleSchema);
-container.bind<IRoleRepo>(TYPES.IRoleRepo).to(RoleRepo);
-container.bind<IRoleService>(TYPES.IRoleService).to(RoleService);
+container.bind<Model<IRolePersistence>>(config.TYPES.IRoleSchema).toConstantValue(roleSchema);
+container.bind<IRoleRepo>(config.TYPES.IRoleRepo).to(RoleRepo);
+container.bind<IRoleService>(config.TYPES.IRoleService).to(RoleService);
 container.bind<RoleController>(RoleController).toSelf();
 
-container.bind<Model<IUserPersistence>>(TYPES.IUserSchema).toConstantValue(userSchema);
-container.bind<IUserRepo>(TYPES.IUserRepo).to(UserRepo);
-container.bind<IUserService>(TYPES.IUserService).to(UserService);
+container.bind<Model<IUserPersistence>>(config.TYPES.IUserSchema).toConstantValue(userSchema);
+container.bind<IUserRepo>(config.TYPES.IUserRepo).to(UserRepo);
+container.bind<IUserService>(config.TYPES.IUserService).to(UserService);
 container.bind<UserController>(UserController).toSelf();
 
 export default container;

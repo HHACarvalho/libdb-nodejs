@@ -1,4 +1,4 @@
-import { TYPES } from '../../config';
+import config from '../../config';
 import IUserRepo from './IRepos/IUserRepo';
 import { IUserPersistence } from '../schemas/userSchema';
 import User from '../domain/user';
@@ -9,12 +9,12 @@ import { Model } from 'mongoose';
 
 @injectable()
 export default class UserRepo implements IUserRepo {
-	constructor(@inject(TYPES.IUserSchema) private schema: Model<IUserPersistence>) {}
+	constructor(@inject(config.TYPES.IUserSchema) private schema: Model<IUserPersistence>) {}
 
 	public async createUser(user: User): Promise<boolean> {
 		const persistence = UserDTO.persistence(user);
 		const document = await this.schema.create(persistence);
-		if (document === null) {
+		if (document == null) {
 			return false;
 		}
 
@@ -33,7 +33,7 @@ export default class UserRepo implements IUserRepo {
 
 	public async findOneUser(email: string): Promise<User | null> {
 		const document = await this.schema.findOne({ email: email });
-		if (document === null) {
+		if (document == null) {
 			return null;
 		}
 
@@ -52,7 +52,7 @@ export default class UserRepo implements IUserRepo {
 			}
 		);
 
-		if (document === null) {
+		if (document == null) {
 			return false;
 		}
 
@@ -68,7 +68,7 @@ export default class UserRepo implements IUserRepo {
 			}
 		);
 
-		if (document === null) {
+		if (document == null) {
 			return false;
 		}
 
@@ -77,7 +77,7 @@ export default class UserRepo implements IUserRepo {
 
 	public async deleteUser(email: string): Promise<boolean> {
 		const document = await this.schema.findOneAndDelete({ email: email });
-		if (document === null) {
+		if (document == null) {
 			return false;
 		}
 

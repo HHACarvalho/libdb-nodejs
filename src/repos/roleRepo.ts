@@ -1,4 +1,4 @@
-import { TYPES } from '../../config';
+import config from '../../config';
 import IRoleRepo from './IRepos/IRoleRepo';
 import { IRolePersistence } from '../schemas/roleSchema';
 import Role from '../domain/role';
@@ -9,12 +9,12 @@ import { Model } from 'mongoose';
 
 @injectable()
 export default class RoleRepo implements IRoleRepo {
-	constructor(@inject(TYPES.IRoleSchema) private schema: Model<IRolePersistence>) {}
+	constructor(@inject(config.TYPES.IRoleSchema) private schema: Model<IRolePersistence>) {}
 
 	public async createRole(role: Role): Promise<boolean> {
 		const persistence = RoleDTO.persistence(role);
 		const document = await this.schema.create(persistence);
-		if (document === null) {
+		if (document == null) {
 			return false;
 		}
 
@@ -33,7 +33,7 @@ export default class RoleRepo implements IRoleRepo {
 
 	public async findOneRole(roleName: string): Promise<Role | null> {
 		const document = await this.schema.findOne({ name: roleName });
-		if (document === null) {
+		if (document == null) {
 			return null;
 		}
 
@@ -46,7 +46,7 @@ export default class RoleRepo implements IRoleRepo {
 			{ name: role.name, permissions: role.permissions, $inc: { _version: 1 } }
 		);
 
-		if (document === null) {
+		if (document == null) {
 			return false;
 		}
 
@@ -55,7 +55,7 @@ export default class RoleRepo implements IRoleRepo {
 
 	public async deleteRole(roleName: string): Promise<boolean> {
 		const document = await this.schema.findOneAndDelete({ name: roleName });
-		if (document === null) {
+		if (document == null) {
 			return false;
 		}
 

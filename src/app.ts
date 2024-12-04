@@ -14,7 +14,7 @@ import { connect } from 'mongoose';
 
 async function startServer() {
 	// Connect to the MongoDB database
-	await connect(config.databaseURL);
+	await connect(config.DB_URL);
 
 	const app = express();
 
@@ -38,8 +38,8 @@ async function startServer() {
 	});
 
 	app
-		.listen(config.apiPort, () => {
-			Logger.info(`Now listening on: http://localhost:${config.apiPort}`);
+		.listen(config.API_PORT, () => {
+			Logger.info(`Now listening on: http://localhost:${config.API_PORT}`);
 		})
 		.on('error', (err) => {
 			Logger.error(err);

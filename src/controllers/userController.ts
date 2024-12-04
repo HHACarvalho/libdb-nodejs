@@ -1,4 +1,4 @@
-import { TYPES } from '../../config';
+import config from '../../config';
 import CoreController from './coreController';
 import IUserService from '../services/IServices/IUserService';
 import { userSignUpBody, userLoginBody } from '../dtos/userDTO';
@@ -8,7 +8,7 @@ import { inject, injectable } from 'inversify';
 
 @injectable()
 export default class UserController extends CoreController {
-	constructor(@inject(TYPES.IUserService) private userService: IUserService) {
+	constructor(@inject(config.TYPES.IUserService) private userService: IUserService) {
 		super();
 	}
 
