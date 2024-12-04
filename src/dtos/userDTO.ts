@@ -8,12 +8,12 @@ export const userSignUpBody = z.object({
 	password: z.string().min(2).max(32),
 	firstName: z
 		.string()
-		.regex(/^[a-zA-Z]+$/)
+		.regex(/^\p{L}+$/u)
 		.min(2)
 		.max(32),
 	lastName: z
 		.string()
-		.regex(/^[a-zA-Z]+$/)
+		.regex(/^\p{L}+$/u)
 		.min(2)
 		.max(32)
 });
