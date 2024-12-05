@@ -22,7 +22,14 @@ export const CONFIG = {
 	JWT_REFRESH_SECRET: process.env.JWT_SECRET_REFRESH || '',
 
 	// Default user role for new users
-	DEFAULT_ROLE: 'User',
+	DEFAULT_ROLE: 'User'
+};
+
+// Role permissions
+export enum PERMISSIONS {
+	manageRoles,
+	manageUsers
+}
 
 // Types for dependency injection
 export const TYPES = {
