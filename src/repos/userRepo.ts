@@ -1,4 +1,4 @@
-import config from '../../config';
+import { TYPES } from '../../config';
 import IUserRepo from './IRepos/IUserRepo';
 import { IUserPersistence } from '../schemas/userSchema';
 import User from '../domain/user';
@@ -9,7 +9,7 @@ import { Model } from 'mongoose';
 
 @injectable()
 export default class UserRepo implements IUserRepo {
-	constructor(@inject(config.TYPES.IUserSchema) private schema: Model<IUserPersistence>) {}
+	constructor(@inject(TYPES.IUserSchema) private schema: Model<IUserPersistence>) {}
 
 	public async createUser(user: User): Promise<boolean> {
 		const persistence = UserDTO.persistence(user);

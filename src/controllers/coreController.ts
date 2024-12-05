@@ -1,4 +1,4 @@
-import config from '../../config';
+import { CONFIG } from '../../config';
 import Result from '../core/result';
 
 import { Response } from 'express';
@@ -15,7 +15,7 @@ export default abstract class CoreController {
 				if (result.value == null) {
 					res.send();
 				} else if (typeof result.value === 'string') {
-					res.cookie('token', result.value, { httpOnly: true, maxAge: config.JWT_DURATION * 1000 });
+					res.cookie('token', result.value, { httpOnly: true, maxAge: CONFIG.JWT_DURATION * 1000 });
 					res.send();
 				} else {
 					res.json(result.value);

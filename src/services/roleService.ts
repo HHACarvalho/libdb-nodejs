@@ -1,4 +1,4 @@
-import config from '../../config';
+import { TYPES } from '../../config';
 import IRoleService from './IServices/IRoleService';
 import IRoleRepo from '../repos/IRepos/IRoleRepo';
 import Role from '../domain/role';
@@ -9,7 +9,7 @@ import { inject, injectable } from 'inversify';
 
 @injectable()
 export default class RoleService implements IRoleService {
-	constructor(@inject(config.TYPES.IRoleRepo) private repoInstance: IRoleRepo) {}
+	constructor(@inject(TYPES.IRoleRepo) private repoInstance: IRoleRepo) {}
 
 	public async createRole(reqBody: any): Promise<Result> {
 		const roleExists = await this.repoInstance.findOneRole(reqBody.name);

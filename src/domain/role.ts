@@ -14,7 +14,7 @@ export default class Role extends Entity<RoleProps> {
 		return this._props.name;
 	}
 
-	get permissions(): any {
+	get permissions(): string[] {
 		return this._props.permissions;
 	}
 
@@ -22,7 +22,7 @@ export default class Role extends Entity<RoleProps> {
 		this._props.name = value;
 	}
 
-	set permissions(value: any) {
+	set permissions(value: string[]) {
 		this._props.permissions = value;
 	}
 

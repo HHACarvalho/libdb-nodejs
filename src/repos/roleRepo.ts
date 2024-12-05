@@ -1,4 +1,4 @@
-import config from '../../config';
+import { TYPES } from '../../config';
 import IRoleRepo from './IRepos/IRoleRepo';
 import { IRolePersistence } from '../schemas/roleSchema';
 import Role from '../domain/role';
@@ -9,7 +9,7 @@ import { Model } from 'mongoose';
 
 @injectable()
 export default class RoleRepo implements IRoleRepo {
-	constructor(@inject(config.TYPES.IRoleSchema) private schema: Model<IRolePersistence>) {}
+	constructor(@inject(TYPES.IRoleSchema) private schema: Model<IRolePersistence>) {}
 
 	public async createRole(role: Role): Promise<boolean> {
 		const persistence = RoleDTO.persistence(role);

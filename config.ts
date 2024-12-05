@@ -1,8 +1,8 @@
 import { config } from 'dotenv';
 
 config();
-
-export default {
+// API configuration
+export const CONFIG = {
 	// Port used by the API
 	API_PORT: 3000,
 
@@ -24,13 +24,12 @@ export default {
 	// Default user role for new users
 	DEFAULT_ROLE: 'User',
 
-	// Types for dependency injection
-	TYPES: {
-		IRoleSchema: Symbol.for('IRoleSchema'),
-		IRoleRepo: Symbol.for('IRoleRepo'),
-		IRoleService: Symbol.for('IRoleService'),
-		IUserSchema: Symbol.for('IUserSchema'),
-		IUserRepo: Symbol.for('IUserRepo'),
-		IUserService: Symbol.for('IUserService')
-	}
+// Types for dependency injection
+export const TYPES = {
+	IRoleSchema: Symbol.for('IRoleSchema'),
+	IRoleRepo: Symbol.for('IRoleRepo'),
+	IRoleService: Symbol.for('IRoleService'),
+	IUserSchema: Symbol.for('IUserSchema'),
+	IUserRepo: Symbol.for('IUserRepo'),
+	IUserService: Symbol.for('IUserService')
 };

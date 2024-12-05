@@ -1,4 +1,4 @@
-import config from '../../config';
+import { CONFIG, TYPES } from '../../config';
 import IUserService from './IServices/IUserService';
 import IUserRepo from '../repos/IRepos/IUserRepo';
 import IRoleRepo from '../repos/IRepos/IRoleRepo';
@@ -13,8 +13,8 @@ const { sign } = require('jsonwebtoken');
 @injectable()
 export default class UserService implements IUserService {
 	constructor(
-		@inject(config.TYPES.IUserRepo) private userRepo: IUserRepo,
-		@inject(config.TYPES.IRoleRepo) private roleRepo: IRoleRepo
+		@inject(TYPES.IUserRepo) private userRepo: IUserRepo,
+		@inject(TYPES.IRoleRepo) private roleRepo: IRoleRepo
 	) {}
 
 	public async signUp(reqBody: any): Promise<Result> {
@@ -30,7 +30,7 @@ export default class UserService implements IUserService {
 			password: hashedPassword,
 			firstName: reqBody.firstName,
 			lastName: reqBody.lastName,
-			role: 'User' //TODO: Change to ID
+			role: 'User' //TODO: Change to Id
 		});
 
 		await this.userRepo.createUser(user);
@@ -113,8 +113,8 @@ export default class UserService implements IUserService {
 			return Result.fail('No user with the email "' + email + '" was found');
 		}
 
-		if (roleName !== config.DEFAULT_ROLE) {
-			//TODO: defaultRole???
+		//TODO: Change to Id
+		if (roleName !== user.role) {
 			const roleExists = await this.roleRepo.findOneRole(roleName);
 			if (!roleExists) {
 				return Result.fail('No role with the name "' + roleName + '" was found');
@@ -137,6 +137,6 @@ export default class UserService implements IUserService {
 	}
 
 	private signToken(data: any): string {
-		return sign(data, config.JWT_ACCESS_SECRET, { expiresIn: config.JWT_DURATION });
+		return sign(data, CONFIG.JWT_ACCESS_SECRET, { expiresIn: CONFIG.JWT_DURATION });
 	}
 }

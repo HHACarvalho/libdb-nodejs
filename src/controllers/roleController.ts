@@ -1,4 +1,4 @@
-import config from '../../config';
+import { PERMISSIONS, TYPES } from '../../config';
 import CoreController from './coreController';
 import IRoleService from '../services/IServices/IRoleService';
 import { roleCreateBody } from '../dtos/roleDTO';
@@ -10,7 +10,7 @@ import { inject, injectable } from 'inversify';
 export default class RoleController extends CoreController {
 	private roleService: IRoleService;
 
-	constructor(@inject(config.TYPES.IRoleService) roleService: IRoleService) {
+	constructor(@inject(TYPES.IRoleService) roleService: IRoleService) {
 		super();
 		this.roleService = roleService;
 	}
