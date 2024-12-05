@@ -1,6 +1,8 @@
 import { PERMISSIONS, TYPES } from '../../config';
 import CoreController from './coreController';
 import IUserService from '../services/IServices/IUserService';
+import Auth from '../core/middlewares/authentication';
+import Zod from '../core/middlewares/validation';
 import { userSignUpBody, userLoginBody } from '../dtos/userDTO';
 
 import { Request, Response, Router } from 'express';
@@ -15,25 +17,25 @@ export default class UserController extends CoreController {
 	public registerRoutes(): Router {
 		const router = Router();
 
-		router.post('/signup', this.signup.bind(this));
-		router.post('/login', this.login.bind(this));
+		router.post('/signup', Zod(userSignUpBody), this.signup.bind(this));
+		router.post('/login', Zod(userLoginBody), this.login.bind(this));
 		router.get('/', this.findAllUsers.bind(this));
 		router.get('/search', this.findUsers.bind(this));
 		router.get('/:email', this.findOneUser.bind(this));
-		router.put('/profile/:email', this.updateUserProfile.bind(this));
-		router.put('/role', this.updateUserRole.bind(this));
-		router.delete('/:email', this.deleteUser.bind(this));
+		router.put('/profile/:email', Zod(userSignUpBody), this.updateUserProfile.bind(this));
+		router.put('/role', Auth([PERMISSIONS.manageUsers]), this.updateUserRole.bind(this));
+		router.delete('/:email', Auth([PERMISSIONS.manageUsers]), this.deleteUser.bind(this));
 
 		return router;
 	}
 
 	private async signup(req: Request, res: Response): Promise<void> {
-		const data = userSignUpBody.parse(req.body);
+		const data = req.body;
 		await this.handleServiceCall(() => this.userService.signUp(data), res);
 	}
 
 	private async login(req: Request, res: Response): Promise<void> {
-		const data = userLoginBody.parse(req.body);
+		const data = req.body;
 		await this.handleServiceCall(() => this.userService.login(data), res);
 	}
 
@@ -53,7 +55,7 @@ export default class UserController extends CoreController {
 
 	private async updateUserProfile(req: Request, res: Response): Promise<void> {
 		const { email } = req.params;
-		const data = userSignUpBody.parse(req.body);
+		const data = req.body;
 		await this.handleServiceCall(() => this.userService.updateProfile(email, data), res);
 	}
 

