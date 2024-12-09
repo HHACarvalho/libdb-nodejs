@@ -26,9 +26,10 @@ export const userLoginBody = z.object({
 export class UserDTO {
 	public static simple(user: User): any {
 		return {
+			id: user.id.getValue(),
 			firstName: user.firstName,
 			lastName: user.lastName,
-			role: user.role
+			role: user.roleId
 		};
 	}
 
@@ -38,7 +39,7 @@ export class UserDTO {
 			email: user.email,
 			firstName: user.firstName,
 			lastName: user.lastName,
-			role: user.role
+			role: user.roleId
 		};
 	}
 
@@ -49,7 +50,7 @@ export class UserDTO {
 			password: user.password,
 			firstName: user.firstName,
 			lastName: user.lastName,
-			role: user.role
+			roleId: user.roleId
 		} as IUserPersistence;
 	}
 }

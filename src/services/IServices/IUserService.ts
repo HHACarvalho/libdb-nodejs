@@ -5,15 +5,15 @@ export default interface IUserService {
 
 	login(reqBody: any): Promise<Result>;
 
-	findAllUsers(): Promise<Result>;
+	findAllUsers(pageNumber: number, pageSize: number): Promise<Result>;
 
-	findUsers(email: string): Promise<Result>;
+	findUsers(pageNumber: number, pageSize: number, firstName: string, lastName: string, email: string): Promise<Result>;
 
-	findOneUser(email: string): Promise<Result>;
+	findOneUser(id: string): Promise<Result>;
 
-	updateProfile(email: string, reqBody: any): Promise<Result>;
+	updateProfile(id: string, reqBody: any): Promise<Result>;
 
-	updateUserRole(email: string, roleName: string): Promise<Result>;
+	updateUserRole(userId: string, roleId: string): Promise<Result>;
 
-	deleteUser(email: string): Promise<Result>;
+	deleteUser(id: string): Promise<Result>;
 }

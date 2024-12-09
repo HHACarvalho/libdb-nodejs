@@ -19,12 +19,13 @@ export default class UserController extends CoreController {
 
 		router.post('/signup', Zod(userSignUpBody), this.signup.bind(this));
 		router.post('/login', Zod(userLoginBody), this.login.bind(this));
-		router.get('/', this.findAllUsers.bind(this));
-		router.get('/search', this.findUsers.bind(this));
-		router.get('/:email', this.findOneUser.bind(this));
-		router.put('/profile/:email', Zod(userSignUpBody), this.updateUserProfile.bind(this));
-		router.put('/role', Auth([PERMISSIONS.manageUsers]), this.updateUserRole.bind(this));
-		router.delete('/:email', Auth([PERMISSIONS.manageUsers]), this.deleteUser.bind(this));
+		router.get('/', this.findAll.bind(this));
+		router.get('/search', this.find.bind(this));
+		router.get('/:id', this.findOne.bind(this));
+		router.put('/profile', Auth(), Zod(userSignUpBody), this.updateProfile.bind(this));
+		router.put('/role', Auth([PERMISSIONS.manageUsers]), this.updateRole.bind(this));
+		router.delete('/', Auth(), this.deleteCurrent.bind(this));
+		router.delete('/:id', Auth([PERMISSIONS.manageUsers]), this.delete.bind(this));
 
 		return router;
 	}
@@ -39,34 +40,48 @@ export default class UserController extends CoreController {
 		await this.handleServiceCall(() => this.userService.login(data), res);
 	}
 
-	private async findAllUsers(req: Request, res: Response): Promise<void> {
-		await this.handleServiceCall(() => this.userService.findAllUsers(), res);
+	private async findAll(req: Request, res: Response): Promise<void> {
+		const pageNumber = Number(req.query.pageNumber as string) || 1;
+		const pageSize = Number(req.query.pageSize as string) || 16;
+		await this.handleServiceCall(() => this.userService.findAllUsers(pageNumber, pageSize), res);
 	}
 
-	private async findUsers(req: Request, res: Response): Promise<void> {
+	private async find(req: Request, res: Response): Promise<void> {
+		const pageNumber = Number(req.query.pageNumber as string) || 1;
+		const pageSize = Number(req.query.pageSize as string) || 16;
+		const firstName = (req.query.firstName as string) || '';
+		const lastName = (req.query.lastName as string) || '';
 		const email = (req.query.email as string) || '';
-		await this.handleServiceCall(() => this.userService.findUsers(email), res);
+		await this.handleServiceCall(
+			() => this.userService.findUsers(pageNumber, pageSize, firstName, lastName, email),
+			res
+		);
 	}
 
-	private async findOneUser(req: Request, res: Response): Promise<void> {
-		const { email } = req.params;
-		await this.handleServiceCall(() => this.userService.findOneUser(email), res);
+	private async findOne(req: Request, res: Response): Promise<void> {
+		const { id } = req.params;
+		await this.handleServiceCall(() => this.userService.findOneUser(id), res);
 	}
 
-	private async updateUserProfile(req: Request, res: Response): Promise<void> {
-		const { email } = req.params;
+	private async updateProfile(req: Request, res: Response): Promise<void> {
+		const id = req.token.id;
 		const data = req.body;
-		await this.handleServiceCall(() => this.userService.updateProfile(email, data), res);
+		await this.handleServiceCall(() => this.userService.updateProfile(id, data), res);
 	}
 
-	private async updateUserRole(req: Request, res: Response): Promise<void> {
-		const email = (req.query.email as string) || '';
-		const role = (req.query.role as string) || '';
-		await this.handleServiceCall(() => this.userService.updateUserRole(email, role), res);
+	private async updateRole(req: Request, res: Response): Promise<void> {
+		const userId = (req.query.userId as string) || '';
+		const roleId = (req.query.roleId as string) || '';
+		await this.handleServiceCall(() => this.userService.updateUserRole(userId, roleId), res);
 	}
 
-	private async deleteUser(req: Request, res: Response): Promise<void> {
-		const { email } = req.params;
-		await this.handleServiceCall(() => this.userService.deleteUser(email), res);
+	private async deleteCurrent(req: Request, res: Response): Promise<void> {
+		const id = req.token.id;
+		await this.handleServiceCall(() => this.userService.deleteUser(id), res);
+	}
+
+	private async delete(req: Request, res: Response): Promise<void> {
+		const { id } = req.params;
+		await this.handleServiceCall(() => this.userService.deleteUser(id), res);
 	}
 }

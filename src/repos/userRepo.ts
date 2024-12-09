@@ -29,12 +29,16 @@ export default class UserRepo implements IUserRepo {
 		return documents.map((e) => User.restore(e));
 	}
 
-	public async findUsers(email: string): Promise<User[]> {
-		const documents = await this.schema.find({ email: { $regex: email, $options: 'i' } });
-		return documents.map((e) => User.restore(e));
+	public async findOneUser(id: string): Promise<User | null> {
+		const document = await this.schema.findOne({ _id: id });
+		if (document == null) {
+			return null;
+		}
+
+		return User.restore(document);
 	}
 
-	public async findOneUser(email: string): Promise<User | null> {
+	public async findOneUserByEmail(email: string): Promise<User | null> {
 		const document = await this.schema.findOne({ email: email });
 		if (document == null) {
 			return null;
@@ -66,7 +70,7 @@ export default class UserRepo implements IUserRepo {
 		const document = await this.schema.findOneAndUpdate(
 			{ _id: user.id.getValue() },
 			{
-				role: user.role,
+				roleId: user.roleId,
 				$inc: { _version: 1 }
 			}
 		);
@@ -78,8 +82,8 @@ export default class UserRepo implements IUserRepo {
 		return true;
 	}
 
-	public async deleteUser(email: string): Promise<boolean> {
-		const document = await this.schema.findOneAndDelete({ email: email });
+	public async deleteUser(id: string): Promise<boolean> {
+		const document = await this.schema.findOneAndDelete({ _id: id });
 		if (document == null) {
 			return false;
 		}

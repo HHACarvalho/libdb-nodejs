@@ -6,7 +6,7 @@ export interface IUserPersistence extends Document {
 	password: string;
 	firstName: string;
 	lastName: string;
-	role: string;
+	roleId: string;
 }
 
 const userSchema = new Schema<IUserPersistence>(
@@ -16,7 +16,7 @@ const userSchema = new Schema<IUserPersistence>(
 		password: String,
 		firstName: String,
 		lastName: String,
-		role: String
+		roleId: String
 	},
 	{
 		versionKey: '_version',

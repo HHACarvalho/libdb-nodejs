@@ -9,7 +9,7 @@ interface UserProps {
 	password: string;
 	firstName: string;
 	lastName: string;
-	role: string;
+	roleId: string;
 }
 
 export default class User extends Entity<UserProps> {
@@ -29,8 +29,8 @@ export default class User extends Entity<UserProps> {
 		return this._props.lastName;
 	}
 
-	get role(): string {
-		return this._props.role;
+	get roleId(): string {
+		return this._props.roleId;
 	}
 
 	set email(value: string) {
@@ -49,8 +49,8 @@ export default class User extends Entity<UserProps> {
 		this._props.lastName = value;
 	}
 
-	set role(value: string) {
-		this._props.role = value;
+	set roleId(value: string) {
+		this._props.roleId = value;
 	}
 
 	public static create(props: UserProps, id?: EntityID): User {
@@ -64,7 +64,7 @@ export default class User extends Entity<UserProps> {
 				password: schema.password,
 				firstName: schema.firstName,
 				lastName: schema.lastName,
-				role: schema.role
+				roleId: schema.roleId
 			},
 			new EntityID(schema._id)
 		);
