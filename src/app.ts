@@ -12,10 +12,8 @@ const cors = require('cors');
 import express from 'express';
 import { connect } from 'mongoose';
 
-async function startServer() {
-	// Connect to the MongoDB database
-	await connect(CONFIG.DB_URL);
-
+// Connect to the MongoDB database
+connect(CONFIG.DB_URL).then(() => {
 	const app = express();
 
 	// Status endpoint
@@ -38,7 +36,7 @@ async function startServer() {
 		res.sendStatus(404);
 	});
 
-	app
+	const server = app
 		.listen(CONFIG.API_PORT, () => {
 			Logger.info(`Now listening on: http://localhost:${CONFIG.API_PORT}`);
 		})
@@ -46,6 +44,13 @@ async function startServer() {
 			Logger.error(err);
 			process.exit(1);
 		});
-}
 
-startServer();
+	function shutdown() {
+		server.close(() => {
+			Logger.info('Server closed.');
+			process.exit(0);
+		});
+	}
+
+	process.on('SIGTERM', shutdown);
+});
