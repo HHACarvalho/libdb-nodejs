@@ -21,8 +21,11 @@ export default class UserRepo implements IUserRepo {
 		return true;
 	}
 
-	public async findAllUsers(): Promise<User[]> {
-		const documents = await this.schema.find();
+	public async findUsers(pageNumber: number, pageSize: number, queryFilter?: any): Promise<User[]> {
+		const documents = await this.schema
+			.find(queryFilter ? queryFilter : null)
+			.skip((pageNumber - 1) * pageSize)
+			.limit(pageSize);
 		return documents.map((e) => User.restore(e));
 	}
 
