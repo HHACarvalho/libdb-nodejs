@@ -5,11 +5,9 @@ export default interface IRoleService {
 
 	findAllRoles(): Promise<Result>;
 
-	findRoles(roleName: string): Promise<Result>;
+	findOneRole(id: string): Promise<Result>;
 
-	findOneRole(roleName: string): Promise<Result>;
+	updateRole(id: string, reqBody: any): Promise<Result>;
 
-	updateRole(roleName: string, reqBody: any): Promise<Result>;
-
-	deleteRole(roleName: string): Promise<Result>;
+	deleteRole(id: string): Promise<Result>;
 }

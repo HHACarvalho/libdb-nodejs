@@ -38,15 +38,15 @@ Retrieves a list of all roles.
 ```json
 [
     {
+        "id": "29680e14-d994-46d5-ba03-2c7c82445dd5",
         "name": "User",
         "permissions": []
     },
     {
+        "id": "5f7579fe-dc3b-4508-a974-a92d4b86b24b",
         "name": "Mod",
-        "permissions": [
-            "manageRoles"
-        ]
-    }
+        "permissions": ["manageRoles"]
+    },
 	...
 ]
 ```
@@ -79,17 +79,22 @@ Otherwise, the code 404 and an error message.
 
 ---
 
-### Update role - [PUT]() /role
+### Update role - [PUT]() /role/_id_
 
 Updates an existing role.
 
 **Pre-requisites:** A successful login and sufficient permissions.
 
+**Parameters:**
+
+| Parameter | Type   | Default value |
+| :-------- | :----- | :------------ |
+| id        | String | null          |
+
 **Body:**
 
 ```json
 {
-	"id": "59f965be-5681-4538-9c95-ce7f6d93fda1",
 	"name": "Admin",
 	"permissions": ["manageRoles", "manageUsers"]
 }

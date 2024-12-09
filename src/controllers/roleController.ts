@@ -22,10 +22,9 @@ export default class RoleController extends CoreController {
 
 		router.post('/', Auth([PERMISSIONS.manageRoles]), Zod(roleCreateBody), this.create.bind(this));
 		router.get('/', this.findAll.bind(this));
-		router.get('/search', this.find.bind(this));
-		router.get('/:roleName', this.findOne.bind(this));
-		router.put('/:roleName', Auth([PERMISSIONS.manageRoles]), Zod(roleCreateBody), this.update.bind(this));
-		router.delete('/:roleName', Auth([PERMISSIONS.manageRoles]), this.delete.bind(this));
+		router.get('/:id', this.findOne.bind(this));
+		router.put('/:id', Auth([PERMISSIONS.manageRoles]), Zod(roleCreateBody), this.update.bind(this));
+		router.delete('/:id', Auth([PERMISSIONS.manageRoles]), this.delete.bind(this));
 
 		return router;
 	}
@@ -39,24 +38,19 @@ export default class RoleController extends CoreController {
 		await this.handleServiceCall(() => this.roleService.findAllRoles(), res);
 	}
 
-	private async find(req: Request, res: Response): Promise<void> {
-		const roleName = (req.query.roleName as string) || '';
-		await this.handleServiceCall(() => this.roleService.findRoles(roleName), res);
-	}
-
 	private async findOne(req: Request, res: Response): Promise<void> {
-		const { roleName } = req.params;
-		await this.handleServiceCall(() => this.roleService.findOneRole(roleName), res);
+		const { id } = req.params;
+		await this.handleServiceCall(() => this.roleService.findOneRole(id), res);
 	}
 
 	private async update(req: Request, res: Response): Promise<void> {
-		const { roleName } = req.params;
+		const { id } = req.params;
 		const data = req.body;
-		await this.handleServiceCall(() => this.roleService.updateRole(roleName, data), res);
+		await this.handleServiceCall(() => this.roleService.updateRole(id, data), res);
 	}
 
 	private async delete(req: Request, res: Response): Promise<void> {
-		const { roleName } = req.params;
-		await this.handleServiceCall(() => this.roleService.deleteRole(roleName), res);
+		const { id } = req.params;
+		await this.handleServiceCall(() => this.roleService.deleteRole(id), res);
 	}
 }

@@ -1,10 +1,11 @@
 import { config } from 'dotenv';
 
 config();
+
 // API configuration
 export const CONFIG = {
 	// Port used by the API
-	API_PORT: 3000,
+	API_PORT: 5000,
 
 	// MongoDB's connection string
 	DB_URL:

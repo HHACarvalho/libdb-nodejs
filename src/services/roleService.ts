@@ -12,7 +12,7 @@ export default class RoleService implements IRoleService {
 	constructor(@inject(TYPES.IRoleRepo) private repoInstance: IRoleRepo) {}
 
 	public async createRole(reqBody: any): Promise<Result> {
-		const roleExists = await this.repoInstance.findOneRole(reqBody.name);
+		const roleExists = await this.repoInstance.findOneRoleByName(reqBody.name);
 		if (roleExists) {
 			return Result.fail('Role with the name "' + reqBody.name + '" already exists');
 		}
@@ -36,35 +36,26 @@ export default class RoleService implements IRoleService {
 			return Result.fail('There are no roles');
 		}
 
-		return Result.ok(roleList.map((role) => RoleDTO.simple(role)));
+		return Result.ok(roleList.map((role) => RoleDTO.detailed(role)));
 	}
 
-	public async findRoles(roleName: string): Promise<Result> {
-		const roleList = await this.repoInstance.findRoles(roleName);
-		if (roleList.length === 0) {
-			return Result.fail('No roles matching the criteria were found');
-		}
-
-		return Result.ok(roleList.map((role) => RoleDTO.simple(role)));
-	}
-
-	public async findOneRole(roleName: string): Promise<Result> {
-		const role = await this.repoInstance.findOneRole(roleName);
+	public async findOneRole(id: string): Promise<Result> {
+		const role = await this.repoInstance.findOneRole(id);
 		if (!role) {
-			return Result.fail('No role with the name "' + roleName + '" was found');
+			return Result.fail('No role with the id "' + id + '" was found');
 		}
 
 		return Result.ok(RoleDTO.detailed(role));
 	}
 
-	public async updateRole(roleName: string, reqBody: any): Promise<Result> {
-		const role = await this.repoInstance.findOneRole(roleName);
+	public async updateRole(id: string, reqBody: any): Promise<Result> {
+		const role = await this.repoInstance.findOneRole(id);
 		if (!role) {
-			return Result.fail('No role with the name "' + roleName + '" was found');
+			return Result.fail('No role with the id "' + id + '" was found');
 		}
 
-		if (roleName !== reqBody.name) {
-			const existingRole = await this.repoInstance.findOneRole(reqBody.name);
+		if (role.name !== reqBody.name) {
+			const existingRole = await this.repoInstance.findOneRoleByName(reqBody.name);
 			if (existingRole) {
 				return Result.fail('Role with the name "' + reqBody.name + '" already exists');
 			}
@@ -73,17 +64,17 @@ export default class RoleService implements IRoleService {
 
 		role.permissions = reqBody.permissions;
 
-		const bResult = await this.repoInstance.updateRole(roleName, role);
+		const bResult = await this.repoInstance.updateRole(id, role);
 		if (!bResult) {
 			return Result.fail('Failed to update role');
 		}
 		return Result.ok(null);
 	}
 
-	public async deleteRole(roleName: string): Promise<Result> {
-		const bResult = await this.repoInstance.deleteRole(roleName);
+	public async deleteRole(id: string): Promise<Result> {
+		const bResult = await this.repoInstance.deleteRole(id);
 		if (!bResult) {
-			return Result.fail('No role with the name "' + roleName + '" was found');
+			return Result.fail('No role with the id "' + id + '" was found');
 		}
 
 		return Result.ok(null);

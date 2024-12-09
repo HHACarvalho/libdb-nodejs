@@ -9,13 +9,6 @@ export const roleCreateBody = z.object({
 });
 
 export class RoleDTO {
-	public static simple(role: Role): any {
-		return {
-			name: role.name,
-			permissions: role.permissions
-		};
-	}
-
 	public static detailed(role: Role): any {
 		return {
 			id: role.id.getValue(),

@@ -5,11 +5,11 @@ export default interface IRoleRepo {
 
 	findAllRoles(): Promise<Role[]>;
 
-	findRoles(roleName: string): Promise<Role[]>;
+	findOneRole(id: string): Promise<Role | null>;
 
-	findOneRole(roleName: string): Promise<Role | null>;
+	findOneRoleByName(name: string): Promise<Role | null>;
 
-	updateRole(roleName: string, role: Role): Promise<boolean>;
+	updateRole(id: string, role: Role): Promise<boolean>;
 
-	deleteRole(roleName: string): Promise<boolean>;
+	deleteRole(id: string): Promise<boolean>;
 }

@@ -26,13 +26,8 @@ export default class RoleRepo implements IRoleRepo {
 		return documents.map((e) => Role.restore(e));
 	}
 
-	public async findRoles(roleName: string): Promise<Role[]> {
-		const documents = await this.schema.find({ name: { $regex: roleName, $options: 'i' } });
-		return documents.map((e) => Role.restore(e));
-	}
-
-	public async findOneRole(roleName: string): Promise<Role | null> {
-		const document = await this.schema.findOne({ name: roleName });
+	public async findOneRole(id: string): Promise<Role | null> {
+		const document = await this.schema.findOne({ _id: id });
 		if (document == null) {
 			return null;
 		}
@@ -40,9 +35,18 @@ export default class RoleRepo implements IRoleRepo {
 		return Role.restore(document);
 	}
 
-	public async updateRole(roleName: string, role: Role): Promise<boolean> {
+	public async findOneRoleByName(name: string): Promise<Role | null> {
+		const document = await this.schema.findOne({ name: name });
+		if (document == null) {
+			return null;
+		}
+
+		return Role.restore(document);
+	}
+
+	public async updateRole(id: string, role: Role): Promise<boolean> {
 		const document = await this.schema.findOneAndUpdate(
-			{ name: roleName },
+			{ _id: id },
 			{ name: role.name, permissions: role.permissions, $inc: { _version: 1 } }
 		);
 
@@ -53,8 +57,8 @@ export default class RoleRepo implements IRoleRepo {
 		return true;
 	}
 
-	public async deleteRole(roleName: string): Promise<boolean> {
-		const document = await this.schema.findOneAndDelete({ name: roleName });
+	public async deleteRole(id: string): Promise<boolean> {
+		const document = await this.schema.findOneAndDelete({ _id: id });
 		if (document == null) {
 			return false;
 		}
