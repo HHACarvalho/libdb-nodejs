@@ -16,9 +16,8 @@ import { connect } from 'mongoose';
 connect(CONFIG.DB_URL).then(() => {
 	const app = express();
 
-	// Status endpoint
-	app.get('/status', (req, res) => {
-		res.cookie('backdoor', true, { httpOnly: true, maxAge: 60000 });
+	// Health endpoint
+	app.get('/health', (req, res) => {
 		res.sendStatus(200);
 	});
 
