@@ -1,9 +1,10 @@
 import { CONFIG, PERMISSIONS, TYPES } from '../../../config';
+import container from '../dependencies';
+import IUserRepo from '../../repos/IRepos/IUserRepo';
 import IRoleRepo from '../../repos/IRepos/IRoleRepo';
 
 import { Request, Response, NextFunction } from 'express';
 const { verify } = require('jsonwebtoken');
-import container from '../dependencies';
 
 export default function authentication(requiredPermissions?: number[]) {
 	return async function (req: Request, res: Response, next: NextFunction) {
@@ -34,20 +35,27 @@ function validateToken(req: Request, res: Response, token: string): boolean {
 		req.token = verify(token, CONFIG.JWT_ACCESS_SECRET);
 		return true;
 	} catch (error) {
+		console.error(error);
 		res.status(401).json({ error: 'Invalid token' });
 		return false;
 	}
 }
 
-async function validatePermissions(res: Response, roleName: string, requiredPermissions: number[]): Promise<boolean> {
-	if (roleName === CONFIG.DEFAULT_ROLE) {
-		res.status(403).json({ error: 'Insufficient permissions' });
-		return false;
+async function validatePermissions(req: Request, res: Response, requiredPermissions?: number[]): Promise<boolean> {
+	if (!requiredPermissions || (requiredPermissions && requiredPermissions.length === 0)) {
+		return true;
 	}
 
 	try {
+		const userRepo = container.get<IUserRepo>(TYPES.IUserRepo);
+		const user = await userRepo.findOneUser(req.token.id);
+		if (user == null) {
+			res.status(403).json({ error: 'Invalid user' });
+			return false;
+		}
+
 		const roleRepo = container.get<IRoleRepo>(TYPES.IRoleRepo);
-		const role = await roleRepo.findOneRole(roleName);
+		const role = await roleRepo.findOneRole(user.roleId);
 		if (role == null) {
 			res.status(401).json({ error: 'Invalid role' });
 			return false;
