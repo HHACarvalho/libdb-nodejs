@@ -14,9 +14,10 @@ export default abstract class CoreController {
 			} else {
 				if (result.value == null) {
 					res.send();
-				} else if (typeof result.value === 'string') {
-					res.cookie('token', result.value, { httpOnly: true, maxAge: CONFIG.JWT_DURATION * 1000 });
-					res.send();
+				} else if (result.value.set_token) {
+					res.cookie('token', result.value.set_token, { httpOnly: true, maxAge: CONFIG.JWT_DURATION * 1000 }).send();
+				} else if (result.value.clear_token) {
+					res.clearCookie('token').send();
 				} else {
 					res.json(result.value);
 				}

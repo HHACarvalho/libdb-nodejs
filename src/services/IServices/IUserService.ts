@@ -15,5 +15,7 @@ export default interface IUserService {
 
 	updateUserRole(userId: string, roleId: string): Promise<Result>;
 
+	deleteCurrentUser(id: string): Promise<Result>;
+
 	deleteUser(id: string): Promise<Result>;
 }

@@ -41,7 +41,7 @@ export default class UserService implements IUserService {
 		await this.userRepo.createUser(user);
 
 		const token = this.signToken(UserDTO.detailed(user));
-		return Result.ok(token, 201);
+		return Result.ok({ set_token: token }, 201);
 	}
 
 	public async login(reqBody: any): Promise<Result> {
@@ -56,7 +56,7 @@ export default class UserService implements IUserService {
 		}
 
 		const token = this.signToken(UserDTO.detailed(user));
-		return Result.ok(token);
+		return Result.ok({ set_token: token });
 	}
 
 	public async findAllUsers(pageNumber: number, pageSize: number): Promise<Result> {
@@ -120,7 +120,7 @@ export default class UserService implements IUserService {
 		await this.userRepo.updateUserProfile(user);
 
 		const token = this.signToken(UserDTO.detailed(user));
-		return Result.ok(token);
+		return Result.ok({ set_token: token });
 	}
 
 	public async updateUserRole(userId: string, roleId: string): Promise<Result> {
@@ -139,6 +139,15 @@ export default class UserService implements IUserService {
 
 		await this.userRepo.updateUserRole(user);
 		return Result.ok(null);
+	}
+
+	public async deleteCurrentUser(id: string): Promise<Result> {
+		const result = await this.userRepo.deleteUser(id);
+		if (!result) {
+			return Result.fail('No user with the id "' + id + '" was found');
+		}
+
+		return Result.ok({ clear_token: true });
 	}
 
 	public async deleteUser(id: string): Promise<Result> {

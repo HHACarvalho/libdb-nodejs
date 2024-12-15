@@ -77,7 +77,7 @@ export default class UserController extends CoreController {
 
 	private async deleteCurrent(req: Request, res: Response): Promise<void> {
 		const id = req.token.id;
-		await this.handleServiceCall(() => this.userService.deleteUser(id), res);
+		await this.handleServiceCall(() => this.userService.deleteCurrentUser(id), res);
 	}
 
 	private async delete(req: Request, res: Response): Promise<void> {
